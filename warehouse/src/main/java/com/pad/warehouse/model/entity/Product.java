@@ -18,40 +18,42 @@ import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Entity
-@Table(name = "B_PRODUCT")
+@Table(name = "b_product")
 @Data
 public class Product {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "CODE")
+    @Column(name = "product_code")
     private String productCode;
 
-    @Column(name = "QUANTITY")
+    @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "PRICE")
+    @Column(name = "price")
     private double price;
 
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private String status;
 
-    @Column(name = "TYPE")
+    @Column(name = "type")
     private String type;
 
-    @Column(name = "SUBTYPE")
+    @Column(name = "subtype")
     private String subType;
 
+    @Column(name = "created")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime created;
 
+    @Column(name = "modified")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy HH:mm:ss")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modified;

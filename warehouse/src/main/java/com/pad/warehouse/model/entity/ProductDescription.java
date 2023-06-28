@@ -11,13 +11,13 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "B_PRODUCT_DESCRIPTION")
+@Table(name = "b_product_description")
 @Data
 public class ProductDescription {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
@@ -25,7 +25,7 @@ public class ProductDescription {
     private Product productId;
 
 
-    @Column(name = "DESCRIPTION")
+    @Column(name = "description")
     private String productDescription; 
 
 
