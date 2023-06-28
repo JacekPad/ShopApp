@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ProductStatus {
     
-    OK("OK","Ok"),
+    AVAILABLE("AVAILABLE","Available"),
     UNAVAILABLE("UNAVAILABLE","Unavailable"),
     LOW_QUANTITY("LOW_QUANTITY","low quantity"),
     DISABLED("DISABLED","Disabled");
