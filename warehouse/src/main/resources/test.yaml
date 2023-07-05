@@ -1,0 +1,1393 @@
+openapi: 3.0.0
+info:
+  title: Warehouse API
+  description: This is a warehouse API for managing products and suppliers
+  contact: 
+    name: Author
+    url: http://localhost:8080/
+  version: '0.0.1'
+servers: 
+  - url: http://localhost:8080
+tags:
+  - name: Product
+    description: Category for managing products
+
+  - name: Product Description
+    description: Category for managing product descriptions
+
+  - name: Supplier
+    description: Category for managing suppliers
+
+
+paths: 
+  /products:
+
+    get:
+      tags:
+        - Product
+      summary: Get products by query
+      operationId: getProducts
+      parameters: 
+        - name: id
+          in: query
+          description: Name of the product
+          required: false
+          schema: 
+            type: string
+
+        - name: name
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+
+        - name: productCode
+          in: query
+          description: Name of the product
+          required: false
+          schema: 
+            type: string
+
+        - name: quantity
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+
+        - name: price
+          in: query
+          description: Name of the product
+          required: false
+          schema: 
+            type: string
+
+        - name: status
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+
+        - name: type
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+
+        - name: subtype
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+
+        - name: created
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+
+        - name: modified
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+            
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ProductsResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post: 
+      tags:
+        - Product
+      summary: Add new product
+      operationId: addProduct
+      parameters: 
+        - name: createProductRequest
+          in: body
+          required: true
+          description: Data for creating product
+          schema:
+            $ref: '#/components/schemas/CreateProductRequest'
+      responses: 
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ProductCreationResponse'
+
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /products/{productId}:
+    get: 
+      tags:
+        - Product
+      summary: Get product by id number
+      operationId: getProductById
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ProductResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put: 
+      tags:
+        - Product
+      summary: Update product by id number
+      operationId: updateProduct
+      parameters: 
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: updateProductRequest
+          in: body
+          required: true
+          description: Data for updating product
+          schema:
+            $ref: '#/components/schemas/UpdateProductRequest'
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ProductResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete: 
+      tags:
+        - Product
+      summary: Delete product by id number
+      operationId: removeProduct
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DeleteResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /products/{productId}/descriptions:
+    get: 
+      tags:
+        - Product Description
+      summary: Get product descriptions by product id number
+      operationId: getProductDescriptionsByProductId
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ProductDescriptionsResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+    post: 
+      tags:
+        - Product Description
+      summary: Add product description by product id number
+      operationId: addProductDescriptionsByProductId
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: createProductDescriptionRequest
+        in: body
+        required: true
+        description: Data for creating product description
+        schema:
+          $ref: '#/components/schemas/CreateProductDescriptionRequest'
+
+      responses: 
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ProductDescriptionCreationResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /products/descriptions/{descriptionId}:
+    put: 
+      tags:
+        - Product Description
+      summary: Update product descriptions by product id number
+      operationId: updateProductDescriptionsByProductId
+      parameters:
+        - name: descriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: updateProductDescriptionRequest
+          in: body
+          required: true
+          description: Data for updating product description
+          schema:
+            $ref: '#/components/schemas/UpdateProductDescriptionRequest'
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ProductDescriptionsResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete: 
+      tags:
+        - Product Description
+      summary: Delete product description(s) by product id number
+      operationId: removeProductDescriptionByProductId
+      parameters:
+        - name: descriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DeleteResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /suppliers:
+
+    get:
+      tags:
+        - Supplier
+      summary: Get suppliers by query
+      operationId: getSuppliers
+      parameters: 
+        - name: id
+          in: query
+          description: Name of the product
+          required: false
+          schema: 
+            type: string
+
+        - name: name
+          in: query
+          description: Type of the product
+          required: false
+          schema:
+            type: string
+
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SuppliersResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+    post: 
+      tags:
+        - Supplier
+      summary: Add new supplier
+      operationId: addSupplier
+      parameters: 
+        - name: createSupplierRequest
+          in: body
+          description: Data for creating supplier
+          required: true
+          schema:
+            $ref: '#/components/schemas/CreateSupplierRequest'
+      responses: 
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SupplierCreationResponse'
+
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /suppliers/{supplierId}:
+    get: 
+      tags:
+        - Supplier
+      summary: Get supplier by id number
+      operationId: getSupplierById
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SupplierResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put: 
+      tags:
+        - Supplier
+      summary: Update supplier by id number
+      operationId: updateSupplier
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: updateSupplierRequest
+          in: body
+          required: true
+          description: Data for updating supplier
+          schema:
+            $ref: '#/components/schemas/UpdateSupplierRequest'
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SupplierResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete: 
+      tags:
+        - Supplier
+      summary: Delete supplier by id number
+      operationId: removeSupplier
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses: 
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/DeleteResponse'
+        400:
+          description: Bad request
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        405:
+          description: Method not allowed
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        501:
+          description: Not implemented
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+        503:
+          description: Service Unavailable
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+components:
+  schemas: 
+
+    Supplier:
+      type: object
+      properties: 
+        id:
+          type: string
+          examples: 
+            - 1
+        name:
+          type: string
+          examples:
+            - NCM CO.
+
+    Suppliers:
+      type: array
+      items:
+        $ref: '#/components/schemas/Supplier'
+
+    Product:
+      type: object
+      properties: 
+        id:
+          type: string
+          examples: 
+            - "2"
+        name:
+          type: string
+          examples: 
+            - hammer
+        productCode:
+          type: string
+          examples: 
+            - HMM2200787
+        quantity:
+          type: string
+          examples: 
+            - "66"
+        price:
+          type: string
+          examples: 
+            - "66.86"
+        status:
+          type: string
+          examples: 
+            - available
+        type:
+          type: string
+          examples: 
+            - tools
+        subtype:
+          type: string
+          examples: 
+            - gardening
+        created:
+          type: string
+          format: date-time
+          examples: 
+            - "2022-02-02T12:00:00"
+        modified:
+          type: string
+          format: date-time
+          examples: 
+            - "2022-02-02T12:00:00"
+          
+    ProductDescription:
+      type: object
+      properties: 
+        id:
+          type: string
+          examples:
+            - "2"
+        productId:
+          type: string
+          examples:
+            - "1"
+        productDescription:
+          type: string
+          examples: 
+            - "Durable"
+
+    ProductDescriptions:
+      type: array
+      items: 
+        $ref: '#/components/schemas/ProductDescription'
+
+    ProductResponse:
+      type: object
+      properties:
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        Product:
+          $ref: '#/components/schemas/Product'
+
+    ProductsResponse:
+      type: object
+      properties: 
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        Products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductList'
+    
+    ProductList:
+      type: object
+      properties:
+        Product:
+          $ref: '#/components/schemas/Product'
+        ProductDescription:
+          $ref: '#/components/schemas/ProductDescriptions'
+
+    ProductCreationResponse:
+      type: object
+      description: Response class for creating product
+      properties: 
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+          description: ResponseHeader object
+        productId:
+          type: string
+          description: id of the created product
+          example: "2"
+
+    ProductDescriptionsResponse:
+      type: object
+      description: Response class for getting product descriptions
+      properties:
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        ProductDescriptions:
+          $ref: '#/components/schemas/ProductDescriptions'
+
+    ProductDescriptionCreationResponse:
+      type: object
+      description: Response class for creating product descriptions
+      properties:
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        ProductDescription:
+          $ref: '#/components/schemas/ProductDescription'
+
+    SupplierResponse:
+      type: object
+      description: Response class for getting supplier
+      properties: 
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        Supplier:
+          $ref: '#/components/schemas/Supplier'
+
+    SuppliersResponse:
+      type: object
+      description: Response class for getting supplier
+      properties: 
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        Suppliers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Supplier'
+
+    SupplierCreationResponse:
+      type: object
+      description: Response class for creating supplier
+      properties:
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        supplierId:
+          type: string
+          example: "2"
+
+    SupplierList:
+      type: object
+      properties:
+        Supplier:
+          $ref: '#/components/schemas/Supplier'
+
+    DeleteResponse:
+      type: object
+      properties:
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+        Message:
+          type string:
+          example: "Resource removed successfully"
+
+    ErrorResponse:
+      description: Error class
+      properties: 
+        ResponseHeader:
+          $ref: '#/components/schemas/ResponseHeader'
+          description: ResponseHeader object
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+
+    ResponseHeader:
+      description: Metadata Class
+      properties: 
+        requestId:
+          type: string
+          format: uuid
+          description: Request ID
+        timestamp:
+          type: string
+          format: date-time
+          description: Send date yyyy-MM-ddThh:MM:ss
+
+    RequestHeader:
+      type: object
+      description: Request Class
+      required:
+        - requestId
+      properties:
+        requestId:
+          type: string
+          format: UUID
+          description: Request ID
+        timestamp:
+          type: string
+          format: date-time
+          description: Send date yyyy-MM-ddThh:MM:ss
+
+    CreateProductRequest:
+      type: object
+      description: Create product request class
+      required: 
+        - RequestHeader
+        - Product
+      properties:
+        RequestHeader:
+          $ref: '#/components/schemas/RequestHeader'
+        Product:
+          $ref: '#/components/schemas/Product'
+
+    UpdateProductRequest:
+      type: object
+      description: Update product request class
+      properties:
+        RequestHeader:
+          $ref: '#/components/schemas/RequestHeader'
+        Product:
+          $ref: '#/components/schemas/Product'
+
+    CreateProductDescriptionRequest:
+      type: object
+      description: Create product description request class
+      properties:
+        RequestHeader:
+          $ref: '#/components/schemas/RequestHeader'
+        ProductDescription:
+          $ref: '#/components/schemas/ProductDescriptions'
+        ProductId:
+          type: string
+          exmaple: "2"
+
+    UpdateProductDescriptionRequest:
+      type: object
+      description: Update product description request class
+      properties:
+        RequestHeader:
+          $ref: '#/components/schemas/RequestHeader'
+        ProductDescription:
+          $ref: '#/components/schemas/ProductDescription'
+        ProductId:
+          type: string
+          example: "2"
+
+    CreateSupplierRequest:
+      type: object
+      description: Create supplier request class
+      properties:
+        RequestHeader:
+          $ref: '#/components/schemas/RequestHeader'
+        Supplier:
+          $ref: '#/components/schemas/Supplier'
+
+    UpdateSupplierRequest:
+      type: object
+      description: Update supplier request class
+      properties:
+        RequestHeader:
+          $ref: '#/components/schemas/RequestHeader'
+        Supplier:
+          $ref: '#/components/schemas/Supplier'
+
+
+

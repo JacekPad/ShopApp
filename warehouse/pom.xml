@@ -95,6 +95,34 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>io.swagger.codegen.v3</groupId>				<!-- swagger plugin -->
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>3.0.46</version>				<!-- newest version -->
+				<executions>
+					<execution>
+						<?m2e execute onConfiguration?>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>/home/linux/myProjects/private/warehouse/src/main/resources/test.yaml</inputSpec>							<!-- yaml file with swagger config -->
+							<language>spring</language>							<!-- generates springboot classes and interfaces -->
+							<library>spring-boot</library>							<!-- not sure is needed (uses default if not specified -->
+							<output>${project.build.directory}/generated-sources</output>							<!-- where to generate files (this one is like that defult anyway -->
+							<generateSupportingFiles>false</generateSupportingFiles>							<!-- don’t know whas is supporting files (might check later) -->
+							<generateApiTests>false</generateApiTests>							<!-- don’t know -->
+							<generateModelTests>false</generateModelTests>							<!-- don’t know -->
+							<modelPackage>com.example.swaggerdemo.pet.model</modelPackage>							<!-- where entity object will be generated -->
+							<apiPackage>com.example.swaggerdemo.pet.api</apiPackage>							<!-- where operation object will be generated -->
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>								<!-- no controller implemenattion, only interface -->
+								<dateLibrary>java8</dateLibrary>								<!-- library for offsetdatetime etc. (default needs dependencies) -->
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
