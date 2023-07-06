@@ -46,7 +46,7 @@ public class Product {
     private String type;
 
     @Column(name = "subtype")
-    private String subType;
+    private String subtype;
 
     @Column(name = "created")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy HH:mm:ss")

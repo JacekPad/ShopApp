@@ -134,8 +134,8 @@
 							<generateSupportingFiles>false</generateSupportingFiles>							<!-- don’t know whas is supporting files (might check later) -->
 							<generateApiTests>false</generateApiTests>							<!-- don’t know -->
 							<generateModelTests>false</generateModelTests>							<!-- don’t know -->
-							<modelPackage>com.pad.warehouse.model</modelPackage>							<!-- where entity object will be generated -->
-							<apiPackage>com.pad.warehouse.api</apiPackage>							<!-- where operation object will be generated -->
+							<modelPackage>com.pad.warehouse.swagger.model</modelPackage>							<!-- where entity object will be generated -->
+							<apiPackage>com.pad.warehouse.swagger.api</apiPackage>							<!-- where operation object will be generated -->
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>								<!-- no controller implemenattion, only interface -->
 								<dateLibrary>java8</dateLibrary>								<!-- library for offsetdatetime etc. (default needs dependencies) -->
