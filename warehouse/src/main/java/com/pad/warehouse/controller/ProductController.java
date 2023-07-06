@@ -23,89 +23,83 @@ import com.pad.warehouse.model.entity.Product;
 import com.pad.warehouse.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("")
 @RequiredArgsConstructor
-public class ProductController implements ProductsApi{
+@Slf4j
+public class ProductController implements ProductsApi {
 
     private final ProductService productService;
 
     @Override
     public ResponseEntity<ProductCreationResponse> addProduct(@Valid CreateProductRequest body) {
-        System.out.println("addProduct");
-        System.out.println(body);
-        // TODO Auto-generated method stub
+        log.info("Add product: {}: START", body);
+        log.info("Add product: {}: END", body);
         return ProductsApi.super.addProduct(body);
     }
 
     @Override
     public ResponseEntity<ProductDescriptionCreationResponse> addProductDescriptionsByProductId(String productId,
             @Valid CreateProductDescriptionRequest body) {
-        System.out.println("addProductDescription");
-        System.out.println(body);
+        log.info("Add Product Description: ID - {}, Desc - {}: START", productId, body);
+        log.info("Add Product Description: END");
         return ProductsApi.super.addProductDescriptionsByProductId(productId, body);
     }
 
     @Override
     public ResponseEntity<ProductResponse> getProductById(String productId) {
-        System.out.println("get product by id");
+        log.info("Get Product by Id: {}: START", productId);
         Product product = productService.getProduct(productId);
-        System.out.println(product);
+        log.info("Get Product by Id: {}: END", product);
         return ProductsApi.super.getProductById(productId);
     }
 
     @Override
     public ResponseEntity<ProductDescriptionsResponse> getProductDescriptionsByProductId(String productId) {
-        System.out.println("getProductDesc");
+        log.info("Get Product Description: {}: START", productId);
+        log.info("Get Product Description: {}: END", productId);
         return ProductsApi.super.getProductDescriptionsByProductId(productId);
     }
 
     @Override
-    public ResponseEntity<ProductsResponse> getProducts(@Valid String id, @Valid String name, @Valid String productCode,
+    public ResponseEntity<ProductsResponse> getProducts(@Valid String name, @Valid String productCode,
             @Valid String quantity, @Valid String price, @Valid String status, @Valid String type,
             @Valid String subtype, @Valid String created, @Valid String modified) {
-                // TODO remove id from queryParams
-        System.out.println("getProducts - query");
-        System.out.println(id);
-        System.out.println(name);
-        System.out.println(productCode);
-        System.out.println(quantity);
-        System.out.println(price);
-        System.out.println(status);
-        System.out.println(type); 
-        System.out.println(subtype); 
-        System.out.println(created); 
-        System.out.println(modified); 
-        List<Product> products = productService.getProducts(name, productCode, quantity, price, status, type, subtype, created, modified);
-        System.out.println(products);
-        return ProductsApi.super.getProducts(id, name, productCode, quantity, price, status, type, subtype, created, modified);
+        log.info("Get products query: START");
+        ProductsResponse productsResponse = productService.getProductsResponse(name, productCode, quantity, price, status, type,
+                subtype, created, modified);
+        log.info("Get products query: {}: END", productsResponse);
+        return new ResponseEntity<ProductsResponse>(productsResponse, null, 200);
     }
 
     @Override
     public ResponseEntity<DeleteResponse> removeProduct(String productId) {
-        System.out.println("remove product");
+        log.info("Remove Product: {}: START", productId);
+        log.info("Remove Product: {}: END", productId);
         return ProductsApi.super.removeProduct(productId);
     }
 
     @Override
     public ResponseEntity<DeleteResponse> removeProductDescriptionByProductId(String descriptionId) {
-        System.out.println("removeProductDescipriotns");
+        log.info("Remove Product Description: {}: START", descriptionId);
+        log.info("Remove Product Description: {}: END", descriptionId);
         return ProductsApi.super.removeProductDescriptionByProductId(descriptionId);
     }
 
     @Override
     public ResponseEntity<ProductResponse> updateProduct(String productId, @Valid UpdateProductRequest body) {
-        System.out.println("updatePRoducts");
-        System.out.println(body);
+        log.info("Update Product: Id - {} Body - {}: START", productId, body);
+        log.info("Update Product: {}: END", body);
         return ProductsApi.super.updateProduct(productId, body);
     }
 
     @Override
     public ResponseEntity<ProductDescriptionsResponse> updateProductDescriptionsByProductId(String descriptionId,
             @Valid UpdateProductDescriptionRequest body) {
-        System.out.println("updateProducttDescirption");
-        System.out.println(body);
+        log.info("Update Product Description: Id - {} Body - {}: START", descriptionId, body);
+        log.info("Update Product Description: END");
         return ProductsApi.super.updateProductDescriptionsByProductId(descriptionId, body);
     }
 

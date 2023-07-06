@@ -28,13 +28,6 @@ paths:
       summary: Get products by query
       operationId: getProducts
       parameters: 
-        - name: id
-          in: query
-          description: Name of the product
-          required: false
-          schema: 
-            type: string
-
         - name: name
           in: query
           description: Type of the product
@@ -741,13 +734,6 @@ paths:
       summary: Get suppliers by query
       operationId: getSuppliers
       parameters: 
-        - name: id
-          in: query
-          description: Name of the product
-          required: false
-          schema: 
-            type: string
-
         - name: name
           in: query
           description: Type of the product
