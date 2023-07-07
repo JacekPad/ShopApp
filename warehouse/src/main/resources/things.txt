@@ -1,0 +1,5 @@
+1. do i need error logs (or just make detailed message in custom exception class)
+2. check all exceptions (make points where already checked)
+3. tests
+4. test transactional
+5. change entity name to make imports less fucking ugly

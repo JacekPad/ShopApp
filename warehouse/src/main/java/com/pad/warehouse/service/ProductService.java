@@ -1,5 +1,6 @@
 package com.pad.warehouse.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,10 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.pad.warehouse.mappers.ProductMapper;
 import com.pad.warehouse.model.entity.Product;
+import com.pad.warehouse.model.entity.ProductDescription;
 import com.pad.warehouse.repository.ProductRepository;
+import com.pad.warehouse.swagger.model.CreateProductRequest;
 import com.pad.warehouse.swagger.model.ProductList;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,4 +67,19 @@ public class ProductService {
         return productRepository.findById(Long.parseLong(id)).get();
     }
 
+    @Transactional
+    public String saveProductData(@Valid CreateProductRequest body) {
+        log.info("save product: {}, START", body);
+        // TODO: automap datetime
+
+        Product savedProduct = productMapper.mapToEntityProduct(body.getProduct());
+        savedProduct.setCreated(LocalDateTime.now());
+        productRepository.save(savedProduct);
+        productRepository.flush();
+        if (body.getProductDescription() != null && !body.getProductDescription().isEmpty()) {
+            body.getProductDescription().forEach(productDescription -> productDescriptionService.saveProductDescription(productDescription, savedProduct.getId()));
+        }
+        log.info("save product: {}, END", body);
+        return String.valueOf(savedProduct.getId());
+    }
 }

@@ -50,8 +50,12 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<ProductCreationResponse> addProduct(@Valid CreateProductRequest body) {
         log.info("Add product: {}: START", body);
+        String savedProductId = productService.saveProductData(body);
+        ProductCreationResponse response = new ProductCreationResponse();
+        response.setProductId(savedProductId);
+        response.setResponseHeader(null);
         log.info("Add product: {}: END", body);
-        return ProductsApi.super.addProduct(body);
+        return new ResponseEntity<ProductCreationResponse>(response, null, 200);
     }
 
     @Override
@@ -91,8 +95,11 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<DeleteResponse> removeProduct(String productId) {
         log.info("Remove Product: {}: START", productId);
+        DeleteResponse response = new DeleteResponse();
+        response.setMessage("response");
+        response.setResponseHeader(null);
         log.info("Remove Product: {}: END", productId);
-        return ProductsApi.super.removeProduct(productId);
+        return new ResponseEntity<>(response, null, 200);
     }
 
     @Override
