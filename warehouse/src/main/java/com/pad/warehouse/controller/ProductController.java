@@ -1,10 +1,9 @@
 package com.pad.warehouse.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +18,13 @@ import com.pad.warehouse.swagger.model.ProductResponse;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 import com.pad.warehouse.swagger.model.UpdateProductDescriptionRequest;
 import com.pad.warehouse.swagger.model.UpdateProductRequest;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import com.pad.warehouse.model.entity.Product;
+import com.pad.warehouse.model.entity.ProductDescription;
+import com.pad.warehouse.repository.ProductDescriptionRepository;
+import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +37,15 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController implements ProductsApi {
 
     private final ProductService productService;
+    private final ProductRepository poRepository;
+    private final ProductDescriptionRepository productDescriptionRepository;
+
+    @PostMapping("/test")
+    public void test(@org.springframework.web.bind.annotation.RequestBody ProductDescription productDescription) {
+        log.info("save test {}", productDescription);
+        // poRepository.save(product);
+        productDescriptionRepository.save(productDescription);
+    }
 
     @Override
     public ResponseEntity<ProductCreationResponse> addProduct(@Valid CreateProductRequest body) {

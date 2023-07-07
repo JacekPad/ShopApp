@@ -1325,6 +1325,10 @@ components:
           $ref: '#/components/schemas/RequestHeader'
         Product:
           $ref: '#/components/schemas/Product'
+        ProductDescription:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDescription'
 
     UpdateProductRequest:
       type: object

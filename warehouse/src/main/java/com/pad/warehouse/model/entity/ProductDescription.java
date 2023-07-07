@@ -1,5 +1,7 @@
 package com.pad.warehouse.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,9 +23,12 @@ public class ProductDescription {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product productId;
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @JsonIgnore
+    private Product product;
 
+    @Column(name = "product_id")
+    private Long productId;
 
     @Column(name = "description")
     private String productDescription; 
