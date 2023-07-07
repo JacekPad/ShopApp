@@ -13,7 +13,6 @@ import com.pad.warehouse.model.entity.Product;
 import com.pad.warehouse.model.entity.ProductDescription;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
 import com.pad.warehouse.repository.ProductRepository;
-import com.pad.warehouse.swagger.model.ProductDescriptions;
 import com.pad.warehouse.swagger.model.ProductList;
 import com.pad.warehouse.swagger.model.ProductResponse;
 import com.pad.warehouse.swagger.model.ProductsResponse;
