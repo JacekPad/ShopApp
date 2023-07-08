@@ -1226,8 +1226,9 @@ components:
       properties:
         ResponseHeader:
           $ref: '#/components/schemas/ResponseHeader'
-        ProductDescription:
-          $ref: '#/components/schemas/ProductDescription'
+        ProductDescriptionId:
+          type: string
+          example: 2
 
     SupplierResponse:
       type: object
@@ -1346,9 +1347,8 @@ components:
         RequestHeader:
           $ref: '#/components/schemas/RequestHeader'
         ProductDescription:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductDescription'
+          type: object
+          $ref: '#/components/schemas/ProductDescription'
         ProductId:
           type: string
           exmaple: "2"

@@ -58,17 +58,42 @@ public class ProductService {
             log.error("Couldn't map product: {} to DataObject, error: {}", product, e.getMessage());
             // TODO: handle exception
         }
-        List<com.pad.warehouse.swagger.model.ProductDescription> productDescriptionsForProduct = productDescriptionService.getDataProductDescriptionsForProduct(product.getId());
+        List<com.pad.warehouse.swagger.model.ProductDescription> productDescriptionsForProduct = productDescriptionService
+                .getDataProductDescriptionsForProduct(product.getId());
         productList.setProductDescription(productDescriptionsForProduct);
         return productList;
     }
 
-    public Product getProduct(String id) {
+    public Product getProductEntity(String id) {
         return productRepository.findById(Long.parseLong(id)).get();
     }
 
+    public com.pad.warehouse.swagger.model.Product getProductData(String id) {
+        Product productEntity = getProductEntity(id);
+        return convertEntityToData(productEntity);
+    }
+
+    private Product convertDataToEntity(
+            com.pad.warehouse.swagger.model.Product productData) {
+        try {
+            return productMapper.mapToEntityProduct(productData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return null;
+        }
+    }
+
+    private com.pad.warehouse.swagger.model.Product convertEntityToData(Product productEntity) {
+        try {
+            return productMapper.mapToDataProduct(productEntity);
+        } catch (Exception e) {
+            return null;
+            // TODO: handle exception
+        }
+    }
+
     @Transactional
-    public String saveProductData(@Valid CreateProductRequest body) {
+    public Long saveProductData(@Valid CreateProductRequest body) {
         log.info("save product: {}, START", body);
         // TODO: automap datetime
 
@@ -77,9 +102,10 @@ public class ProductService {
         productRepository.save(savedProduct);
         productRepository.flush();
         if (body.getProductDescription() != null && !body.getProductDescription().isEmpty()) {
-            body.getProductDescription().forEach(productDescription -> productDescriptionService.saveProductDescription(productDescription, savedProduct.getId()));
+            body.getProductDescription().forEach(productDescription -> productDescriptionService
+                    .saveProductDescription(productDescription, savedProduct.getId()));
         }
         log.info("save product: {}, END", body);
-        return String.valueOf(savedProduct.getId());
+        return savedProduct.getId();
     }
 }
