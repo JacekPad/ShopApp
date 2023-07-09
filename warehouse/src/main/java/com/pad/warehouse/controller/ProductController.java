@@ -71,6 +71,7 @@ public class ProductController implements ProductsApi {
 
     @Override
     public ResponseEntity<ProductDescriptionsResponse> getProductDescriptionsByProductId(String productId) {
+        // TODO if product 404 - message no such product exception etc.
         log.info("Get Product Description: {}: START", productId);
         List<com.pad.warehouse.swagger.model.ProductDescription> dataProductDescriptionsForProduct = productDescriptionService.getDataProductDescriptionsForProduct(Long.valueOf(productId));
         ProductDescriptionsResponse response = new ProductDescriptionsResponse();
@@ -95,6 +96,7 @@ public class ProductController implements ProductsApi {
     public ResponseEntity<DeleteResponse> removeProduct(String productId) {
         log.info("Remove Product: {}: START", productId);
         DeleteResponse response = new DeleteResponse();
+        productService.removeProduct(productId);
         response.setMessage("response");
         response.setResponseHeader(null);
         log.info("Remove Product: {}: END", response.getResponseHeader());
@@ -104,8 +106,12 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<DeleteResponse> removeProductDescriptionByProductId(String descriptionId) {
         log.info("Remove Product Description: {}: START", descriptionId);
-        log.info("Remove Product Description: {}: END", descriptionId);
-        return ProductsApi.super.removeProductDescriptionByProductId(descriptionId);
+        DeleteResponse response = new DeleteResponse();
+        response.setMessage("response");
+        response.setResponseHeader(null);
+        productDescriptionService.removeProductDescription(Long.valueOf(descriptionId));
+        log.info("Remove Product Description: {}: END", response.getResponseHeader());
+        return new ResponseEntity<DeleteResponse>(response, null, 200);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.pad.warehouse.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,8 @@ public class ProductDescriptionService {
         List<com.pad.warehouse.swagger.model.ProductDescription> dataList = new ArrayList<>();
         for (ProductDescription productDescription : entityProductDescriptionForProduct) {
             try {
-                com.pad.warehouse.swagger.model.ProductDescription dataProductDescription = convertEntityToData(productDescription);
+                com.pad.warehouse.swagger.model.ProductDescription dataProductDescription = convertEntityToData(
+                        productDescription);
                 dataList.add(dataProductDescription);
             } catch (Exception e) {
                 // TODO: handle exception
@@ -47,20 +49,21 @@ public class ProductDescriptionService {
             return null;
         }
     }
-    
 
     public ProductDescription getProductsDescription(Long descriptionId) {
         return null;
     }
 
     @Transactional
-    public Long saveProductDescription(com.pad.warehouse.swagger.model.ProductDescription productDescription, Long productId) {
+    public Long saveProductDescription(com.pad.warehouse.swagger.model.ProductDescription productDescription,
+            Long productId) {
         log.info("Save product description: {}, for product: {}, START", productDescription, productId);
         ProductDescription productDescriptionEntity = convertDataToEntity(productDescription);
         productDescriptionEntity.setProductId(productId);
         if (validateProductDescription(productDescriptionEntity)) {
             try {
-                ProductDescription savedProductDescription = productDescriptionRepository.save(productDescriptionEntity);
+                ProductDescription savedProductDescription = productDescriptionRepository
+                        .save(productDescriptionEntity);
                 productDescriptionRepository.flush();
                 log.info("Save product description: {}, for product: {}, END", productDescriptionEntity, productId);
                 return savedProductDescription.getId();
@@ -86,7 +89,8 @@ public class ProductDescriptionService {
         }
     }
 
-    private com.pad.warehouse.swagger.model.ProductDescription convertEntityToData(ProductDescription productDescription) {
+    private com.pad.warehouse.swagger.model.ProductDescription convertEntityToData(
+            ProductDescription productDescription) {
         try {
             return productDescriptionMapper.mapToDataProductDescription(productDescription);
         } catch (Exception e) {
@@ -99,6 +103,21 @@ public class ProductDescriptionService {
         log.info("Product description validation {}: START", productDescription);
         log.info("Product description validation {}: END", productDescription);
         return true;
+    }
+
+    @Transactional
+    public void removeProductDescription(Long productDescriptionId) {
+        Optional<ProductDescription> productDescription = productDescriptionRepository.findById(productDescriptionId);
+        try {
+            if (productDescription.isPresent()) {
+                productDescriptionRepository.delete(productDescription.get());
+            } else {
+                // TODO no productDesc excetpion
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
     }
 
 }

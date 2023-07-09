@@ -2,6 +2,7 @@ package com.pad.warehouse.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -15,7 +16,6 @@ import com.pad.warehouse.swagger.model.CreateProductRequest;
 import com.pad.warehouse.swagger.model.ProductList;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,8 +73,7 @@ public class ProductService {
         return convertEntityToData(productEntity);
     }
 
-    private Product convertDataToEntity(
-            com.pad.warehouse.swagger.model.Product productData) {
+    private Product convertDataToEntity(com.pad.warehouse.swagger.model.Product productData) {
         try {
             return productMapper.mapToEntityProduct(productData);
         } catch (Exception e) {
@@ -107,5 +106,23 @@ public class ProductService {
         }
         log.info("save product: {}, END", body);
         return savedProduct.getId();
+    }
+
+    @Transactional
+    public void removeProduct(String productId) {
+        Optional<Product> product = productRepository.findById(Long.valueOf(productId));
+        try {
+            if (product.isPresent()) {
+                List<ProductDescription> productDescriptions = productDescriptionService
+                        .getEntityProductDescriptionForProduct(product.get().getId());
+                productDescriptions.forEach(productDescription -> {
+                    productDescriptionService.removeProductDescription(productDescription.getId());
+                });
+                productRepository.delete(product.get());
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
     }
 }
