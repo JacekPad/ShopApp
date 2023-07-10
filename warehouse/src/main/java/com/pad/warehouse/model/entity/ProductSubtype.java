@@ -22,8 +22,8 @@ public class ProductSubtype {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "type_id")
-    private Long typeId;
+    @Column(name = "type_code")
+    private String typeName;
 
     @Column(name = "code")
     private String code;

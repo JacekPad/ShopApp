@@ -22,15 +22,15 @@ CREATE TABLE IF NOT EXISTS b_product_description
 
 create table IF NOT EXISTS e_product_type (
 	id int AUTO_INCREMENT primary key,
-    code varchar(30),
+    code varchar(30) unique,
     value varchar(30)
 );
 
 create table IF NOT EXISTS e_product_subtype (
 id int AUTO_INCREMENT primary key,
-type_id int,
+type_code varchar(50) not null,
 code varchar(30),
 value varchar(30),
-constraint FK_PRODUCT_TYPE FOREIGN KEY (type_id) REFERENCES e_product_type(id)
+constraint FK_PRODUCT_TYPE FOREIGN KEY (type_code) REFERENCES e_product_type(code)
 );
 
