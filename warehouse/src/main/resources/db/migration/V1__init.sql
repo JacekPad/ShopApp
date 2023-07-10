@@ -20,3 +20,17 @@ CREATE TABLE IF NOT EXISTS b_product_description
     constraint FK_PRODUCT FOREIGN KEY (product_id) REFERENCES b_product(id)
 );
 
+create table IF NOT EXISTS e_product_type (
+	id int AUTO_INCREMENT primary key,
+    code varchar(30),
+    value varchar(30)
+);
+
+create table IF NOT EXISTS e_product_subtype (
+id int AUTO_INCREMENT primary key,
+type_id int,
+code varchar(30),
+value varchar(30),
+constraint FK_PRODUCT_TYPE FOREIGN KEY (type_id) REFERENCES e_product_type(id)
+);
+
