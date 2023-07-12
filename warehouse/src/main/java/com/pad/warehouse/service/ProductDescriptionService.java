@@ -1,11 +1,19 @@
 package com.pad.warehouse.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.pad.warehouse.exception.badRequest.ValidationException;
+import com.pad.warehouse.exception.conflict.ProductDescriptionExistsException;
+import com.pad.warehouse.exception.internal.FetchDataError;
+import com.pad.warehouse.exception.internal.SaveObjectException;
+import com.pad.warehouse.exception.notFound.NoObjectFound;
+import com.pad.warehouse.exception.unprocessable.ProductDescriptionMapperException;
 import com.pad.warehouse.mappers.ProductDescriptionMapper;
 import com.pad.warehouse.model.entity.ProductDescription;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
@@ -27,13 +35,9 @@ public class ProductDescriptionService {
         List<ProductDescription> entityProductDescriptionForProduct = getEntityProductDescriptionForProduct(productId);
         List<com.pad.warehouse.swagger.model.ProductDescription> dataList = new ArrayList<>();
         for (ProductDescription productDescription : entityProductDescriptionForProduct) {
-            try {
-                com.pad.warehouse.swagger.model.ProductDescription dataProductDescription = convertEntityToData(
-                        productDescription);
-                dataList.add(dataProductDescription);
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
+            com.pad.warehouse.swagger.model.ProductDescription dataProductDescription = convertEntityToData(
+                    productDescription);
+            dataList.add(dataProductDescription);
         }
         return dataList;
     }
@@ -44,9 +48,8 @@ public class ProductDescriptionService {
             log.info("Get descriptions for product: {}: END", productId);
             return productDescriptionRepository.getByProductId(productId);
         } catch (Exception e) {
-            // TODO: handle exception
-            log.info("No product found for id: {}", productId);
-            return null;
+            log.error("Error while fetching product descriptions for product ID: {} - {}", productId, e.getMessage());
+            throw new FetchDataError("Error while fetching product descriptions for product ID: " + productId + "error: " + e.getMessage());
         }
     }
 
@@ -57,10 +60,20 @@ public class ProductDescriptionService {
     @Transactional
     public Long saveProductDescription(com.pad.warehouse.swagger.model.ProductDescription productDescription,
             Long productId) {
+        Map<String, String> errors = new HashMap<>();
+        // TODO max number of descrpitons per product
         log.info("Save product description: {}, for product: {}, START", productDescription, productId);
+        if (productDescription.getId() != null) {
+            Optional<ProductDescription> findById = productDescriptionRepository
+                    .findById(Long.valueOf(productDescription.getId()));
+            if (findById.isPresent()) {
+                log.error("Product description: {} already exists", productDescription.getId());
+                throw new ProductDescriptionExistsException("Product description already exists");
+            }
+        }
         ProductDescription productDescriptionEntity = convertDataToEntity(productDescription);
         productDescriptionEntity.setProductId(productId);
-        if (validateProductDescription(productDescriptionEntity)) {
+        if (validateProductDescription(productDescriptionEntity, errors)) {
             try {
                 ProductDescription savedProductDescription = productDescriptionRepository
                         .save(productDescriptionEntity);
@@ -68,15 +81,14 @@ public class ProductDescriptionService {
                 log.info("Save product description: {}, for product: {}, END", productDescriptionEntity, productId);
                 return savedProductDescription.getId();
             } catch (Exception e) {
-                log.error("Unexpected error while saving productdescription: {}, error: {}", productDescriptionEntity,
+                log.error("Unexpected error while saving product description: {}, error: {}", productDescriptionEntity,
                         e.getMessage());
-                return -1L;
-                // TODO: handle exception
+                throw new SaveObjectException("Unexpected error while saving: " + e.getMessage());
             }
+        } else {
+            log.error("Validation errors for description: {} and product {}", productDescriptionEntity, productId);
+            throw new ValidationException(errors);
         }
-        log.error("ProductDescription not valid");
-        // TODO: return some error list etc?
-        return -1L;
     }
 
     private ProductDescription convertDataToEntity(
@@ -84,8 +96,8 @@ public class ProductDescriptionService {
         try {
             return productDescriptionMapper.mapToEntityProductDescription(productDescription);
         } catch (Exception e) {
-            // TODO: handle exception
-            return null;
+            log.error("Mapping data to entity failed: {}", e.getMessage());
+            throw new ProductDescriptionMapperException("Mapping data to entity failed: " + e.getMessage());
         }
     }
 
@@ -94,15 +106,15 @@ public class ProductDescriptionService {
         try {
             return productDescriptionMapper.mapToDataProductDescription(productDescription);
         } catch (Exception e) {
-            // TODO: handle exception
-            return null;
+            log.error("Mapping entity to data failed: {}", e.getMessage());
+            throw new ProductDescriptionMapperException("Mapping entity to data failed: " + e.getMessage());
         }
     }
 
-    private boolean validateProductDescription(ProductDescription productDescription) {
+    private boolean validateProductDescription(ProductDescription productDescription, Map<String, String> errors) {
         log.info("Product description validation {}: START", productDescription);
         log.info("Product description validation {}: END", productDescription);
-        return true;
+        return errors.isEmpty() ? true : false;
     }
 
     @Transactional
@@ -112,7 +124,8 @@ public class ProductDescriptionService {
             if (productDescription.isPresent()) {
                 productDescriptionRepository.delete(productDescription.get());
             } else {
-                // TODO no productDesc excetpion
+                log.error("No product description for ID: {}", productDescriptionId);
+                throw new NoObjectFound("No product description for ID: " + productDescriptionId);
             }
         } catch (Exception e) {
             // TODO: handle exception

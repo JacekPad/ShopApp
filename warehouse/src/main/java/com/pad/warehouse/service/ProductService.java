@@ -8,6 +8,10 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
+import com.pad.warehouse.exception.conflict.ProductExistsException;
+import com.pad.warehouse.exception.internal.FetchDataError;
+import com.pad.warehouse.exception.internal.SaveObjectException;
+import com.pad.warehouse.exception.unprocessable.ProductMapperException;
 import com.pad.warehouse.mappers.ProductMapper;
 import com.pad.warehouse.model.entity.Product;
 import com.pad.warehouse.model.entity.ProductDescription;
@@ -45,19 +49,21 @@ public class ProductService {
     private List<Product> getProducts(String name, String productCode,
             String quantity, String price, String status, String type,
             String subtype, String created, String modified) {
-        return productRepository.findByQueryParams(name, productCode, quantity, price, status, type, subtype, created,
-                modified);
+                log.info("Get products: START");
+                try {
+                    log.info("Get products: END");
+                    return productRepository.findByQueryParams(name, productCode, quantity, price, status, type, subtype, created,
+                    modified);
+                } catch (Exception e) {
+                    log.error("Error while fetching products: {}", e.getMessage());
+                    throw new FetchDataError("Error while fetching products: " + e.getMessage());
+                }
     }
 
     private ProductList prepareProductList(Product product) {
         ProductList productList = new ProductList();
-        try {
-            com.pad.warehouse.swagger.model.Product dataProduct = productMapper.mapToDataProduct(product);
-            productList.setProduct(dataProduct);
-        } catch (Exception e) {
-            log.error("Couldn't map product: {} to DataObject, error: {}", product, e.getMessage());
-            // TODO: handle exception
-        }
+        com.pad.warehouse.swagger.model.Product dataProduct = convertEntityToData(product);
+        productList.setProduct(dataProduct);
         List<com.pad.warehouse.swagger.model.ProductDescription> productDescriptionsForProduct = productDescriptionService
                 .getDataProductDescriptionsForProduct(product.getId());
         productList.setProductDescription(productDescriptionsForProduct);
@@ -77,8 +83,8 @@ public class ProductService {
         try {
             return productMapper.mapToEntityProduct(productData);
         } catch (Exception e) {
-            // TODO: handle exception
-            return null;
+            log.error("Mapping data to entity failed: {}", e.getMessage());
+            throw new ProductMapperException("Mapping data to entity failed: " + e.getMessage());
         }
     }
 
@@ -86,30 +92,41 @@ public class ProductService {
         try {
             return productMapper.mapToDataProduct(productEntity);
         } catch (Exception e) {
-            return null;
-            // TODO: handle exception
+            log.error("Mapping entity to data failed: {}", e.getMessage());
+            throw new ProductMapperException("Mapping entity to data failed: " + e.getMessage());
         }
     }
 
     @Transactional
     public Long saveProductData(@Valid CreateProductRequest body) {
-        log.info("save product: {}, START", body);
+        log.info("save product - BODY: {}, START", body);
         // TODO: automap datetime
-
-        Product savedProduct = productMapper.mapToEntityProduct(body.getProduct());
-        savedProduct.setCreated(LocalDateTime.now());
-        productRepository.save(savedProduct);
+        if (body.getProduct().getId() != null) {
+            Optional<Product> findById = productRepository.findById(Long.valueOf(body.getProduct().getId()));
+            if (findById.isPresent()) {
+                log.error("product: {} already exists", body.getProduct().getId());
+                throw new ProductExistsException("Product already exists");
+            }
+        }
+        Product productEntityToSave = convertDataToEntity(body.getProduct());
+        try {
+            productRepository.save(productEntityToSave);
+        } catch (Exception e) {
+            log.error("Unexpected error while saving product: {}, error: {}", productEntityToSave,
+                e.getMessage());
+            throw new SaveObjectException("Unexpected error while saving: " + e.getMessage());
+        }
         productRepository.flush();
         if (body.getProductDescription() != null && !body.getProductDescription().isEmpty()) {
             body.getProductDescription().forEach(productDescription -> productDescriptionService
-                    .saveProductDescription(productDescription, savedProduct.getId()));
+                    .saveProductDescription(productDescription, productEntityToSave.getId()));
         }
-        log.info("save product: {}, END", body);
-        return savedProduct.getId();
+        log.info("save product - ID: {}, END", productEntityToSave.getId());
+        return productEntityToSave.getId();
     }
 
     @Transactional
-    public void removeProduct(String productId) {
+    public String removeProduct(String productId) {
         Optional<Product> product = productRepository.findById(Long.valueOf(productId));
         try {
             if (product.isPresent()) {
@@ -119,9 +136,13 @@ public class ProductService {
                     productDescriptionService.removeProductDescription(productDescription.getId());
                 });
                 productRepository.delete(product.get());
+                return "Product successfully removed";
             }
+            // TODO exception
+            return "No product";
         } catch (Exception e) {
             // TODO: handle exception
+            return "error";
         }
 
     }

@@ -1,5 +1,6 @@
 package com.pad.warehouse.mappers;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

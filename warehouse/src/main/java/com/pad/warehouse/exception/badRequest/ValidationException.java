@@ -1,9 +1,11 @@
-package com.pad.warehouse.exception;
+package com.pad.warehouse.exception.badRequest;
 
 import java.util.Map;
 import java.util.StringJoiner;
 
 import org.springframework.http.HttpStatus;
+
+import com.pad.warehouse.exception.AbstractException;
 
 /**
  * Custom exception class
@@ -13,11 +15,12 @@ import org.springframework.http.HttpStatus;
 public class ValidationException extends AbstractException {
 
     private static final long serialVersionUID = -5689721647285L;
+    private static final HttpStatus CODE = HttpStatus.BAD_REQUEST;
 
     private final Map<String, String> exceptions;
 
-    public ValidationException(Map<String, String> exceptions, HttpStatus code) {
-        super(code);
+    public ValidationException(Map<String, String> exceptions) {
+        super(CODE);
         this.exceptions = exceptions;
     }
 

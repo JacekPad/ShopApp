@@ -1,6 +1,7 @@
 package com.pad.warehouse.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -19,7 +20,7 @@ import com.pad.warehouse.swagger.model.ProductResponse;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 import com.pad.warehouse.swagger.model.UpdateProductDescriptionRequest;
 import com.pad.warehouse.swagger.model.UpdateProductRequest;
-
+import com.pad.warehouse.mappers.ResponseHeaderMapper;
 import com.pad.warehouse.service.ProductDescriptionService;
 import com.pad.warehouse.service.ProductService;
 
@@ -41,7 +42,7 @@ public class ProductController implements ProductsApi {
         Long savedProductId = productService.saveProductData(body);
         ProductCreationResponse response = new ProductCreationResponse();
         response.setProductId(String.valueOf(savedProductId));
-        response.setResponseHeader(null);
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Add product: {}: END", response.getResponseHeader());
         return new ResponseEntity<ProductCreationResponse>(response, null, 200);
     }
@@ -53,7 +54,7 @@ public class ProductController implements ProductsApi {
         Long saveProductDescriptionId = productDescriptionService.saveProductDescription(body.getProductDescription(), Long.valueOf(productId));
         ProductDescriptionCreationResponse response = new ProductDescriptionCreationResponse();
         response.setProductDescriptionId(String.valueOf(saveProductDescriptionId));
-        response.setResponseHeader(null);
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Add Product Description {}: END", response.getResponseHeader());
         return new ResponseEntity<ProductDescriptionCreationResponse>(response, null, 200);
     }
@@ -64,7 +65,7 @@ public class ProductController implements ProductsApi {
         com.pad.warehouse.swagger.model.Product product = productService.getProductData(productId);
         ProductResponse response = new ProductResponse();
         response.setProduct(product);
-        response.setResponseHeader(null);
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Get Product by Id: {}: END", product);
         return new ResponseEntity<ProductResponse>(response, null, 200);
     }
@@ -76,7 +77,7 @@ public class ProductController implements ProductsApi {
         List<com.pad.warehouse.swagger.model.ProductDescription> dataProductDescriptionsForProduct = productDescriptionService.getDataProductDescriptionsForProduct(Long.valueOf(productId));
         ProductDescriptionsResponse response = new ProductDescriptionsResponse();
         response.setProductDescriptions(dataProductDescriptionsForProduct);
-        response.setResponseHeader(null);
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Get Product Description: {}: END", response.getResponseHeader());
         return new ResponseEntity<ProductDescriptionsResponse>(response, null, 200);
     }
@@ -88,6 +89,7 @@ public class ProductController implements ProductsApi {
         log.info("Get products query: START");
         ProductsResponse productsResponse = productService.getProductsResponse(name, productCode, quantity, price, status, type,
                 subtype, created, modified);
+        productsResponse.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Get products query: {}: END", productsResponse.getResponseHeader());
         return new ResponseEntity<ProductsResponse>(productsResponse, null, 200);
     }
@@ -96,9 +98,9 @@ public class ProductController implements ProductsApi {
     public ResponseEntity<DeleteResponse> removeProduct(String productId) {
         log.info("Remove Product: {}: START", productId);
         DeleteResponse response = new DeleteResponse();
-        productService.removeProduct(productId);
-        response.setMessage("response");
-        response.setResponseHeader(null);
+        String message = productService.removeProduct(productId);
+        response.setMessage(message);
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Remove Product: {}: END", response.getResponseHeader());
         return new ResponseEntity<>(response, null, 200);
     }
@@ -108,7 +110,7 @@ public class ProductController implements ProductsApi {
         log.info("Remove Product Description: {}: START", descriptionId);
         DeleteResponse response = new DeleteResponse();
         response.setMessage("response");
-        response.setResponseHeader(null);
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         productDescriptionService.removeProductDescription(Long.valueOf(descriptionId));
         log.info("Remove Product Description: {}: END", response.getResponseHeader());
         return new ResponseEntity<DeleteResponse>(response, null, 200);

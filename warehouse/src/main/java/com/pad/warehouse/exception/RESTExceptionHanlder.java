@@ -29,8 +29,7 @@ public class RESTExceptionHanlder {
     // }
     @ExceptionHandler(AbstractException.class)
     public ResponseEntity<ErrorResponse> exceptionResponse(AbstractException exception) {
-        log.info("excpetion: {}", exception);
-        log.info("excp code: {}", exception.getCode());
+        // TODO save exceptions to log db?
         ErrorResponse response = createErrorResponse(exception.getCode(), exception.getMessage());
         return new ResponseEntity<ErrorResponse>(response, null, exception.getCode());
     }

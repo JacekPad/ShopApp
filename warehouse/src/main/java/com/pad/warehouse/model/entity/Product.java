@@ -1,6 +1,7 @@
 package com.pad.warehouse.model.entity;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -49,22 +50,22 @@ public class Product {
     private String subtype;
 
     @Column(name = "created")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime created;
+    private OffsetDateTime created;
 
     @Column(name = "modified")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime modified;
+    private OffsetDateTime modified;
 
     @PrePersist
     private void setCreatedDate() {
-        created = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        created = OffsetDateTime.parse(OffsetDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
 
     @PreUpdate
     private void setModifiedDate() {
-        modified = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        modified = OffsetDateTime.parse(OffsetDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
 }
