@@ -1,0 +1,177 @@
+{
+	"info": {
+		"_postman_id": "d08c0c5c-562f-4f52-a2b1-c7ef626444c7",
+		"name": "ShopV2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get products by query",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"RequestHeader\": {\r\n        \"requestId\": \"abcd\",\r\n        \"timestamp\": \"2022-02-02T00:00:00+01:00\"\r\n    }, \"Product\": {\r\n            \"name\": \"newTest\",\r\n            \"productCode\": \"CODE1\",\r\n            \"quantity\": \"33\",\r\n            \"price\": \"11.0\",\r\n            \"status\": \"OK\",\r\n            \"type\": \"tools\",\r\n            \"subtype\": \"garden\",\r\n            \"created\": \"2022-02-02T00:00:00+01:00\",\r\n            \"modified\": null\r\n    }, \"ProductDescription\": [\r\n        {\r\n            \"productDescription\": \"nmewTest\"\r\n        } \r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove product by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddProductDescription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ProductDescription\": {\r\n        \"productId\": \"2\",\r\n        \"productDescription\": \"addManually\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/2/descriptions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"2",
+								"descriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get ProductDescriptions by ProductId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/9/descriptions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"9",
+								"descriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove product description by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/descriptions/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"descriptions",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Suppliers",
+			"item": []
+		}
+	]
+}
