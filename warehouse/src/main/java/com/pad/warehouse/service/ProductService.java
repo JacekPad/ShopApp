@@ -40,7 +40,8 @@ public class ProductService {
             @Valid String modified) {
         log.info("Get product response: START");
         ProductsResponse response = new ProductsResponse();
-        List<ProductEntity> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype, created,
+        List<ProductEntity> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype,
+                created,
                 modified);
         if (products.isEmpty()) {
             throw new NoObjectFound("No products with given attributes");
@@ -55,15 +56,16 @@ public class ProductService {
     private List<ProductEntity> getProductsEntity(String name, String productCode,
             String quantity, String price, String status, String type,
             String subtype, String created, String modified) {
-                log.info("Get products: START");
-                try {
-                    log.info("Get products: END");
-                    return productRepository.findByQueryParams(name, productCode, quantity, price, status, type, subtype, created,
+        log.info("Get products: START");
+        try {
+            log.info("Get products: END");
+            return productRepository.findByQueryParams(name, productCode, quantity, price, status, type, subtype,
+                    created,
                     modified);
-                } catch (Exception e) {
-                    log.error("Error while fetching products: {}", e.getMessage());
-                    throw new FetchDataError("Error while fetching products: " + e.getMessage());
-                }
+        } catch (Exception e) {
+            log.error("Error while fetching products: {}", e.getMessage());
+            throw new FetchDataError("Error while fetching products");
+        }
     }
 
     private ProductList prepareProductList(ProductEntity product) {
@@ -78,7 +80,8 @@ public class ProductService {
 
     public ProductEntity getProductEntity(Long id) {
         Optional<ProductEntity> product = productRepository.findById(id);
-        if (product.isPresent()) return product.get(); 
+        if (product.isPresent())
+            return product.get();
         else {
             log.error("No product found for ID: {}", id);
             throw new NoObjectFound("No product found");
@@ -95,7 +98,7 @@ public class ProductService {
             return productMapper.mapToEntityProduct(productData);
         } catch (Exception e) {
             log.error("Mapping data to entity failed: {}", e.getMessage());
-            throw new ProductMapperException("Mapping data to entity failed: " + e.getMessage());
+            throw new ProductMapperException("Mapping data to entity failed");
         }
     }
 
@@ -104,7 +107,7 @@ public class ProductService {
             return productMapper.mapToDataProduct(productEntity);
         } catch (Exception e) {
             log.error("Mapping entity to data failed: {}", e.getMessage());
-            throw new ProductMapperException("Mapping entity to data failed: " + e.getMessage());
+            throw new ProductMapperException("Mapping entity to data failed");
         }
     }
 
@@ -123,8 +126,8 @@ public class ProductService {
             productRepository.save(productEntityToSave);
         } catch (Exception e) {
             log.error("Unexpected error while saving product: {}, error: {}", productEntityToSave,
-                e.getMessage());
-            throw new SaveObjectException("Unexpected error while saving: " + e.getMessage());
+                    e.getMessage());
+            throw new SaveObjectException("Unexpected error while saving product");
         }
         productRepository.flush();
         if (body.getProductDescription() != null && !body.getProductDescription().isEmpty()) {
@@ -138,16 +141,43 @@ public class ProductService {
     @Transactional
     public String removeProduct(String productId) {
         Optional<ProductEntity> product = productRepository.findById(Long.valueOf(productId));
-            if (product.isPresent()) {
-                List<ProductDescriptionEntity> productDescriptions = productDescriptionService
-                        .getEntityProductDescriptionForProduct(product.get().getId());
-                productDescriptions.forEach(productDescription -> {
-                    productDescriptionService.removeProductDescription(productDescription.getId());
-                });
-                productRepository.delete(product.get());
-                return "Product successfully removed";
+        if (product.isPresent()) {
+            List<ProductDescriptionEntity> productDescriptions = productDescriptionService
+                    .getEntityProductDescriptionForProduct(product.get().getId());
+            productDescriptions.forEach(productDescription -> {
+                productDescriptionService.removeProductDescription(productDescription.getId());
+            });
+            productRepository.delete(product.get());
+            return "Product successfully removed";
+        }
+        // TODO exception
+        return "No product";
+    }
+
+    @Transactional
+    public Product updateProductData(String productId, Product product) {
+        log.info("update product - BODY: {}, START", product);
+
+        if (productId != null) {
+            Optional<ProductEntity> productEntity = productRepository.findById(Long.valueOf(productId));
+            if (!productEntity.isPresent()) {
+                log.error("Product with id {} does not exists", productId);
+                throw new NoObjectFound("Product does not exists");
             }
-            // TODO exception
-            return "No product";
+            ProductEntity productEntityToUpdate = productMapper.mapToEntityProduct(product);
+            productEntityToUpdate.setId(Long.parseLong(productId));
+
+            try {
+                productRepository.save(productEntityToUpdate);
+                productRepository.flush();
+            } catch (Exception e) {
+                log.error("Unexpected error while updating product: {}, error: {}", productId,
+                        e.getMessage());
+                throw new SaveObjectException("Unexpected error while updating product");
+            }
+            log.info("update product - ID: {}, END", productEntityToUpdate.getId());
+            return productMapper.mapToDataProduct(productEntityToUpdate);
+        } else throw new SaveObjectException("Product id could not be specified");
+
     }
 }

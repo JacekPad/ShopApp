@@ -53,7 +53,8 @@ public class ProductController implements ProductsApi {
     public ResponseEntity<ProductDescriptionCreationResponse> addProductDescriptionsByProductId(String productId,
             @Valid CreateProductDescriptionRequest body) {
         log.info("Add Product Description: ID - {}, Desc - {}: START", productId, body);
-        Long saveProductDescriptionId = productDescriptionService.saveProductDescription(body.getProductDescription(), Long.valueOf(productId));
+        Long saveProductDescriptionId = productDescriptionService.saveProductDescription(body.getProductDescription(),
+                Long.valueOf(productId));
         ProductDescriptionCreationResponse response = new ProductDescriptionCreationResponse();
         response.setProductDescriptionId(String.valueOf(saveProductDescriptionId));
         response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
@@ -75,7 +76,8 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<ProductDescriptionsResponse> getProductDescriptionsByProductId(String productId) {
         log.info("Get Product Description: {}: START", productId);
-        List<ProductDescription> dataProductDescriptionsForProduct = productDescriptionService.getDataProductDescriptionsForProduct(Long.valueOf(productId));
+        List<ProductDescription> dataProductDescriptionsForProduct = productDescriptionService
+                .getDataProductDescriptionsForProduct(Long.valueOf(productId));
         ProductDescriptionsResponse response = new ProductDescriptionsResponse();
         response.setProductDescriptions(dataProductDescriptionsForProduct);
         response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
@@ -88,7 +90,8 @@ public class ProductController implements ProductsApi {
             @Valid String quantity, @Valid String price, @Valid String status, @Valid String type,
             @Valid String subtype, @Valid String created, @Valid String modified) {
         log.info("Get products query: START");
-        ProductsResponse productsResponse = productService.getProductsData(name, productCode, quantity, price, status, type,
+        ProductsResponse productsResponse = productService.getProductsData(name, productCode, quantity, price, status,
+                type,
                 subtype, created, modified);
         productsResponse.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Get products query: {}: END", productsResponse.getResponseHeader());
@@ -120,14 +123,19 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<ProductResponse> updateProduct(String productId, @Valid UpdateProductRequest body) {
         log.info("Update Product: Id - {} Body - {}: START", productId, body);
+        Product updatedProduct = productService.updateProductData(productId, body.getProduct());
+        ProductResponse response = new ProductResponse();
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
+        response.setProduct(updatedProduct);
         log.info("Update Product: {}: END", body);
-        return ProductsApi.super.updateProduct(productId, body);
+        return new ResponseEntity<ProductResponse>(response, null, 200);
     }
 
     @Override
     public ResponseEntity<ProductDescriptionsResponse> updateProductDescriptionsByProductId(String descriptionId,
             @Valid UpdateProductDescriptionRequest body) {
         log.info("Update Product Description: Id - {} Body - {}: START", descriptionId, body);
+        productDescriptionService.updateProductDescription(descriptionId, body.getProductDescription());
         log.info("Update Product Description: END");
         return ProductsApi.super.updateProductDescriptionsByProductId(descriptionId, body);
     }

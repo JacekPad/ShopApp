@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Service;
 
 import com.pad.warehouse.exception.badRequest.ValidationException;
@@ -140,6 +142,29 @@ public class ProductDescriptionService {
             log.error("No product description for ID: {}", productDescriptionId);
             throw new NoObjectFound("No product description found");
         }
+    }
+
+    public void updateProductDescription(String descriptionId, ProductDescription productDescription) {
+        if (descriptionId != null) {
+            Optional<ProductDescriptionEntity> productDescriptionEntity = productDescriptionRepository
+                    .findById(Long.valueOf(descriptionId));
+            if (!productDescriptionEntity.isPresent()) {
+                log.error("Product description with id {} does not exists", descriptionId);
+                throw new NoObjectFound("Product description does not exists");
+            }
+            ProductDescriptionEntity productDescriptionEntityToUpdate = productDescriptionMapper
+                    .mapToEntityProductDescription(productDescription);
+            productDescriptionEntityToUpdate.setId(Long.valueOf(descriptionId));
+            try {
+                productDescriptionRepository.save(productDescriptionEntityToUpdate);
+                productDescriptionRepository.flush();
+            } catch (Exception e) {
+                log.error("Unexpected error while updating product: {}, error: {}", descriptionId,
+                        e.getMessage());
+                throw new SaveObjectException("Unexpected error while updating product description");
+            }
+        } else
+            throw new SaveObjectException("Product description id could not be specified");
     }
 
 }
