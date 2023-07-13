@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.pad.warehouse.exception.conflict.ProductExistsException;

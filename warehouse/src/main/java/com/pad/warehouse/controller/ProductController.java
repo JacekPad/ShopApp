@@ -51,6 +51,7 @@ public class ProductController implements ProductsApi {
     public ResponseEntity<ProductDescriptionCreationResponse> addProductDescriptionsByProductId(String productId,
             @Valid CreateProductDescriptionRequest body) {
         log.info("Add Product Description: ID - {}, Desc - {}: START", productId, body);
+        productService.getProductEntity(Long.valueOf(productId));
         Long saveProductDescriptionId = productDescriptionService.saveProductDescription(body.getProductDescription(), Long.valueOf(productId));
         ProductDescriptionCreationResponse response = new ProductDescriptionCreationResponse();
         response.setProductDescriptionId(String.valueOf(saveProductDescriptionId));
@@ -72,8 +73,8 @@ public class ProductController implements ProductsApi {
 
     @Override
     public ResponseEntity<ProductDescriptionsResponse> getProductDescriptionsByProductId(String productId) {
-        // TODO if product 404 - message no such product exception etc.
         log.info("Get Product Description: {}: START", productId);
+        productService.getProductEntity(Long.valueOf(productId));
         List<com.pad.warehouse.swagger.model.ProductDescription> dataProductDescriptionsForProduct = productDescriptionService.getDataProductDescriptionsForProduct(Long.valueOf(productId));
         ProductDescriptionsResponse response = new ProductDescriptionsResponse();
         response.setProductDescriptions(dataProductDescriptionsForProduct);

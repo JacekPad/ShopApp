@@ -3,3 +3,4 @@
 3. tests
 4. test transactional
 5. change entity name to make imports less fucking ugly
+6. checking if product exists in controller (dependency loop if checking in productDesc serivce :( )

@@ -29,6 +29,7 @@ public class ProductDescriptionService {
 
     private final ProductDescriptionRepository productDescriptionRepository;
     private final ProductDescriptionMapper productDescriptionMapper;
+    private ProductService productService;
 
     public List<com.pad.warehouse.swagger.model.ProductDescription> getDataProductDescriptionsForProduct(
             Long productId) {
@@ -62,6 +63,7 @@ public class ProductDescriptionService {
         Map<String, String> errors = new HashMap<>();
         // TODO max number of descrpitons per product
         log.info("Save product description: {}, for product: {}, START", productDescription, productId);
+
         if (productDescription.getId() != null) {
             Optional<ProductDescription> findById = productDescriptionRepository
                     .findById(Long.valueOf(productDescription.getId()));
@@ -72,7 +74,7 @@ public class ProductDescriptionService {
         }
         ProductDescription productDescriptionEntity = convertDataToEntity(productDescription);
         productDescriptionEntity.setProductId(productId);
-        if (validateProductDescription(productDescriptionEntity, errors)) {
+        if (validateAddProductDescription(productDescriptionEntity, errors, productId)) {
             try {
                 ProductDescription savedProductDescription = productDescriptionRepository
                         .save(productDescriptionEntity);
@@ -110,7 +112,8 @@ public class ProductDescriptionService {
         }
     }
 
-    private boolean validateProductDescription(ProductDescription productDescription, Map<String, String> errors) {
+    private boolean validateAddProductDescription(ProductDescription productDescription, Map<String, String> errors, Long productId) {
+        if (productId == null) errors.put("ProductId", "Product ID cannot be empty");
         log.info("Product description validation {}: START", productDescription);
         log.info("Product description validation {}: END", productDescription);
         return errors.isEmpty() ? true : false;
