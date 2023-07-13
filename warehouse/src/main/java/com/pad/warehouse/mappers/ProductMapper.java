@@ -4,15 +4,16 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.pad.warehouse.model.entity.Product;
+import com.pad.warehouse.model.entity.ProductEntity;
+import com.pad.warehouse.swagger.model.Product;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "modified", ignore = true)
-    Product mapToEntityProduct(com.pad.warehouse.swagger.model.Product product);
+    ProductEntity mapToEntityProduct(Product product);
 
-    com.pad.warehouse.swagger.model.Product mapToDataProduct(Product product);
+    Product mapToDataProduct(ProductEntity product);
 
 }

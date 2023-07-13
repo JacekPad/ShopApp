@@ -13,7 +13,9 @@ import com.pad.warehouse.swagger.api.ProductsApi;
 import com.pad.warehouse.swagger.model.CreateProductDescriptionRequest;
 import com.pad.warehouse.swagger.model.CreateProductRequest;
 import com.pad.warehouse.swagger.model.DeleteResponse;
+import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductCreationResponse;
+import com.pad.warehouse.swagger.model.ProductDescription;
 import com.pad.warehouse.swagger.model.ProductDescriptionCreationResponse;
 import com.pad.warehouse.swagger.model.ProductDescriptionsResponse;
 import com.pad.warehouse.swagger.model.ProductResponse;
@@ -63,7 +65,7 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<ProductResponse> getProductById(String productId) {
         log.info("Get Product by Id: {}: START", productId);
-        com.pad.warehouse.swagger.model.Product product = productService.getProductData(productId);
+        Product product = productService.getProductData(productId);
         ProductResponse response = new ProductResponse();
         response.setProduct(product);
         response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
@@ -75,7 +77,7 @@ public class ProductController implements ProductsApi {
     public ResponseEntity<ProductDescriptionsResponse> getProductDescriptionsByProductId(String productId) {
         log.info("Get Product Description: {}: START", productId);
         productService.getProductEntity(Long.valueOf(productId));
-        List<com.pad.warehouse.swagger.model.ProductDescription> dataProductDescriptionsForProduct = productDescriptionService.getDataProductDescriptionsForProduct(Long.valueOf(productId));
+        List<ProductDescription> dataProductDescriptionsForProduct = productDescriptionService.getDataProductDescriptionsForProduct(Long.valueOf(productId));
         ProductDescriptionsResponse response = new ProductDescriptionsResponse();
         response.setProductDescriptions(dataProductDescriptionsForProduct);
         response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));

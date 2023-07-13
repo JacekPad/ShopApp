@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.pad.warehouse.model.entity.ProductDescription;
+import com.pad.warehouse.model.entity.ProductDescriptionEntity;
 
-public interface ProductDescriptionRepository extends JpaRepository<ProductDescription, Long> {
+public interface ProductDescriptionRepository extends JpaRepository<ProductDescriptionEntity, Long> {
     
-    List<ProductDescription> getByProductId(Long productId);
+    List<ProductDescriptionEntity> getByProductId(Long productId);
 }

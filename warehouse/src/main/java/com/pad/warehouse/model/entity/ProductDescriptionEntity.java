@@ -15,7 +15,7 @@ import lombok.Data;
 @Entity
 @Table(name = "b_product_description")
 @Data
-public class ProductDescription {
+public class ProductDescriptionEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class ProductDescription {
     @ManyToOne
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     @JsonIgnore
-    private Product product;
+    private ProductEntity product;
 
     @Column(name = "product_id")
     private Long productId;

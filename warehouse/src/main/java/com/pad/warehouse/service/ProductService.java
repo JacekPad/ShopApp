@@ -14,10 +14,12 @@ import com.pad.warehouse.exception.internal.SaveObjectException;
 import com.pad.warehouse.exception.notFound.NoObjectFound;
 import com.pad.warehouse.exception.unprocessable.ProductMapperException;
 import com.pad.warehouse.mappers.ProductMapper;
-import com.pad.warehouse.model.entity.Product;
-import com.pad.warehouse.model.entity.ProductDescription;
+import com.pad.warehouse.model.entity.ProductEntity;
+import com.pad.warehouse.model.entity.ProductDescriptionEntity;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.CreateProductRequest;
+import com.pad.warehouse.swagger.model.Product;
+import com.pad.warehouse.swagger.model.ProductDescription;
 import com.pad.warehouse.swagger.model.ProductList;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 
@@ -38,19 +40,19 @@ public class ProductService {
             @Valid String modified) {
         log.info("Get product response: START");
         ProductsResponse response = new ProductsResponse();
-        List<Product> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype, created,
+        List<ProductEntity> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype, created,
                 modified);
         if (products.isEmpty()) {
             throw new NoObjectFound("No products with given attributes");
         }
-        for (Product product : products) {
+        for (ProductEntity product : products) {
             response.addProductsItem(prepareProductList(product));
         }
         log.info("Get product response: END");
         return response;
     }
 
-    private List<Product> getProductsEntity(String name, String productCode,
+    private List<ProductEntity> getProductsEntity(String name, String productCode,
             String quantity, String price, String status, String type,
             String subtype, String created, String modified) {
                 log.info("Get products: START");
@@ -64,18 +66,18 @@ public class ProductService {
                 }
     }
 
-    private ProductList prepareProductList(Product product) {
+    private ProductList prepareProductList(ProductEntity product) {
         ProductList productList = new ProductList();
-        com.pad.warehouse.swagger.model.Product dataProduct = convertEntityToData(product);
+        Product dataProduct = convertEntityToData(product);
         productList.setProduct(dataProduct);
-        List<com.pad.warehouse.swagger.model.ProductDescription> productDescriptionsForProduct = productDescriptionService
+        List<ProductDescription> productDescriptionsForProduct = productDescriptionService
                 .getDataProductDescriptionsForProduct(product.getId());
         productList.setProductDescription(productDescriptionsForProduct);
         return productList;
     }
 
-    public Product getProductEntity(Long id) {
-        Optional<Product> product = productRepository.findById(id);
+    public ProductEntity getProductEntity(Long id) {
+        Optional<ProductEntity> product = productRepository.findById(id);
         if (product.isPresent()) return product.get(); 
         else {
             log.error("No product found for ID: {}", id);
@@ -83,12 +85,12 @@ public class ProductService {
         }
     }
 
-    public com.pad.warehouse.swagger.model.Product getProductData(String id) {
-        Product productEntity = getProductEntity(Long.parseLong(id));
+    public Product getProductData(String id) {
+        ProductEntity productEntity = getProductEntity(Long.parseLong(id));
         return convertEntityToData(productEntity);
     }
 
-    private Product convertDataToEntity(com.pad.warehouse.swagger.model.Product productData) {
+    private ProductEntity convertDataToEntity(Product productData) {
         try {
             return productMapper.mapToEntityProduct(productData);
         } catch (Exception e) {
@@ -97,7 +99,7 @@ public class ProductService {
         }
     }
 
-    private com.pad.warehouse.swagger.model.Product convertEntityToData(Product productEntity) {
+    private Product convertEntityToData(ProductEntity productEntity) {
         try {
             return productMapper.mapToDataProduct(productEntity);
         } catch (Exception e) {
@@ -110,13 +112,13 @@ public class ProductService {
     public Long saveProductData(@Valid CreateProductRequest body) {
         log.info("save product - BODY: {}, START", body);
         if (body.getProduct().getId() != null) {
-            Optional<Product> findById = productRepository.findById(Long.valueOf(body.getProduct().getId()));
+            Optional<ProductEntity> findById = productRepository.findById(Long.valueOf(body.getProduct().getId()));
             if (findById.isPresent()) {
                 log.error("product: {} already exists", body.getProduct().getId());
                 throw new ProductExistsException("Product already exists");
             }
         }
-        Product productEntityToSave = convertDataToEntity(body.getProduct());
+        ProductEntity productEntityToSave = convertDataToEntity(body.getProduct());
         try {
             productRepository.save(productEntityToSave);
         } catch (Exception e) {
@@ -135,9 +137,9 @@ public class ProductService {
 
     @Transactional
     public String removeProduct(String productId) {
-        Optional<Product> product = productRepository.findById(Long.valueOf(productId));
+        Optional<ProductEntity> product = productRepository.findById(Long.valueOf(productId));
             if (product.isPresent()) {
-                List<ProductDescription> productDescriptions = productDescriptionService
+                List<ProductDescriptionEntity> productDescriptions = productDescriptionService
                         .getEntityProductDescriptionForProduct(product.get().getId());
                 productDescriptions.forEach(productDescription -> {
                     productDescriptionService.removeProductDescription(productDescription.getId());

@@ -2,13 +2,14 @@ package com.pad.warehouse.mappers;
 
 import org.mapstruct.Mapper;
 
-import com.pad.warehouse.model.entity.ProductDescription;
+import com.pad.warehouse.model.entity.ProductDescriptionEntity;
+import com.pad.warehouse.swagger.model.ProductDescription;
 
 @Mapper(componentModel = "spring")
 public interface ProductDescriptionMapper {
     
-    ProductDescription mapToEntityProductDescription(com.pad.warehouse.swagger.model.ProductDescription productDescription);
+    ProductDescriptionEntity mapToEntityProductDescription(ProductDescription productDescription);
 
-    com.pad.warehouse.swagger.model.ProductDescription mapToDataProductDescription(ProductDescription productDescription);
+    ProductDescription mapToDataProductDescription(ProductDescriptionEntity productDescription);
 
 }

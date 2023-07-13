@@ -15,8 +15,9 @@ import com.pad.warehouse.exception.internal.SaveObjectException;
 import com.pad.warehouse.exception.notFound.NoObjectFound;
 import com.pad.warehouse.exception.unprocessable.ProductDescriptionMapperException;
 import com.pad.warehouse.mappers.ProductDescriptionMapper;
-import com.pad.warehouse.model.entity.ProductDescription;
+import com.pad.warehouse.model.entity.ProductDescriptionEntity;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
+import com.pad.warehouse.swagger.model.ProductDescription;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,23 +32,23 @@ public class ProductDescriptionService {
     private final ProductDescriptionMapper productDescriptionMapper;
     private ProductService productService;
 
-    public List<com.pad.warehouse.swagger.model.ProductDescription> getDataProductDescriptionsForProduct(
+    public List<ProductDescription> getDataProductDescriptionsForProduct(
             Long productId) {
-        List<ProductDescription> entityProductDescriptionForProduct = getEntityProductDescriptionForProduct(productId);
-        List<com.pad.warehouse.swagger.model.ProductDescription> dataList = new ArrayList<>();
-        for (ProductDescription productDescription : entityProductDescriptionForProduct) {
-            com.pad.warehouse.swagger.model.ProductDescription dataProductDescription = convertEntityToData(
+        List<ProductDescriptionEntity> entityProductDescriptionForProduct = getEntityProductDescriptionForProduct(productId);
+        List<ProductDescription> dataList = new ArrayList<>();
+        for (ProductDescriptionEntity productDescription : entityProductDescriptionForProduct) {
+            ProductDescription dataProductDescription = convertEntityToData(
                     productDescription);
             dataList.add(dataProductDescription);
         }
         return dataList;
     }
 
-    public List<ProductDescription> getEntityProductDescriptionForProduct(Long productId) {
+    public List<ProductDescriptionEntity> getEntityProductDescriptionForProduct(Long productId) {
         log.info("Get descriptions for product: {}: START", productId);
         try {
             log.info("Get descriptions for product: {}: END", productId);
-            List<ProductDescription> byProductId = productDescriptionRepository.getByProductId(productId);
+            List<ProductDescriptionEntity> byProductId = productDescriptionRepository.getByProductId(productId);
             
             return productDescriptionRepository.getByProductId(productId);
         } catch (Exception e) {
@@ -58,25 +59,25 @@ public class ProductDescriptionService {
     }
 
     @Transactional
-    public Long saveProductDescription(com.pad.warehouse.swagger.model.ProductDescription productDescription,
+    public Long saveProductDescription(ProductDescription productDescription,
             Long productId) {
         Map<String, String> errors = new HashMap<>();
         // TODO max number of descrpitons per product
         log.info("Save product description: {}, for product: {}, START", productDescription, productId);
 
         if (productDescription.getId() != null) {
-            Optional<ProductDescription> findById = productDescriptionRepository
+            Optional<ProductDescriptionEntity> findById = productDescriptionRepository
                     .findById(Long.valueOf(productDescription.getId()));
             if (findById.isPresent()) {
                 log.error("Product description: {} already exists", productDescription.getId());
                 throw new ProductDescriptionExistsException("Product description already exists");
             }
         }
-        ProductDescription productDescriptionEntity = convertDataToEntity(productDescription);
+        ProductDescriptionEntity productDescriptionEntity = convertDataToEntity(productDescription);
         productDescriptionEntity.setProductId(productId);
         if (validateAddProductDescription(productDescriptionEntity, errors, productId)) {
             try {
-                ProductDescription savedProductDescription = productDescriptionRepository
+                ProductDescriptionEntity savedProductDescription = productDescriptionRepository
                         .save(productDescriptionEntity);
                 productDescriptionRepository.flush();
                 log.info("Save product description: {}, for product: {}, END", productDescriptionEntity, productId);
@@ -92,8 +93,8 @@ public class ProductDescriptionService {
         }
     }
 
-    private ProductDescription convertDataToEntity(
-            com.pad.warehouse.swagger.model.ProductDescription productDescription) {
+    private ProductDescriptionEntity convertDataToEntity(
+            ProductDescription productDescription) {
         try {
             return productDescriptionMapper.mapToEntityProductDescription(productDescription);
         } catch (Exception e) {
@@ -102,8 +103,8 @@ public class ProductDescriptionService {
         }
     }
 
-    private com.pad.warehouse.swagger.model.ProductDescription convertEntityToData(
-            ProductDescription productDescription) {
+    private ProductDescription convertEntityToData(
+            ProductDescriptionEntity productDescription) {
         try {
             return productDescriptionMapper.mapToDataProductDescription(productDescription);
         } catch (Exception e) {
@@ -112,7 +113,7 @@ public class ProductDescriptionService {
         }
     }
 
-    private boolean validateAddProductDescription(ProductDescription productDescription, Map<String, String> errors, Long productId) {
+    private boolean validateAddProductDescription(ProductDescriptionEntity productDescription, Map<String, String> errors, Long productId) {
         if (productId == null) errors.put("ProductId", "Product ID cannot be empty");
         log.info("Product description validation {}: START", productDescription);
         log.info("Product description validation {}: END", productDescription);
@@ -121,7 +122,7 @@ public class ProductDescriptionService {
 
     @Transactional
     public void removeProductDescription(Long productDescriptionId) {
-        Optional<ProductDescription> productDescription = productDescriptionRepository.findById(productDescriptionId);
+        Optional<ProductDescriptionEntity> productDescription = productDescriptionRepository.findById(productDescriptionId);
             if (productDescription.isPresent()) {
                 productDescriptionRepository.delete(productDescription.get());
             } else {
