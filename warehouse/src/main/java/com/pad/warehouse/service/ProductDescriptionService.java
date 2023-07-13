@@ -17,6 +17,7 @@ import com.pad.warehouse.exception.unprocessable.ProductDescriptionMapperExcepti
 import com.pad.warehouse.mappers.ProductDescriptionMapper;
 import com.pad.warehouse.model.entity.ProductDescriptionEntity;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
+import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.ProductDescription;
 
 import jakarta.transaction.Transactional;
@@ -30,11 +31,16 @@ public class ProductDescriptionService {
 
     private final ProductDescriptionRepository productDescriptionRepository;
     private final ProductDescriptionMapper productDescriptionMapper;
-    private ProductService productService;
+    private final ProductRepository productRepository;
 
     public List<ProductDescription> getDataProductDescriptionsForProduct(
             Long productId) {
-        List<ProductDescriptionEntity> entityProductDescriptionForProduct = getEntityProductDescriptionForProduct(productId);
+        if (!productRepository.findById(productId).isPresent()) {
+            log.error("No product found for ID: {}", productId);
+            throw new NoObjectFound("No product found");
+        }
+        List<ProductDescriptionEntity> entityProductDescriptionForProduct = getEntityProductDescriptionForProduct(
+                productId);
         List<ProductDescription> dataList = new ArrayList<>();
         for (ProductDescriptionEntity productDescription : entityProductDescriptionForProduct) {
             ProductDescription dataProductDescription = convertEntityToData(
@@ -48,8 +54,6 @@ public class ProductDescriptionService {
         log.info("Get descriptions for product: {}: START", productId);
         try {
             log.info("Get descriptions for product: {}: END", productId);
-            List<ProductDescriptionEntity> byProductId = productDescriptionRepository.getByProductId(productId);
-            
             return productDescriptionRepository.getByProductId(productId);
         } catch (Exception e) {
             log.error("Error while fetching product descriptions for product ID: {} - {}", productId, e.getMessage());
@@ -72,6 +76,10 @@ public class ProductDescriptionService {
                 log.error("Product description: {} already exists", productDescription.getId());
                 throw new ProductDescriptionExistsException("Product description already exists");
             }
+        }
+        if (!productRepository.findById(productId).isPresent()) {
+            log.error("No product found for ID: {}", productId);
+            throw new NoObjectFound("No product found");
         }
         ProductDescriptionEntity productDescriptionEntity = convertDataToEntity(productDescription);
         productDescriptionEntity.setProductId(productId);
@@ -113,8 +121,10 @@ public class ProductDescriptionService {
         }
     }
 
-    private boolean validateAddProductDescription(ProductDescriptionEntity productDescription, Map<String, String> errors, Long productId) {
-        if (productId == null) errors.put("ProductId", "Product ID cannot be empty");
+    private boolean validateAddProductDescription(ProductDescriptionEntity productDescription,
+            Map<String, String> errors, Long productId) {
+        if (productId == null)
+            errors.put("ProductId", "Product ID cannot be empty");
         log.info("Product description validation {}: START", productDescription);
         log.info("Product description validation {}: END", productDescription);
         return errors.isEmpty() ? true : false;
@@ -122,13 +132,14 @@ public class ProductDescriptionService {
 
     @Transactional
     public void removeProductDescription(Long productDescriptionId) {
-        Optional<ProductDescriptionEntity> productDescription = productDescriptionRepository.findById(productDescriptionId);
-            if (productDescription.isPresent()) {
-                productDescriptionRepository.delete(productDescription.get());
-            } else {
-                log.error("No product description for ID: {}", productDescriptionId);
-                throw new NoObjectFound("No product description found");
-            }
+        Optional<ProductDescriptionEntity> productDescription = productDescriptionRepository
+                .findById(productDescriptionId);
+        if (productDescription.isPresent()) {
+            productDescriptionRepository.delete(productDescription.get());
+        } else {
+            log.error("No product description for ID: {}", productDescriptionId);
+            throw new NoObjectFound("No product description found");
+        }
     }
 
 }
