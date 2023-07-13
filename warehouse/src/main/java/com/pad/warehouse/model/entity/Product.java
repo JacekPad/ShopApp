@@ -61,11 +61,11 @@ public class Product {
 
     @PrePersist
     private void setCreatedDate() {
-        created = OffsetDateTime.parse(OffsetDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        created = OffsetDateTime.parse(OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 
     @PreUpdate
     private void setModifiedDate() {
-        modified = OffsetDateTime.parse(OffsetDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        modified = OffsetDateTime.parse(OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 }

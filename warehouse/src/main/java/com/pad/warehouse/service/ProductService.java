@@ -6,11 +6,13 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.pad.warehouse.exception.conflict.ProductExistsException;
 import com.pad.warehouse.exception.internal.FetchDataError;
 import com.pad.warehouse.exception.internal.SaveObjectException;
+import com.pad.warehouse.exception.notFound.NoObjectFound;
 import com.pad.warehouse.exception.unprocessable.ProductMapperException;
 import com.pad.warehouse.mappers.ProductMapper;
 import com.pad.warehouse.model.entity.Product;
@@ -32,13 +34,16 @@ public class ProductService {
     private final ProductDescriptionService productDescriptionService;
     private final ProductMapper productMapper;
 
-    public ProductsResponse getProductsResponse(@Valid String name, @Valid String productCode, @Valid String quantity,
+    public ProductsResponse getProductsData(@Valid String name, @Valid String productCode, @Valid String quantity,
             @Valid String price, @Valid String status, @Valid String type, @Valid String subtype, @Valid String created,
             @Valid String modified) {
         log.info("Get product response: START");
         ProductsResponse response = new ProductsResponse();
-        List<Product> products = getProducts(name, productCode, quantity, price, status, type, subtype, created,
+        List<Product> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype, created,
                 modified);
+        if (products.isEmpty()) {
+            throw new NoObjectFound("No products with given attributes");
+        }
         for (Product product : products) {
             response.addProductsItem(prepareProductList(product));
         }
@@ -46,7 +51,7 @@ public class ProductService {
         return response;
     }
 
-    private List<Product> getProducts(String name, String productCode,
+    private List<Product> getProductsEntity(String name, String productCode,
             String quantity, String price, String status, String type,
             String subtype, String created, String modified) {
                 log.info("Get products: START");
@@ -70,12 +75,17 @@ public class ProductService {
         return productList;
     }
 
-    public Product getProductEntity(String id) {
-        return productRepository.findById(Long.parseLong(id)).get();
+    public Product getProductEntity(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()) return product.get(); 
+        else {
+            log.error("No product found for ID: {}", id);
+            throw new NoObjectFound("No product found");
+        }
     }
 
     public com.pad.warehouse.swagger.model.Product getProductData(String id) {
-        Product productEntity = getProductEntity(id);
+        Product productEntity = getProductEntity(Long.parseLong(id));
         return convertEntityToData(productEntity);
     }
 
@@ -100,7 +110,6 @@ public class ProductService {
     @Transactional
     public Long saveProductData(@Valid CreateProductRequest body) {
         log.info("save product - BODY: {}, START", body);
-        // TODO: automap datetime
         if (body.getProduct().getId() != null) {
             Optional<Product> findById = productRepository.findById(Long.valueOf(body.getProduct().getId()));
             if (findById.isPresent()) {
@@ -128,7 +137,6 @@ public class ProductService {
     @Transactional
     public String removeProduct(String productId) {
         Optional<Product> product = productRepository.findById(Long.valueOf(productId));
-        try {
             if (product.isPresent()) {
                 List<ProductDescription> productDescriptions = productDescriptionService
                         .getEntityProductDescriptionForProduct(product.get().getId());
@@ -140,10 +148,5 @@ public class ProductService {
             }
             // TODO exception
             return "No product";
-        } catch (Exception e) {
-            // TODO: handle exception
-            return "error";
-        }
-
     }
 }

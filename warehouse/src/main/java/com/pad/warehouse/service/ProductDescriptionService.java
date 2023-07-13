@@ -46,15 +46,14 @@ public class ProductDescriptionService {
         log.info("Get descriptions for product: {}: START", productId);
         try {
             log.info("Get descriptions for product: {}: END", productId);
+            List<ProductDescription> byProductId = productDescriptionRepository.getByProductId(productId);
+            
             return productDescriptionRepository.getByProductId(productId);
         } catch (Exception e) {
             log.error("Error while fetching product descriptions for product ID: {} - {}", productId, e.getMessage());
-            throw new FetchDataError("Error while fetching product descriptions for product ID: " + productId + "error: " + e.getMessage());
+            // TODO save errors to DB and fetch error id and put it in exception message
+            throw new FetchDataError("Error while fetching product descriptions for product ID: " + productId);
         }
-    }
-
-    public ProductDescription getProductsDescription(Long descriptionId) {
-        return null;
     }
 
     @Transactional
@@ -120,17 +119,12 @@ public class ProductDescriptionService {
     @Transactional
     public void removeProductDescription(Long productDescriptionId) {
         Optional<ProductDescription> productDescription = productDescriptionRepository.findById(productDescriptionId);
-        try {
             if (productDescription.isPresent()) {
                 productDescriptionRepository.delete(productDescription.get());
             } else {
                 log.error("No product description for ID: {}", productDescriptionId);
-                throw new NoObjectFound("No product description for ID: " + productDescriptionId);
+                throw new NoObjectFound("No product description found");
             }
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
     }
 
 }

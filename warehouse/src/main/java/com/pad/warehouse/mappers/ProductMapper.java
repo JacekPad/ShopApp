@@ -13,8 +13,6 @@ public interface ProductMapper {
     @Mapping(target = "modified", ignore = true)
     Product mapToEntityProduct(com.pad.warehouse.swagger.model.Product product);
 
-    @Mapping(target = "created", ignore = true)
-    @Mapping(target = "modified", ignore = true)
     com.pad.warehouse.swagger.model.Product mapToDataProduct(Product product);
 
 }

@@ -87,7 +87,7 @@ public class ProductController implements ProductsApi {
             @Valid String quantity, @Valid String price, @Valid String status, @Valid String type,
             @Valid String subtype, @Valid String created, @Valid String modified) {
         log.info("Get products query: START");
-        ProductsResponse productsResponse = productService.getProductsResponse(name, productCode, quantity, price, status, type,
+        ProductsResponse productsResponse = productService.getProductsData(name, productCode, quantity, price, status, type,
                 subtype, created, modified);
         productsResponse.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
         log.info("Get products query: {}: END", productsResponse.getResponseHeader());
