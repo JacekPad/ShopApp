@@ -87,11 +87,10 @@ public class ProductDescriptionService {
         productDescriptionEntity.setProductId(productId);
         if (validateAddProductDescription(productDescriptionEntity, errors, productId)) {
             try {
-                ProductDescriptionEntity savedProductDescription = productDescriptionRepository
-                        .save(productDescriptionEntity);
+                productDescriptionRepository.save(productDescriptionEntity);
                 productDescriptionRepository.flush();
                 log.info("Save product description: {}, for product: {}, END", productDescriptionEntity, productId);
-                return savedProductDescription.getId();
+                return productDescriptionEntity.getId();
             } catch (Exception e) {
                 log.error("Unexpected error while saving product description: {}, error: {}", productDescriptionEntity,
                         e.getMessage());
