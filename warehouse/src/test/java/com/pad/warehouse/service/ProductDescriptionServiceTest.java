@@ -78,7 +78,7 @@ public class ProductDescriptionServiceTest {
     }
 
     @Test
-    void shouldSaveProductDescription() {
+    void saveProductDescription_shouldSaveProductDescription() {
         ProductDescription productDescription = createProductDescription("1", "1");
 
         // when
@@ -94,7 +94,7 @@ public class ProductDescriptionServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionIfProductDescriptionAlreadyExists() {
+    void saveProductDescription_shouldThrowExceptionIfProductDescriptionAlreadyExists() {
         ProductDescription productDescription = createProductDescription("1", "1");
 
         // when
@@ -114,7 +114,7 @@ public class ProductDescriptionServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionIfProductDoesNotExist() {
+    void saveProductDescription_shouldThrowExceptionIfProductDoesNotExist() {
         ProductDescription productDescription = createProductDescription("1", "1");
 
         // when

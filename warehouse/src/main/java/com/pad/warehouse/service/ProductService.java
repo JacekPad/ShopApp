@@ -1,6 +1,5 @@
 package com.pad.warehouse.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,9 +148,10 @@ public class ProductService {
             });
             productRepository.delete(product.get());
             return "Product successfully removed";
+        } else {
+            log.error("No product found for ID: {}", productId);
+            throw new NoObjectFound("No product found");
         }
-        // TODO exception
-        return "No product";
     }
 
     @Transactional
@@ -177,7 +177,8 @@ public class ProductService {
             }
             log.info("update product - ID: {}, END", productEntityToUpdate.getId());
             return productMapper.mapToDataProduct(productEntityToUpdate);
-        } else throw new SaveObjectException("Product id could not be specified");
+        } else
+            throw new SaveObjectException("Product id could not be specified");
 
     }
 }

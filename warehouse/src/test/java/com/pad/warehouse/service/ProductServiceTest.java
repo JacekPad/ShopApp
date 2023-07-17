@@ -1,9 +1,12 @@
 package com.pad.warehouse.service;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +24,7 @@ import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.CreateProductRequest;
 import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductDescription;
+import com.pad.warehouse.swagger.model.ProductsResponse;
 import com.pad.warehouse.swagger.model.RequestHeader;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +36,9 @@ public class ProductServiceTest {
 
     @Mock
     private ProductMapper productMapper;
+
+    @Mock
+    private ProductDescriptionService productDescriptionService;
 
     @InjectMocks
     ProductService productService;
@@ -82,8 +89,64 @@ public class ProductServiceTest {
         return productEntity;
     }
 
+    private List<ProductEntity> createEntityList() {
+        List<ProductEntity> list = new ArrayList<>();
+        list.add(createProductEntity(1L));
+        list.add(createProductEntity(2L));
+        list.add(createProductEntity(3L));
+        return list;
+    }
+
     @Test
-    void saveProduct_shouldSave() {
+    void getProductsData_shouldReturnData() {
+        List<ProductEntity> entityList = createEntityList();
+        when(productRepository.findByQueryParams(anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString(), anyString(), any(), any())).thenReturn(entityList);
+        when(productDescriptionService.getDataProductDescriptionsForProduct(any())).thenReturn(List.of());
+        // how input many ids?
+        when(productMapper.mapToDataProduct(any())).thenReturn(createProductData("1"));
+        ProductsResponse productsData = productService.getProductsData("test", "test", "test", "test", "test", "test",
+                "test", null, null);
+        System.out.println(productsData);
+        // assertEquals(entityList, productsData.getProducts());
+
+    }
+
+    @Test
+    void getProductsData_shouldThrowNoObjectException() {
+        List<ProductEntity> entityList = List.of();
+        when(productRepository.findByQueryParams(anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString(), anyString(), any(), any())).thenReturn(entityList);
+        when(productDescriptionService.getDataProductDescriptionsForProduct(any())).thenReturn(List.of());
+        try {
+            ProductsResponse productsData = productService.getProductsData("test", "test", "test", "test", "test",
+                    "test", "test", null, null);
+        } catch (Exception e) {
+            assertEquals("No products with given attributes", e.getMessage());
+        }
+
+    }
+
+    @Test
+    void getProductEntity_shouldReturnEntity() {
+        ProductEntity createProductEntity = createProductEntity(1L);
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(createProductEntity));
+        ProductEntity productEntity = productService.getProductEntity(1L);
+        assertEquals(createProductEntity, productEntity);
+    }
+
+    @Test
+    void getProductEntity_shouldThrowNoObjectFoundException() {
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
+        try {
+            productService.getProductEntity(1L);
+        } catch (Exception e) {
+            assertEquals("No product found", e.getMessage());
+        }
+    }
+
+    @Test
+    void saveProduct_shouldSaveProduct() {
         Product product = createProductData(null);
         CreateProductRequest request = createProductRequest(product, null);
         // when
@@ -111,6 +174,40 @@ public class ProductServiceTest {
             // expected
             assertEquals("Product already exists", e.getMessage());
         }
+    }
+
+    @Test
+    void removeProductEntity_shouldReturnEntity() {
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(createProductEntity(1L)));
+        productService.removeProduct("1");
+        // TODO finish
+    }
+
+    @Test
+    void removeProductEntity_shouldThrowNoObjectFoundException() {
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
+        try {
+            productService.removeProduct("1");
+        } catch (Exception e) {
+            assertEquals("No product found", e.getMessage());
+        }
+    }
+
+    // TODO finish
+
+    @Test
+    void updateProductData_shouldReturnProduct() {
+
+    }
+
+    @Test
+    void updateProductData_shouldThrowNoObjectFoundException() {
+
+    }
+
+    @Test
+    void updateProductData_shouldThrowNoIdSpecifiedException() {
+
     }
 
 }
