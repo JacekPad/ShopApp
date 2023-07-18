@@ -16,7 +16,7 @@ import lombok.Data;
 @Data
 @Table(name = "e_product_subtype")
 public class ProductSubtype {
-        
+        // TODO change String to enum values
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
