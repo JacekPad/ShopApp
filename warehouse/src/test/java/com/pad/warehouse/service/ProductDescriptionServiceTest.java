@@ -3,11 +3,7 @@ package com.pad.warehouse.service;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,9 +17,7 @@ import com.pad.warehouse.model.entity.ProductEntity;
 import com.pad.warehouse.model.enums.ProductStatus;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
 import com.pad.warehouse.repository.ProductRepository;
-import com.pad.warehouse.swagger.model.CreateProductDescriptionRequest;
 import com.pad.warehouse.swagger.model.ProductDescription;
-import com.pad.warehouse.swagger.model.RequestHeader;
 
 import static org.junit.jupiter.api.Assertions.*;
 

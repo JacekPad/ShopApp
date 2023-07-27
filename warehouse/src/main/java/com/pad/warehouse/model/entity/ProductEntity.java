@@ -1,6 +1,5 @@
 package com.pad.warehouse.model.entity;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
