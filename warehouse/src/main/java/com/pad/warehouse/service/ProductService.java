@@ -147,7 +147,7 @@ public class ProductService {
                 productDescriptionService.removeProductDescription(productDescription.getId());
             });
             productRepository.delete(product.get());
-            return "Product successfully removed";
+            return "Product removed successfully";
         } else {
             log.error("No product found for ID: {}", productId);
             throw new NoObjectFound("No product found");
@@ -164,21 +164,25 @@ public class ProductService {
                 log.error("Product with id {} does not exists", productId);
                 throw new NoObjectFound("Product does not exists");
             }
-            ProductEntity productEntityToUpdate = productMapper.mapToEntityProduct(product);
-            productEntityToUpdate.setId(Long.parseLong(productId));
-
+            ProductEntity productEntityToUpdate = productEntity.get();
+            if (product.getName() != null) productEntityToUpdate.setName(product.getName());
+            if (product.getProductCode() != null) productEntityToUpdate.setProductCode(product.getProductCode());
+            if (product.getQuantity() != null) productEntityToUpdate.setQuantity(Integer.valueOf(product.getQuantity()));
+            if (product.getPrice() != null) productEntityToUpdate.setPrice(Long.valueOf(product.getPrice()));
+            if (product.getStatus() != null) productEntityToUpdate.setStatus(product.getStatus());
+            if (product.getType() != null) productEntityToUpdate.setType(product.getType());
+            if (product.getSubtype() != null) productEntityToUpdate.setSubtype(product.getSubtype());
             try {
-                productRepository.save(productEntityToUpdate);
-                productRepository.flush();
+                productRepository.saveAndFlush(productEntityToUpdate);
             } catch (Exception e) {
                 log.error("Unexpected error while updating product: {}, error: {}", productId,
                         e.getMessage());
                 throw new SaveObjectException("Unexpected error while updating product");
             }
-            log.info("update product - ID: {}, END", productEntityToUpdate.getId());
+            log.info("update product: {}, END", productEntityToUpdate);
             return productMapper.mapToDataProduct(productEntityToUpdate);
         } else
+            log.error("Product id could not be specified: ID {}", productId);
             throw new SaveObjectException("Product id could not be specified");
-
     }
 }

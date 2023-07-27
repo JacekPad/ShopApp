@@ -18,6 +18,7 @@ import com.pad.warehouse.exception.notFound.NoObjectFound;
 import com.pad.warehouse.exception.unprocessable.ProductDescriptionMapperException;
 import com.pad.warehouse.mappers.ProductDescriptionMapper;
 import com.pad.warehouse.model.entity.ProductDescriptionEntity;
+import com.pad.warehouse.model.entity.ProductEntity;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.ProductDescription;
@@ -132,18 +133,19 @@ public class ProductDescriptionService {
     }
 
     @Transactional
-    public void removeProductDescription(Long productDescriptionId) {
+    public String removeProductDescription(Long productDescriptionId) {
         Optional<ProductDescriptionEntity> productDescription = productDescriptionRepository
                 .findById(productDescriptionId);
         if (productDescription.isPresent()) {
             productDescriptionRepository.delete(productDescription.get());
+            return "Product description removed successfully";
         } else {
             log.error("No product description for ID: {}", productDescriptionId);
             throw new NoObjectFound("No product description found");
         }
     }
 
-    public void updateProductDescription(String descriptionId, ProductDescription productDescription) {
+    public ProductDescription updateProductDescription(String descriptionId, ProductDescription productDescription) {
         if (descriptionId != null) {
             Optional<ProductDescriptionEntity> productDescriptionEntity = productDescriptionRepository
                     .findById(Long.valueOf(descriptionId));
@@ -151,18 +153,25 @@ public class ProductDescriptionService {
                 log.error("Product description with id {} does not exists", descriptionId);
                 throw new NoObjectFound("Product description does not exists");
             }
-            ProductDescriptionEntity productDescriptionEntityToUpdate = productDescriptionMapper
-                    .mapToEntityProductDescription(productDescription);
-            productDescriptionEntityToUpdate.setId(Long.valueOf(descriptionId));
+            ProductDescriptionEntity productDescriptionEntityToUpdate = productDescriptionEntity.get();
+            if (productDescription.getProductDescription() != null) productDescriptionEntityToUpdate.setProductDescription(productDescription.getProductDescription());
+            if (productDescription.getProductId() != null) {
+                Optional<ProductEntity> productEntity = productRepository.findById(Long.valueOf(productDescription.getProductId()));
+                if (productEntity.isPresent()) {
+                productDescriptionEntityToUpdate.setProduct(productEntity.get());
+                productDescriptionEntityToUpdate.setProductId(Long.valueOf(productDescription.getProductId()));
+                }
+            }
             try {
-                productDescriptionRepository.save(productDescriptionEntityToUpdate);
-                productDescriptionRepository.flush();
+                productDescriptionRepository.saveAndFlush(productDescriptionEntityToUpdate);
             } catch (Exception e) {
                 log.error("Unexpected error while updating product: {}, error: {}", descriptionId,
                         e.getMessage());
                 throw new SaveObjectException("Unexpected error while updating product description");
             }
+            return productDescriptionMapper.mapToDataProductDescription(productDescriptionEntityToUpdate);
         } else
+            log.error("Product description id could not be specified: ID {}", descriptionId);
             throw new SaveObjectException("Product description id could not be specified");
     }
 

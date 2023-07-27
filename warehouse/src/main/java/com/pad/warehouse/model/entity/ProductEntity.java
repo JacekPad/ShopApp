@@ -49,7 +49,7 @@ public class ProductEntity {
     @Column(name = "subtype")
     private String subtype;
 
-    @Column(name = "created")
+    @Column(name = "created", updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime created;

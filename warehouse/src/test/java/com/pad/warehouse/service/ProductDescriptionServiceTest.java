@@ -132,6 +132,30 @@ public class ProductDescriptionServiceTest {
         }
     }
 
+    @Test
+    void removeProductDescription_shouldRemoveProductDescription() {
+        // when
+        when(productDescriptionRepository.findById(anyLong())).thenReturn(Optional.of(createProductDescriptionEntity(1L, 1L)));
+
+        // then
+        String removeProductDescription = productDescriptionService.removeProductDescription(1L);
+        assertEquals("Product description removed successfully", removeProductDescription);
+    }
+
+    @Test
+    void removeProductDescription_shouldThrowErrorIfNoProductDescriptionExists() {
+        // when
+        when(productDescriptionRepository.findById(anyLong())).thenReturn(Optional.empty());
+        // then
+        try {
+            productDescriptionService.removeProductDescription(1L);
+            fail("exception not thrown");
+        } catch (Exception e) {
+            // expected
+            assertEquals("No product description found", e.getMessage());
+        }
+    }
+
     // @Test
     // void shouldThrowExceptionIfValidationFails() {
     // // TODO do validation

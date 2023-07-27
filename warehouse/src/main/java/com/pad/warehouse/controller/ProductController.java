@@ -113,9 +113,9 @@ public class ProductController implements ProductsApi {
     public ResponseEntity<DeleteResponse> removeProductDescriptionByProductId(String descriptionId) {
         log.info("Remove Product Description: {}: START", descriptionId);
         DeleteResponse response = new DeleteResponse();
-        response.setMessage("response");
+        String removeProductDescription = productDescriptionService.removeProductDescription(Long.valueOf(descriptionId));
+        response.setMessage(removeProductDescription);
         response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
-        productDescriptionService.removeProductDescription(Long.valueOf(descriptionId));
         log.info("Remove Product Description: {}: END", response.getResponseHeader());
         return new ResponseEntity<DeleteResponse>(response, null, 200);
     }
@@ -134,10 +134,14 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<ProductDescriptionsResponse> updateProductDescriptionsByProductId(String descriptionId,
             @Valid UpdateProductDescriptionRequest body) {
+                // TODO kinda bad response object, change swagger?
         log.info("Update Product Description: Id - {} Body - {}: START", descriptionId, body);
-        productDescriptionService.updateProductDescription(descriptionId, body.getProductDescription());
+        ProductDescriptionsResponse response = new ProductDescriptionsResponse();
+        ProductDescription updateProductDescription = productDescriptionService.updateProductDescription(descriptionId, body.getProductDescription());
+        response.setResponseHeader(ResponseHeaderMapper.createResponseHeader(UUID.randomUUID()));
+        response.setProductDescriptions(List.of(updateProductDescription));
         log.info("Update Product Description: END");
-        return ProductsApi.super.updateProductDescriptionsByProductId(descriptionId, body);
+        return new ResponseEntity<ProductDescriptionsResponse>(response, null, 200);
     }
 
 }

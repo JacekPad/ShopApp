@@ -2,3 +2,4 @@
 3. tests
 4. test transactional
 7. change offsetDateTime saving?
+8. type subtype status enums (how to map it)?
