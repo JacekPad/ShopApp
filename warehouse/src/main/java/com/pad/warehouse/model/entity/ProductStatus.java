@@ -12,9 +12,9 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "e_product_type")
-public class ProductType {
-    
+@Table(name = "e_product_status")
+public class ProductStatus {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +25,4 @@ public class ProductType {
 
     @Column(name = "value")
     private String value;
-    
 }

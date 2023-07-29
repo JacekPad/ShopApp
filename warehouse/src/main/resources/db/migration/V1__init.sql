@@ -34,3 +34,9 @@ value varchar(30),
 constraint FK_PRODUCT_TYPE FOREIGN KEY (type_code) REFERENCES e_product_type(code)
 );
 
+create table IF NOT EXISTS e_product_status (
+	id int AUTO_INCREMENT primary key,
+    code varchar(30) unique,
+    value varchar(30)
+);
+

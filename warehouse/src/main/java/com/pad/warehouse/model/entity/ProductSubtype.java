@@ -2,6 +2,7 @@ package com.pad.warehouse.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ import lombok.Data;
 @Data
 @Table(name = "e_product_subtype")
 public class ProductSubtype {
-        // TODO change String to enum values
+    
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,7 @@ public class ProductSubtype {
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "type_id", insertable = false, updatable = false)
+    @JoinColumn(name = "type_code", insertable = false, updatable = false)
     @JsonIgnore
     private ProductType productType;
 }
