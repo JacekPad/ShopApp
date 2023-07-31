@@ -20,6 +20,7 @@ import com.pad.warehouse.model.entity.ProductEntity;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.ProductDescription;
+import com.pad.warehouse.utils.DataValidators;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class ProductDescriptionService {
     private final ProductDescriptionRepository productDescriptionRepository;
     private final ProductDescriptionMapper productDescriptionMapper;
     private final ProductRepository productRepository;
+    private final DataValidators productDescriptionValidator;
 
     public List<ProductDescription> getDataProductDescriptionsForProduct(
             Long productId) {
@@ -81,23 +83,23 @@ public class ProductDescriptionService {
         if (!productRepository.findById(productId).isPresent()) {
             log.error("No product found for ID: {}", productId);
             throw new NoObjectFound("No product found");
+        } else {
+            productDescription.setProductId(String.valueOf(productId));
+        }
+        if (!productDescriptionValidator.validateProductDescription(productDescription, errors)) {
+            log.error("Validation errors for description {} and product {}- errors: {}", productDescription, productId, errors);
+            throw new ValidationException(errors);
         }
         ProductDescriptionEntity productDescriptionEntity = convertDataToEntity(productDescription);
         productDescriptionEntity.setProductId(productId);
-        if (validateAddProductDescription(productDescriptionEntity, errors, productId)) {
-            try {
-                productDescriptionRepository.save(productDescriptionEntity);
-                productDescriptionRepository.flush();
-                log.info("Save product description: {}, for product: {}, END", productDescriptionEntity, productId);
-                return productDescriptionEntity.getId();
-            } catch (Exception e) {
-                log.error("Unexpected error while saving product description: {}, error: {}", productDescriptionEntity,
-                        e.getMessage());
-                throw new SaveObjectException("Unexpected error while saving: " + e.getMessage());
-            }
-        } else {
-            log.error("Validation errors for description: {} and product {}", productDescriptionEntity, productId);
-            throw new ValidationException(errors);
+        try {
+            productDescriptionRepository.save(productDescriptionEntity);
+            productDescriptionRepository.flush();
+            log.info("Save product description: {}, for product: {}, END", productDescriptionEntity, productId);
+            return productDescriptionEntity.getId();
+        } catch (Exception e) {
+            log.error("Unexpected error while saving product description: {}, error: {}", productDescriptionEntity,e.getMessage());
+            throw new SaveObjectException("Unexpected error while saving: " + e.getMessage());
         }
     }
 
@@ -119,15 +121,6 @@ public class ProductDescriptionService {
             log.error("Mapping entity to data failed: {}", e.getMessage());
             throw new ProductDescriptionMapperException("Mapping entity to data failed: " + e.getMessage());
         }
-    }
-
-    private boolean validateAddProductDescription(ProductDescriptionEntity productDescription,
-            Map<String, String> errors, Long productId) {
-        if (productId == null)
-            errors.put("ProductId", "Product ID cannot be empty");
-        log.info("Product description validation {}: START", productDescription);
-        log.info("Product description validation {}: END", productDescription);
-        return errors.isEmpty() ? true : false;
     }
 
     @Transactional

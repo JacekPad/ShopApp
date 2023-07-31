@@ -22,8 +22,8 @@ public class ProductSubtype {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "type_code")
-    private String typeName;
+    @Column(name = "type_id")
+    private Long typeId;
 
     @Column(name = "code")
     private String code;
@@ -32,7 +32,7 @@ public class ProductSubtype {
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "type_code", insertable = false, updatable = false)
+    @JoinColumn(name = "type_id", insertable = false, updatable = false)
     @JsonIgnore
     private ProductType productType;
 }

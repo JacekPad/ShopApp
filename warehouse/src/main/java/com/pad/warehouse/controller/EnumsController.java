@@ -1,6 +1,7 @@
 package com.pad.warehouse.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pad.warehouse.model.entity.ProductStatus;
 import com.pad.warehouse.model.entity.ProductSubtype;
 import com.pad.warehouse.model.entity.ProductType;
+import com.pad.warehouse.repository.ProductSubtypeRepository;
 import com.pad.warehouse.service.ProductCacheService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,24 +24,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EnumsController {
 
-    private final ProductCacheService enumsService;
-
+    private final ProductCacheService cacheService;
+    
     @Autowired
     private final CacheManager manager;
 
     @GetMapping("/status")
-    public List<ProductStatus> getStatus() {
-        return enumsService.getStatuses();
+    public Map<String, String> getStatus() {
+        return cacheService.getStatusMap();
     }
 
     @GetMapping("/type")
-    public List<ProductType> getType() { 
-        return null;
+    public Map<String, String> getType() { 
+        return cacheService.getTypeMap();
     }
 
     @GetMapping("/subtype")
-    public List<ProductSubtype> getSubtype() {
-        return null;
+    public Map<String, String> getSubtype() {
+        return cacheService.getSubtypeMap();
     }
 
     @GetMapping("/clear")

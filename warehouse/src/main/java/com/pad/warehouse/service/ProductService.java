@@ -1,12 +1,16 @@
 package com.pad.warehouse.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
+import com.pad.warehouse.exception.badRequest.ValidationException;
 import com.pad.warehouse.exception.conflict.ProductExistsException;
 import com.pad.warehouse.exception.internal.FetchDataError;
 import com.pad.warehouse.exception.internal.SaveObjectException;
@@ -21,6 +25,7 @@ import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductDescription;
 import com.pad.warehouse.swagger.model.ProductList;
 import com.pad.warehouse.swagger.model.ProductsResponse;
+import com.pad.warehouse.utils.DataValidators;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +38,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductDescriptionService productDescriptionService;
     private final ProductMapper productMapper;
+    private final DataValidators productValidator;
 
     public ProductsResponse getProductsData(@Valid String name, @Valid String productCode, @Valid String quantity,
             @Valid String price, @Valid String status, @Valid String type, @Valid String subtype, @Valid String created,
@@ -113,6 +119,7 @@ public class ProductService {
     @Transactional
     public Long saveProductData(@Valid CreateProductRequest body) {
         log.info("save product - BODY: {}, START", body);
+        Map<String, String> errors = new HashMap<>();
         if (body.getProduct().getId() != null) {
             Optional<ProductEntity> findById = productRepository.findById(Long.valueOf(body.getProduct().getId()));
             if (findById.isPresent()) {
@@ -120,6 +127,12 @@ public class ProductService {
                 throw new ProductExistsException("Product already exists");
             }
         }
+
+        if (!productValidator.validateProduct(body.getProduct(), errors)) {
+            log.error("Validation errors for Product {} - errors: {}", body.getProduct(), errors);
+            throw new ValidationException(errors);
+        }
+
         ProductEntity productEntityToSave = convertDataToEntity(body.getProduct());
         try {
             productRepository.save(productEntityToSave);
@@ -185,4 +198,6 @@ public class ProductService {
             log.error("Product id could not be specified: ID {}", productId);
             throw new SaveObjectException("Product id could not be specified");
     }
+
+
 }
