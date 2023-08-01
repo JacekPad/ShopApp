@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class DataValidators {
-    // TODO finish + add to update methods
-
     private final ProductCacheService cacheService;
 
     public boolean validateProduct(Product product, Map<String, String> errors) {
@@ -78,8 +76,10 @@ public class DataValidators {
     }
 
     public boolean validateProductDescription(ProductDescription productDescription, Map<String, String> errors) {
+        log.info("validate product description: {} START", productDescription);
         if (productDescription.getProductId() == null) errors.put("product", "Product ID cannot be empty");
         if (productDescription.getProductDescription() == null) errors.put("description", "product description cannot be empty");
+        log.info("validate product description: {} END", productDescription);
         return errors.isEmpty();
     }
 }

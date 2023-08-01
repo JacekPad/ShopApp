@@ -43,7 +43,7 @@ public class ProductService {
     public ProductsResponse getProductsData(@Valid String name, @Valid String productCode, @Valid String quantity,
             @Valid String price, @Valid String status, @Valid String type, @Valid String subtype, @Valid String created,
             @Valid String modified) {
-        log.info("Get product response: START");
+        log.info("Get product response START");
         ProductsResponse response = new ProductsResponse();
         List<ProductEntity> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype,
                 created,
@@ -54,16 +54,16 @@ public class ProductService {
         for (ProductEntity product : products) {
             response.addProductsItem(prepareProductList(product));
         }
-        log.info("Get product response: END");
+        log.info("Get product response END");
         return response;
     }
 
     private List<ProductEntity> getProductsEntity(String name, String productCode,
             String quantity, String price, String status, String type,
             String subtype, String created, String modified) {
-        log.info("Get products: START");
+        log.info("Get products START");
         try {
-            log.info("Get products: END");
+            log.info("Get products END");
             return productRepository.findByQueryParams(name, productCode, quantity, price, status, type, subtype,
                     created,
                     modified);
@@ -129,7 +129,7 @@ public class ProductService {
         }
 
         if (!productValidator.validateProduct(body.getProduct(), errors)) {
-            log.error("Validation errors for Product {} - errors: {}", body.getProduct(), errors);
+            log.error("Validation errors for add Product {} - errors: {}", body.getProduct(), errors);
             throw new ValidationException(errors);
         }
 
@@ -152,6 +152,7 @@ public class ProductService {
 
     @Transactional
     public String removeProduct(String productId) {
+        log.info("remove product: {} START", productId);
         Optional<ProductEntity> product = productRepository.findById(Long.valueOf(productId));
         if (product.isPresent()) {
             List<ProductDescriptionEntity> productDescriptions = productDescriptionService
@@ -160,6 +161,7 @@ public class ProductService {
                 productDescriptionService.removeProductDescription(productDescription.getId());
             });
             productRepository.delete(product.get());
+            log.info("remove product: {} END", productId);
             return "Product removed successfully";
         } else {
             log.error("No product found for ID: {}", productId);
@@ -170,13 +172,19 @@ public class ProductService {
     @Transactional
     public Product updateProductData(String productId, Product product) {
         log.info("update product - BODY: {}, START", product);
-
+        Map<String, String> errors = new HashMap<>();
         if (productId != null) {
             Optional<ProductEntity> productEntity = productRepository.findById(Long.valueOf(productId));
             if (!productEntity.isPresent()) {
                 log.error("Product with id {} does not exists", productId);
                 throw new NoObjectFound("Product does not exists");
             }
+
+            if (!productValidator.validateProduct(product, errors)) {
+            log.error("Validation errors for update Product {} - errors: {}", product, errors);
+            throw new ValidationException(errors);
+            }
+
             ProductEntity productEntityToUpdate = productEntity.get();
             if (product.getName() != null) productEntityToUpdate.setName(product.getName());
             if (product.getProductCode() != null) productEntityToUpdate.setProductCode(product.getProductCode());

@@ -87,7 +87,7 @@ public class ProductDescriptionService {
             productDescription.setProductId(String.valueOf(productId));
         }
         if (!productDescriptionValidator.validateProductDescription(productDescription, errors)) {
-            log.error("Validation errors for description {} and product {}- errors: {}", productDescription, productId, errors);
+            log.error("Validation errors for add product description {}, errors: {}", productDescription, errors);
             throw new ValidationException(errors);
         }
         ProductDescriptionEntity productDescriptionEntity = convertDataToEntity(productDescription);
@@ -137,6 +137,7 @@ public class ProductDescriptionService {
     }
 
     public ProductDescription updateProductDescription(String descriptionId, ProductDescription productDescription) {
+        Map<String, String> errors = new HashMap<>();
         if (descriptionId != null) {
             Optional<ProductDescriptionEntity> productDescriptionEntity = productDescriptionRepository
                     .findById(Long.valueOf(descriptionId));
@@ -144,6 +145,12 @@ public class ProductDescriptionService {
                 log.error("Product description with id {} does not exists", descriptionId);
                 throw new NoObjectFound("Product description does not exists");
             }
+
+            if (!productDescriptionValidator.validateProductDescription(productDescription, errors)) {
+            log.error("Validation errors for update product description {}, errors: {}", productDescription, errors);
+            throw new ValidationException(errors);
+            }
+
             ProductDescriptionEntity productDescriptionEntityToUpdate = productDescriptionEntity.get();
             if (productDescription.getProductDescription() != null) productDescriptionEntityToUpdate.setProductDescription(productDescription.getProductDescription());
             if (productDescription.getProductId() != null) {
