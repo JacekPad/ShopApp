@@ -33,7 +33,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/10",
+							"raw": "http://localhost:8080/products/11",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -41,7 +41,7 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"10"
+								"11"
 							]
 						}
 					},
@@ -54,7 +54,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"RequestHeader\": {\r\n        \"requestId\": \"abcd\",\r\n        \"timestamp\": \"2022-02-02T00:00:00+01:00\"\r\n    }, \"Product\": {\r\n            \"name\": \"newTest\",\r\n            \"productCode\": \"CODE1\",\r\n            \"quantity\": \"33\",\r\n            \"price\": \"11.0\",\r\n            \"status\": \"OK\",\r\n            \"type\": \"tools\",\r\n            \"subtype\": \"garden\",\r\n            \"created\": \"2022-02-02T00:00:00+01:00\",\r\n            \"modified\": null\r\n    }, \"ProductDescription\": [\r\n        {\r\n            \"productDescription\": \"nmewTest\"\r\n        } \r\n    ]\r\n}",
+							"raw": "{\r\n    \"RequestHeader\": {\r\n        \"requestId\": \"abcd\",\r\n        \"timestamp\": \"2022-02-02T00:00:00+01:00\"\r\n    }, \"Product\": {\r\n            \"name\": \"newTest\",\r\n            \"productCode\": \"CODE1\",\r\n            \"quantity\": \"33\",\r\n            \"price\": \"11.0\",\r\n            \"status\": \"OK\",\r\n            \"type\": \"TV\",\r\n            \"subtype\": \"FLAT_SCREEN\"\r\n    }, \"ProductDescription\": [\r\n        {\r\n            \"productDescription\": \"nmewTest\"\r\n        } \r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,7 +81,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/9",
+							"raw": "http://localhost:8080/products/8",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -89,7 +89,7 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"9"
+								"8"
 							]
 						}
 					},
@@ -102,7 +102,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"ProductDescription\": {\r\n        \"productId\": \"2\",\r\n        \"productDescription\": \"addManually\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"ProductDescription\": {\r\n        \"productDescription\": \"addManually\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,7 +110,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/products/2/descriptions",
+							"raw": "http://localhost:8080/products/-1/descriptions",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -118,7 +118,7 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"2",
+								"-1",
 								"descriptions"
 							]
 						}
@@ -131,7 +131,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/products/9/descriptions",
+							"raw": "http://localhost:8080/products/1/descriptions",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -139,7 +139,7 @@
 							"port": "8080",
 							"path": [
 								"products",
-								"9",
+								"1",
 								"descriptions"
 							]
 						}
@@ -166,12 +166,136 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"Product\": {\r\n            \"name\": \"updaeteTest222\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product description",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"ProductDescription\": {\r\n            \"productDescription\": \"updatedProdcutDescirpiton\",\r\n            \"productId\": \"5\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/descriptions/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"descriptions",
+								"5"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
 		{
 			"name": "Suppliers",
 			"item": []
+		},
+		{
+			"name": "Enums",
+			"item": [
+				{
+					"name": "statusMap",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subtype Map",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/subtype",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"subtype"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "typeMap",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/type",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"type"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
