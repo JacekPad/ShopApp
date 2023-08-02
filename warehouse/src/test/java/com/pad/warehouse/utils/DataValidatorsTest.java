@@ -3,13 +3,10 @@ package com.pad.warehouse.utils;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.when;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +18,6 @@ import org.mockito.MockitoAnnotations;
 import com.pad.warehouse.service.ProductCacheService;
 import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductDescription;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class DataValidatorsTest {
 
@@ -252,7 +247,7 @@ public class DataValidatorsTest {
         ProductDescription productDescription = createProductDescription();
         Map<String, String> errorsCorrect = new HashMap<>();
         validators.validateProductDescription(productDescription, errorsCorrect, true);
-        
+
         // then
         assertTrue(errorsCorrect.isEmpty());
     }

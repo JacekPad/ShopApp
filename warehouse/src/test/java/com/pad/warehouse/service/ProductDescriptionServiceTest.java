@@ -156,10 +156,4 @@ public class ProductDescriptionServiceTest {
             assertEquals("No product description found", e.getMessage());
         }
     }
-
-    // @Test
-    // void shouldThrowExceptionIfValidationFails() {
-    // // TODO do validation
-
-    // }
 }
