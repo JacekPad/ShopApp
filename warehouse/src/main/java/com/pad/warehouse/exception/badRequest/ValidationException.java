@@ -15,7 +15,7 @@ import com.pad.warehouse.exception.AbstractException;
 public class ValidationException extends AbstractException {
 
     private static final long serialVersionUID = -5689721647285L;
-    private static final HttpStatus CODE = HttpStatus.BAD_REQUEST;
+    private static final HttpStatus CODE = HttpStatus.UNPROCESSABLE_ENTITY;
 
     private final Map<String, String> exceptions;
 

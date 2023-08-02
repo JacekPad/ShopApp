@@ -18,6 +18,7 @@ import com.pad.warehouse.model.enums.ProductStatus;
 import com.pad.warehouse.repository.ProductDescriptionRepository;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.ProductDescription;
+import com.pad.warehouse.utils.DataValidators;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +33,12 @@ public class ProductDescriptionServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private DataValidators validators;
+
+    @Mock
+    private ProductCacheService cacheService;
+    
     @InjectMocks
     ProductDescriptionService productDescriptionService;
 
@@ -80,8 +87,8 @@ public class ProductDescriptionServiceTest {
         when(productDescriptionRepository.findById(anyLong())).thenReturn(Optional.empty());
         when(productDescriptionMapper.mapToEntityProductDescription(productDescription))
                 .thenReturn(createProductDescriptionEntity(1L, 1L));
-
-        // then
+        when(validators.validateProductDescription(any(), anyMap(), anyBoolean())).thenReturn(true);
+                // then
         Long saveProductDescription = productDescriptionService.saveProductDescription(productDescription, 1L);
 
         assertEquals(1L, saveProductDescription);

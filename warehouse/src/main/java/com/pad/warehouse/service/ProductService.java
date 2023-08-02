@@ -119,29 +119,29 @@ public class ProductService {
     @Transactional
     public Long saveProductData(@Valid CreateProductRequest body) {
         log.info("save product - BODY: {}, START", body);
+        Product product = body.getProduct();
         Map<String, String> errors = new HashMap<>();
-        if (body.getProduct().getId() != null) {
-            Optional<ProductEntity> findById = productRepository.findById(Long.valueOf(body.getProduct().getId()));
+        if (product.getId() != null) {
+            Optional<ProductEntity> findById = productRepository.findById(Long.valueOf(product.getId()));
             if (findById.isPresent()) {
-                log.error("product: {} already exists", body.getProduct().getId());
+                log.error("product: {} already exists", product.getId());
                 throw new ProductExistsException("Product already exists");
             }
         }
 
-        if (!productValidator.validateProduct(body.getProduct(), errors)) {
-            log.error("Validation errors for add Product {} - errors: {}", body.getProduct(), errors);
+        if (!productValidator.validateProduct(product, errors, true)) {
+            log.error("Validation errors for add Product {} - errors: {}", product, errors);
             throw new ValidationException(errors);
         }
 
-        ProductEntity productEntityToSave = convertDataToEntity(body.getProduct());
+        ProductEntity productEntityToSave = convertDataToEntity(product);
         try {
-            productRepository.save(productEntityToSave);
+            productRepository.saveAndFlush(productEntityToSave);
         } catch (Exception e) {
             log.error("Unexpected error while saving product: {}, error: {}", productEntityToSave,
                     e.getMessage());
             throw new SaveObjectException("Unexpected error while saving product");
         }
-        productRepository.flush();
         if (body.getProductDescription() != null && !body.getProductDescription().isEmpty()) {
             body.getProductDescription().forEach(productDescription -> productDescriptionService
                     .saveProductDescription(productDescription, productEntityToSave.getId()));
@@ -180,7 +180,7 @@ public class ProductService {
                 throw new NoObjectFound("Product does not exists");
             }
 
-            if (!productValidator.validateProduct(product, errors)) {
+            if (!productValidator.validateProduct(product, errors, false)) {
             log.error("Validation errors for update Product {} - errors: {}", product, errors);
             throw new ValidationException(errors);
             }

@@ -86,7 +86,7 @@ public class ProductDescriptionService {
         } else {
             productDescription.setProductId(String.valueOf(productId));
         }
-        if (!productDescriptionValidator.validateProductDescription(productDescription, errors)) {
+        if (!productDescriptionValidator.validateProductDescription(productDescription, errors, true)) {
             log.error("Validation errors for add product description {}, errors: {}", productDescription, errors);
             throw new ValidationException(errors);
         }
@@ -146,7 +146,7 @@ public class ProductDescriptionService {
                 throw new NoObjectFound("Product description does not exists");
             }
 
-            if (!productDescriptionValidator.validateProductDescription(productDescription, errors)) {
+            if (!productDescriptionValidator.validateProductDescription(productDescription, errors, false)) {
             log.error("Validation errors for update product description {}, errors: {}", productDescription, errors);
             throw new ValidationException(errors);
             }

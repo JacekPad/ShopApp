@@ -7,7 +7,9 @@ import static org.mockito.Mockito.*;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,13 +21,13 @@ import org.mockito.MockitoAnnotations;
 
 import com.pad.warehouse.mappers.ProductMapper;
 import com.pad.warehouse.model.entity.ProductEntity;
-import com.pad.warehouse.model.enums.ProductStatus;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.CreateProductRequest;
 import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductDescription;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 import com.pad.warehouse.swagger.model.RequestHeader;
+import com.pad.warehouse.utils.DataValidators;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,6 +41,12 @@ public class ProductServiceTest {
 
     @Mock
     private ProductDescriptionService productDescriptionService;
+
+    @Mock
+    private ProductCacheService cacheService;
+
+    @Mock
+    private DataValidators validators;
 
     @InjectMocks
     ProductService productService;
@@ -55,9 +63,9 @@ public class ProductServiceTest {
         product.setProductCode("001");
         product.setQuantity("10");
         product.setPrice("99.0");
-        product.setStatus(ProductStatus.AVAILABLE.getCode());
-        product.setType("type");
-        product.setSubtype("subtype");
+        product.setStatus("STATUS");
+        product.setType("TYPE");
+        product.setSubtype("SUBTYPE");
         product.setCreated(OffsetDateTime.parse("2023-07-27T16:50:27.195414700+02:00"));
         product.setModified(OffsetDateTime.parse("2023-07-27T16:50:27.195414700+02:00"));
         return product;
@@ -81,9 +89,9 @@ public class ProductServiceTest {
         productEntity.setProductCode("001");
         productEntity.setQuantity(10);
         productEntity.setPrice(99);
-        productEntity.setStatus(ProductStatus.AVAILABLE.getCode());
-        productEntity.setType("type");
-        productEntity.setSubtype("subtype");
+        productEntity.setStatus("STATUS");
+        productEntity.setType("TYPE");
+        productEntity.setSubtype("SUBTYPE");
         productEntity.setCreated(OffsetDateTime.parse("2023-07-27T16:50:27.195414700+02:00"));
         productEntity.setModified(OffsetDateTime.parse("2023-07-27T16:50:27.195414700+02:00"));
         return productEntity;
@@ -180,6 +188,7 @@ public class ProductServiceTest {
         // when
         when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
         when(productMapper.mapToEntityProduct(request.getProduct())).thenReturn(createProductEntity(1L));
+        when(validators.validateProduct(any(), anyMap(), anyBoolean())).thenReturn(true);
         // then
         Long saveProductData = productService.saveProductData(request);
         assertEquals(1L, saveProductData);
@@ -191,7 +200,6 @@ public class ProductServiceTest {
         CreateProductRequest request = createProductRequest(product, null);
         // when
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(createProductEntity(1L)));
-
         // then
         try {
             Long saveProductData = productService.saveProductData(request);
@@ -234,6 +242,7 @@ public class ProductServiceTest {
         Product editData = new Product();
         editData.setName("editedName");
         when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(validators.validateProduct(any(), anyMap(), anyBoolean())).thenReturn(true);
 
         // then
         try {
