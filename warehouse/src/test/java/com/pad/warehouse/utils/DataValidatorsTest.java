@@ -244,7 +244,43 @@ public class DataValidatorsTest {
         assertEquals("price must be a positive number", errorsNegativeQuantity.get("price"));
 
         assertTrue(errorsCorrect.isEmpty());
+    }
 
+    @Test
+    void addProductDescription_shouldReturnTrue() {
+        // when
+        ProductDescription productDescription = createProductDescription();
+        Map<String, String> errorsCorrect = new HashMap<>();
+        validators.validateProductDescription(productDescription, errorsCorrect, true);
+        
+        // then
+        assertTrue(errorsCorrect.isEmpty());
+    }
+
+    @Test
+    void addProductDescription_shouldReturnFalse_emptyFields() {
+        // when
+        ProductDescription productDescription = createEmptyDescription();
+        Map<String, String> errorsEmptyFields = new HashMap<>();
+        validators.validateProductDescription(productDescription, errorsEmptyFields, true);
+
+        // then
+        assertTrue(!errorsEmptyFields.isEmpty());
+        assertTrue(errorsEmptyFields.containsKey("product"));
+        assertTrue(errorsEmptyFields.containsKey("description"));
+
+    }
+
+    @Test 
+    void updateProductDescription_shouldReturnTrue_emptyFields() {
+        // when
+        ProductDescription productDescription = createEmptyDescription();
+        Map<String, String> errorsCorrect = new HashMap<>();
+        productDescription.setProductDescription("editedDescription");
+        validators.validateProductDescription(productDescription, errorsCorrect, false);
+
+        // then
+        assertTrue(errorsCorrect.isEmpty());
     }
     
 }
