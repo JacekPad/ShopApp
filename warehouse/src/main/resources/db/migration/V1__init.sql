@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS b_product
     name varchar(255) not null,
     product_code varchar(255) not null,
     quantity int not null,
-    price int not null,
+    price decimal(10,2) not null,
     status varchar(255) not null,
     type varchar(255) not null,
     subtype varchar(255) not null,
@@ -28,10 +28,10 @@ create table IF NOT EXISTS e_product_type (
 
 create table IF NOT EXISTS e_product_subtype (
 id int AUTO_INCREMENT primary key,
-type_code varchar(50) not null,
+type_id int not null,
 code varchar(30),
 value varchar(30),
-constraint FK_PRODUCT_TYPE FOREIGN KEY (type_code) REFERENCES e_product_type(code)
+constraint FK_PRODUCT_TYPE FOREIGN KEY (type_id) REFERENCES e_product_type(id)
 );
 
 create table IF NOT EXISTS e_product_status (
