@@ -1,22 +1,23 @@
 spring:
     jpa:
+        hibernate:
+            ddl-auto: none
     # temp
         show-sql: true
         properties:
             hibernate:
                 format_sql: true
     datasource:
-#        url: jdbc:mysql://127.0.0.1:3333/warehouse
-        url: jdbc:mysql://mysqldb/warehouse
+        url: jdbc:mysql://127.0.0.1:3333/warehouse
         username: root
         password: admin
     flyway:
-#        url: jdbc:mysql://127.0.0.1:3333
-        url: jdbc:mysql://mysqldb/warehouse
+        url: jdbc:mysql://127.0.0.1:3333
         user: root
         password: admin
-        default-schema: warehouse
+        schemas: warehouse
         create-schemas: true
+        baseline-on-migrate: true
 app-config:
     cache:
         clear-cache:
