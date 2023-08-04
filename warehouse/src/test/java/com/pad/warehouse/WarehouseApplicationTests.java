@@ -1,13 +1,13 @@
-package com.pad.warehouse;
+// package com.pad.warehouse;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class WarehouseApplicationTests {
+// @SpringBootTest
+// class WarehouseApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }

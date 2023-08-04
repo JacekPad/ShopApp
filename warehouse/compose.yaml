@@ -1,10 +1,27 @@
-# services:
-#   mysql:
-#     image: 'mysql:latest'
-#     environment:
-#       - 'MYSQL_DATABASE=mydatabase'
-#       - 'MYSQL_PASSWORD=secret'
-#       - 'MYSQL_ROOT_PASSWORD=verysecret'
-#       - 'MYSQL_USER=myuser'
-#     ports:
-#       - '3306'
+ services:
+   mysqldb:
+     image: 'mysql:8'
+     environment:
+       - 'MYSQL_DATABASE=warehouse'
+       - 'MYSQL_ROOT_PASSWORD=admin'
+     networks:
+       - sprnetw
+     ports:
+       - '3333:3306'
+   springbootapp:
+     container_name: app
+     build:
+       context: .
+       dockerfile: Dockerfile
+     image: springbootapp
+     depends_on:
+       - mysqldb
+     links:
+       - mysqldb
+     networks:
+       - sprnetw
+     ports:
+       - 8080:8080
+ networks:
+   sprnetw:
+     driver: bridge
