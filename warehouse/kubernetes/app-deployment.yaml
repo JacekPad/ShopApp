@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warehouse
+  namespace: warehouse-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: warehouse
+  template:
+    metadata:
+      labels:
+        app: warehouse
+    spec:
+      containers:
+      - name: warehouse
+        image: mushiatsui/springbootapp
+        resources:
+          limits:
+            memory: "4000M"
+            cpu: "1000m"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-configmap
+              key: DB_URL
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-configmap
+              key: DB_USERNAME
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+            # name -> metadata name of the secret
+              name: mysqldb-secret
+              # name of the secret data
+              key: MYSQL_ROOT_PASSWORD
+        - name: SPRING_FLYWAY_URL
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-configmap
+              key: FLYWAY_DB_URL
+        - name: SPRING_FLYWAY_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-configmap
+              key: DB_USERNAME
+        - name: SPRING_FLYWAY_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+            # name -> metadata name of the secret
+              name: mysqldb-secret
+              # name of the secret data
+              key: MYSQL_ROOT_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+# name of the service
+  name: warehouse
+  namespace: warehouse-app
+spec:
+  selector:
+    app: warehouse
+  # type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    # nodePort: 30000
+---
+# map ingres IP to domain in /etc/hosts
+apiVersion: networking.k8s.io/v1
+# type for external service with domain name
+kind: Ingress
+metadata:
+  name: myingress
+  namespace: warehouse-app
+spec:
+# rules 
+  rules:
+  # request for that path will be forwared to other internal service (valid domain) (has to be entrypoint[so could be external service])
+  - host: warehouse.com
+  # its always http: (choosing http or https is not here)
+    http:
+      paths:
+      # rules (Exact or Prefix [what matching will be used])
+      - pathType: Prefix
+        path: "/"
+        backend:
+        # internal service name (metadata name) (service should be internal not external [not Loadbalancer]
+          service:
+            name: warehouse
+            # the same as service port (port:)
+            port: 
+              number: 8080
