@@ -38,7 +38,10 @@ public class ProductDescriptionServiceTest {
 
     @Mock
     private ProductCacheService cacheService;
-    
+
+    @Mock
+    private LogService logService;
+
     @InjectMocks
     ProductDescriptionService productDescriptionService;
 

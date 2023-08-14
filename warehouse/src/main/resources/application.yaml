@@ -2,11 +2,11 @@ spring:
     jpa:
         hibernate:
             ddl-auto: none
-    # temp
-        show-sql: true
-        properties:
-            hibernate:
-                format_sql: true
+    # for testing
+        # show-sql: true
+        # properties:
+        #     hibernate:
+        #         format_sql: true
     datasource:
         url: jdbc:mysql://127.0.0.1:3333/warehouse
         username: root
@@ -21,4 +21,6 @@ spring:
 app-config:
     cache:
         clear-cache:
-            fixed-timer: "0 0/1 * * * *"
+            # for testing
+            # fixed-timer: "0 0/1 * * * *"
+            fixed-timer: "0 0 0/24 * * *"

@@ -7,15 +7,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.pad.warehouse.service.LogService;
 import com.pad.warehouse.swagger.model.ErrorResponse;
 import com.pad.warehouse.swagger.model.ResponseHeader;
 
+import lombok.RequiredArgsConstructor;
+
 @ControllerAdvice
+@RequiredArgsConstructor
 public class RESTExceptionHanlder {
+
+    private final LogService logService;
     
     @ExceptionHandler(AbstractException.class)
     public ResponseEntity<ErrorResponse> exceptionResponse(AbstractException exception) {
-        // TODO save exceptions to log db?
+        logService.saveToErrorLog(exception);
         ErrorResponse response = createErrorResponse(exception.getCode(), exception.getMessage());
         return new ResponseEntity<ErrorResponse>(response, null, exception.getCode());
     }

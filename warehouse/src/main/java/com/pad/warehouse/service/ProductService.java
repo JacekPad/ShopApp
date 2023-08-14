@@ -17,6 +17,7 @@ import com.pad.warehouse.exception.notFound.NoObjectFound;
 import com.pad.warehouse.exception.unprocessable.ProductMapperException;
 import com.pad.warehouse.mappers.ProductMapper;
 import com.pad.warehouse.model.entity.ProductEntity;
+import com.pad.warehouse.model.enums.ProductLogType;
 import com.pad.warehouse.model.entity.ProductDescriptionEntity;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.CreateProductRequest;
@@ -38,6 +39,7 @@ public class ProductService {
     private final ProductDescriptionService productDescriptionService;
     private final ProductMapper productMapper;
     private final DataValidators productValidator;
+    private final LogService logService;
 
     public ProductsResponse getProductsData(@Valid String name, @Valid String productCode, @Valid String quantity,
             @Valid String price, @Valid String status, @Valid String type, @Valid String subtype, @Valid String created,
@@ -145,6 +147,7 @@ public class ProductService {
             body.getProductDescription().forEach(productDescription -> productDescriptionService
                     .saveProductDescription(productDescription, productEntityToSave.getId()));
         }
+        logService.saveToLog(productEntityToSave.getId(), ProductLogType.PRODUCT, "Product saved");
         log.info("save product - ID: {}, END", productEntityToSave.getId());
         return productEntityToSave.getId();
     }
@@ -161,6 +164,7 @@ public class ProductService {
             });
             productRepository.delete(product.get());
             log.info("remove product: {} END", productId);
+            logService.saveToLog(product.get().getId(), ProductLogType.PRODUCT, "Product deleted");
             return "Product removed successfully";
         } else {
             log.error("No product found for ID: {}", productId);
@@ -200,6 +204,7 @@ public class ProductService {
                 throw new SaveObjectException("Unexpected error while updating product");
             }
             log.info("update product: {}, END", productEntityToUpdate);
+            logService.saveToLog(productEntityToUpdate.getId(), ProductLogType.PRODUCT, "Product updated");
             return productMapper.mapToDataProduct(productEntityToUpdate);
         } else
             log.error("Product id could not be specified: ID {}", productId);

@@ -46,6 +46,9 @@ public class ProductServiceTest {
     @Mock
     private DataValidators validators;
 
+    @Mock
+    private LogService logService;
+
     @InjectMocks
     ProductService productService;
 

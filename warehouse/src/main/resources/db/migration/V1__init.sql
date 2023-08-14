@@ -40,3 +40,18 @@ create table IF NOT EXISTS e_product_status (
     value varchar(30)
 );
 
+create table IF NOT EXISTS t_application_logs (
+	id int AUTO_INCREMENT primary key,
+    entity_id int not null,
+    message varchar(200),
+    type varchar(20) not null,
+    timestamp timestamp not null
+);
+
+create table IF NOT EXISTS t_error_logs (
+	id int AUTO_INCREMENT primary key,
+    error_code varchar(5) not null,
+    message varchar(200),
+    trace varchar(4000),
+    timestamp timestamp not null
+);
