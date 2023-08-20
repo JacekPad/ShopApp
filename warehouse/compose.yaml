@@ -10,7 +10,8 @@
      ports:
        - '3333:3306'
      volumes:
-      - ./init:/docker-entrypoint-initdb.d
+      - ./sql/init:/docker-entrypoint-initdb.d
+      - ./sql/data/compose/volumes:/var/lib/mysql
    springbootapp:
      container_name: app
      build:
