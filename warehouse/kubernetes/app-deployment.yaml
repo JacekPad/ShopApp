@@ -16,10 +16,10 @@ spec:
       containers:
       - name: warehouse
         image: mushiatsui/springbootapp
-        resources:
-          limits:
-            memory: "4000M"
-            cpu: "1000m"
+#        resources:
+#          limits:
+#            memory: "4000M"
+#            cpu: "1000m"
         ports:
         - containerPort: 8080
         env:
