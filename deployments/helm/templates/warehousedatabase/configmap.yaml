@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.warehousedatabase.fullname}}-secret
+  namespace: {{ .Values.warehousedatabase.namespace}}
+type: Opaque
+data:
+  MYSQL_ROOT_PASSWORD: YWRtaW4=
+  

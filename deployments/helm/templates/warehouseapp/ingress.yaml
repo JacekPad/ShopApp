@@ -1,0 +1,25 @@
+# map ingres IP to domain in /etc/hosts
+apiVersion: networking.k8s.io/v1
+# type for external service with domain name
+kind: Ingress
+metadata:
+  name: {{ .Values.warehouseapp.fullname }}
+  namespace: {{ .Values.warehouseapp.namespace }}
+spec:
+  # rules
+  rules:
+    # request for that path will be forwared to other internal service (valid domain) (has to be entrypoint[so could be external service])
+    - host: warehouse.com
+      # its always http: (choosing http or https is not here)
+      http:
+        paths:
+          # rules (Exact or Prefix [what matching will be used])
+          - pathType: Prefix
+            path: "/"
+            backend:
+              # internal service name (metadata name) (service should be internal not external [not Loadbalancer]
+              service:
+                name: {{ .Values.warehouseapp.fullname }}
+                # the same as service port (port:)
+                port:
+                  number: 8080
