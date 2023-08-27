@@ -134,7 +134,6 @@ public class ProductController implements ProductsApi {
     @Override
     public ResponseEntity<ProductDescriptionsResponse> updateProductDescriptionsByProductId(String descriptionId,
             @Valid UpdateProductDescriptionRequest body) {
-                // TODO kinda bad response object, change swagger?
         log.info("Update Product Description: Id - {} Body - {}, START", descriptionId, body);
         ProductDescriptionsResponse response = new ProductDescriptionsResponse();
         ProductDescription updateProductDescription = productDescriptionService.updateProductDescription(descriptionId, body.getProductDescription());
