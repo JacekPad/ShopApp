@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.pad.warehouse.model.DTOs.ProductQuantityChangeContent;
 import org.springframework.stereotype.Service;
 
 import com.pad.warehouse.exception.badRequest.ValidationException;
@@ -209,6 +210,24 @@ public class ProductService {
         } else
             log.error("Product id could not be specified: ID {}", productId);
             throw new SaveObjectException("Product id could not be specified");
+    }
+
+    public void changeProductQuantity(ProductQuantityChangeContent changeContent) {
+//       TODO return message 200 OK, product updated? or not because its asynch in rabbit
+        Optional<ProductEntity> product = productRepository.findById(changeContent.getProductId());
+        if (product.isPresent()) {
+            ProductEntity productEntity = product.get();
+            int quantity = productEntity.getQuantity();
+            if (productEntity.getQuantity() - changeContent.getQuantity() > 0) {
+                productEntity.setQuantity(quantity - changeContent.getQuantity());
+                productRepository.saveAndFlush(productEntity);
+            } else {
+//                TODO return some error that there are not enough resources?
+            }
+        } else {
+            log.error("Product with id {} does not exists", changeContent.getProductId());
+            throw new NoObjectFound("Product does not exists");
+        }
     }
 
 

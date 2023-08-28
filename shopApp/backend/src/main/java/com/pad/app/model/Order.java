@@ -15,6 +15,4 @@ public class Order {
     private boolean isPayed;
     private DeliveryMethodEnum deliveryMethod;
     private PaymentMethodEnum paymentMethod;
-    private Float orderPrice;
-
 }

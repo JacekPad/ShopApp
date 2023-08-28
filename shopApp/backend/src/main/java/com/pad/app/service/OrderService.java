@@ -40,17 +40,17 @@ public class OrderService {
         ProductQuantityChangeContent productQuantityChangeContent = new ProductQuantityChangeContent();
         productQuantityChangeContent.setQuantity(byNumber);
         productQuantityChangeContent.setProductId(2L);
-        // send rabbitQ to warehouse to decrease num of items
+        // TODO send rabbitQ to warehouse to decrease num of items
         MessageTemplate<ProductQuantityChangeContent> messageTemplate = new MessageTemplate<>();
-        messageTemplate.setMessegeContent(productQuantityChangeContent);
+        messageTemplate.setMessageContent(productQuantityChangeContent);
         messengerService.sendMessage(messageTemplate);
     }
 
     private void processOrder(Order order) {
 
-        // send order to Orders app
+        // TODO send order to Orders app
         MessageTemplate<Order> messageTemplate = new MessageTemplate<>();
-        messageTemplate.setMessegeContent(order);
+        messageTemplate.setMessageContent(order);
         messengerService.sendMessage(messageTemplate);
     }
 
@@ -61,11 +61,11 @@ public class OrderService {
     }
 
     private boolean isOrderAvailable(List<ProductOrder> productOrders) {
-        // check if items are available to buy or were bought inbetween making order and
-        // sending it?
-        boolean isAllAvailable = productOrders.stream()
-                .anyMatch(productOrder -> !productService.isProductAvailable(productOrder.getProduct()));
-        return isAllAvailable;
+        // TODO check if items are available to buy or were bought in between making order and
+        //  (rabbitMQ multithread check all at the same time?)
+        //  is anyMatch multithreaded to send rabbitmq or needs to be used differently?
+        return productOrders.stream()
+                .anyMatch(productOrder -> !productService.isProductAvailable(productOrder.getProduct().getId()));
     }
 
 }

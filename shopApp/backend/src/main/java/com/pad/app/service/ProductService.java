@@ -19,13 +19,14 @@ public class ProductService {
         // clean cache with scheduler
     }
 
-    public boolean isProductAvailable(Product product) {
+    public boolean isProductAvailable(Long id) {
         // check if available and update cached value?
-        updateProductAvailability(product);
+//        TODO maybe send with rabbitMQ all product as multithread and wait for each response?
+        updateProductAvailability(id);
         return false;
     }
 
-    private void updateProductAvailability(Product productToCheck) {
+    private void updateProductAvailability(Long id) {
         // update cached quantity value of checked item? (is it possible?)
     }
 

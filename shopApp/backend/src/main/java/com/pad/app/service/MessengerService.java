@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class MessengerService {
 
     public <T> void sendMessage(MessageTemplate<T> messageTemplate) {
-
+//        TODO interface and different implementations instead of generic?
     }
 
 

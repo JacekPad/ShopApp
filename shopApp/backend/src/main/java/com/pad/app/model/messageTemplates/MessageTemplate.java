@@ -21,6 +21,6 @@ public class MessageTemplate<T> {
     @Setter(AccessLevel.NONE)
     private String timestamp;
 
-    private T messegeContent;
+    private T messageContent;
 
 }

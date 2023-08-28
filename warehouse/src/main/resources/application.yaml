@@ -18,6 +18,9 @@ spring:
         schemas: warehouse
         create-schemas: true
         baseline-on-migrate: true
+    rabbitmq:
+        template:
+            default-receive-queue: product_quantity_change_queue
 app-config:
     cache:
         clear-cache:
