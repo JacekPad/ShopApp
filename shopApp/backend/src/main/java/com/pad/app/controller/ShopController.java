@@ -1,16 +1,24 @@
 package com.pad.app.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.pad.app.model.Order;
+import com.pad.app.service.OrderService;
+import com.pad.app.service.TestService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("")
+@Slf4j
+@RequiredArgsConstructor
 public class ShopController {
-    
+
+    private final OrderService orderService;
+
+
     @PostMapping("/order")
-    public void makeOrder() {
+    public void makeOrder(@RequestBody Order order) {
+        orderService.makeOrder(order);
 // make order and descrease number of products in warehouse and send order to other service
     }
 
