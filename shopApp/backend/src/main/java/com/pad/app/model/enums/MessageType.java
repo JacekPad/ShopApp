@@ -5,9 +5,8 @@ import lombok.Getter;
 import java.io.Serializable;
 
 @Getter
-public enum PaymentMethodEnum implements Serializable {
+public enum MessageType implements Serializable {
 
-    CASH,
-    CREDIT_CARD,
-    BLIK
+    CHANGE_PRODUCT_COUNT,
+    SEND_ORDER
 }

@@ -2,8 +2,10 @@ package com.pad.app.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class OrderAddress {
+public class OrderAddress implements Serializable {
     
 
     private String street;

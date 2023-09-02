@@ -7,7 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="app" />
+        <module name="shopApp" />
       </profile>
       <profile name="Annotation profile for warehouse" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -21,10 +21,14 @@
         <module name="warehouse" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="app" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="app" options="-parameters" />
+      <module name="shopApp" options="-parameters" />
       <module name="warehouse" options="-parameters" />
     </option>
   </component>

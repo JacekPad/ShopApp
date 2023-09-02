@@ -1,4 +1,5 @@
 spring:
+#    database configs
     jpa:
         hibernate:
             ddl-auto: none
@@ -11,6 +12,7 @@ spring:
         url: jdbc:mysql://127.0.0.1:3333/warehouse
         username: root
         password: admin
+#    db migration configs
     flyway:
         url: jdbc:mysql://127.0.0.1:3333
         user: root
@@ -18,9 +20,17 @@ spring:
         schemas: warehouse
         create-schemas: true
         baseline-on-migrate: true
+#        rabbitmq configs
     rabbitmq:
         template:
-            default-receive-queue: product_quantity_change_queue
+            queue:
+                productCountChange: productQuantityChange_queue
+        host: localhost
+        port: 15672
+        username: user
+        password: user
+
+#custom configs
 app-config:
     cache:
         clear-cache:

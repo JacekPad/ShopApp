@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.pad.warehouse.model.DTOs.ProductQuantityChangeContent;
 import org.springframework.stereotype.Service;
 
 import com.pad.warehouse.exception.badRequest.ValidationException;
@@ -179,7 +178,7 @@ public class ProductService {
         Map<String, String> errors = new HashMap<>();
         if (productId != null) {
             Optional<ProductEntity> productEntity = productRepository.findById(Long.valueOf(productId));
-            if (!productEntity.isPresent()) {
+            if (productEntity.isEmpty()) {
                 log.error("Product with id {} does not exists", productId);
                 throw new NoObjectFound("Product does not exists");
             }
@@ -188,12 +187,12 @@ public class ProductService {
             log.error("Validation errors for update Product {} - errors: {}", product, errors);
             throw new ValidationException(errors);
             }
-
+//            TODO make mapper (map struct)?
             ProductEntity productEntityToUpdate = productEntity.get();
             if (product.getName() != null) productEntityToUpdate.setName(product.getName());
             if (product.getProductCode() != null) productEntityToUpdate.setProductCode(product.getProductCode());
-            if (product.getQuantity() != null) productEntityToUpdate.setQuantity(Integer.valueOf(product.getQuantity()));
-            if (product.getPrice() != null) productEntityToUpdate.setPrice(Long.valueOf(product.getPrice()));
+            if (product.getQuantity() != null) productEntityToUpdate.setQuantity(Integer.parseInt(product.getQuantity()));
+            if (product.getPrice() != null) productEntityToUpdate.setPrice(Long.parseLong(product.getPrice()));
             if (product.getStatus() != null) productEntityToUpdate.setStatus(product.getStatus());
             if (product.getType() != null) productEntityToUpdate.setType(product.getType());
             if (product.getSubtype() != null) productEntityToUpdate.setSubtype(product.getSubtype());
@@ -207,25 +206,39 @@ public class ProductService {
             log.info("update product: {}, END", productEntityToUpdate);
             logService.saveToLog(productEntityToUpdate.getId(), ProductLogType.PRODUCT, "Product updated");
             return productMapper.mapToDataProduct(productEntityToUpdate);
-        } else
+        } else {
             log.error("Product id could not be specified: ID {}", productId);
             throw new SaveObjectException("Product id could not be specified");
+        }
     }
 
-    public void changeProductQuantity(ProductQuantityChangeContent changeContent) {
-//       TODO return message 200 OK, product updated? or not because its asynch in rabbit
-        Optional<ProductEntity> product = productRepository.findById(changeContent.getProductId());
+    public void changeProductQuantity(Long productId, int quantityChange) {
+//       TODO return message 200 OK, product updated?
+//        or some confirmation to the broker?
+//        and some tests
+        Optional<ProductEntity> product = productRepository.findById(productId);
         if (product.isPresent()) {
             ProductEntity productEntity = product.get();
             int quantity = productEntity.getQuantity();
-            if (productEntity.getQuantity() - changeContent.getQuantity() > 0) {
-                productEntity.setQuantity(quantity - changeContent.getQuantity());
+            if (quantityChange > 0) {
+//            order canceled, restore product quantity
+                quantity += quantityChange;
+                productEntity.setQuantity(quantity);
                 productRepository.saveAndFlush(productEntity);
-            } else {
-//                TODO return some error that there are not enough resources?
+            } else if (quantityChange < 0) {
+//            new order, decrease product quantity
+                if (quantity - quantityChange <= 0) {
+                    quantity -= quantityChange;
+                    productEntity.setQuantity(quantity);
+                    productRepository.saveAndFlush(productEntity);
+                } else {
+//                    TODO some error
+//                    not enough products left
+                }
             }
+
         } else {
-            log.error("Product with id {} does not exists", changeContent.getProductId());
+            log.error("Product with id {} does not exists", productId);
             throw new NoObjectFound("Product does not exists");
         }
     }

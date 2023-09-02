@@ -1,6 +1,6 @@
-package com.pad.app.model.messageTemplates;
+package com.pad.warehouse.model.DTOs;
 
-import com.pad.app.model.enums.MessageType;
+import com.pad.warehouse.model.enums.MessageType;
 import lombok.*;
 
 import java.io.Serializable;
@@ -25,3 +25,4 @@ public abstract class MessageTemplate implements Serializable {
     private final String timestamp;
     private MessageType messageType;
 }
+
