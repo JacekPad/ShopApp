@@ -1,8 +1,6 @@
 package com.pad.app.service;
 
 import com.pad.app.model.messageTemplates.MessageTemplate;
-import com.pad.app.model.messageTemplates.OrderMessageTemplate;
-import com.pad.app.model.messageTemplates.ProductQuantityChangeMessageTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MessengerService {
+public class WorkerService {
 
     private final RabbitTemplate rabbitTemplate;
 
