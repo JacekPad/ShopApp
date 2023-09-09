@@ -3,8 +3,6 @@ package com.pad.app.service;
 import java.util.List;
 
 import com.pad.app.model.messageTemplates.OrderMessageTemplate;
-import com.pad.app.model.messageTemplates.ProductQuantityChangeMessageTemplate;
-import com.pad.warehouse.swagger.model.Product;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,8 @@ public class OrderService {
 
     private final WorkerService workerService;
 
+    private final ManageOrderService manageOrderService;
+
     public void makeOrder(Order order) {
         log.info("makeOrder START: {}", order);
         List<ProductOrder> productOrderList = order.getProducts();
@@ -34,21 +34,11 @@ public class OrderService {
         // prepare order details and send to other service
         // descrease number of items in warehouse
         // move user somewhere else if 200OK etc.
-    log.info("makeOrder STOP");
-    }
-
-    private void decreaseItemQuantity(int byNumber, Product product) {
-
-//        TODO product ID and test
-        ProductQuantityChangeMessageTemplate productQuantityChangeMessageTemplate = new ProductQuantityChangeMessageTemplate();
-        productQuantityChangeMessageTemplate.setQuantity(byNumber);
-        productQuantityChangeMessageTemplate.setProductId(Long.parseLong(product.getId()));
-        // TODO send rabbitQ to warehouse to decrease num of items
-        workerService.prepareMessage(productQuantityChangeMessageTemplate);
+        log.info("makeOrder STOP");
     }
 
     private void processOrder(Order order) {
-
+        manageOrderService.sendOrder(order);
         // TODO send order to Orders app
         OrderMessageTemplate messageTemplate = new OrderMessageTemplate();
         messageTemplate.setOrder(order);
@@ -56,12 +46,10 @@ public class OrderService {
     }
 
     private void processProductOrder(ProductOrder productOrder) {
-        //        TODO TESTING
-        String thread = Thread.currentThread().getName();
-        log.info("Current thread: {}", thread);
-        Product product = productOrder.getProduct();
         int quantityBought = productOrder.getQuantityBought();
-        decreaseItemQuantity(quantityBought, product);
+        String productId = productOrder.getProduct().getId();
+        productService.updateProductAvailability(productId, quantityBought);
+//        send some emails etc. (not implemented)
     }
 
     private boolean isOrderAvailable(List<ProductOrder> productOrders) {
@@ -73,6 +61,7 @@ public class OrderService {
                 .anyMatch(productOrder -> !productService.isProductAvailable(productOrder));
         log.info("isOrderAvailable: STOP");
         log.error("is available?: {}", isAvailable);
+//        TODO check if working ok
 //        return isAvailable;
         return true;
     }
