@@ -49,6 +49,7 @@ public class ProductService {
         List<ProductEntity> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype,
                 created,
                 modified);
+        log.error("TEMP: check entity content: {}", products);
         if (products.isEmpty()) {
             throw new NoObjectFound("No products with given attributes");
         }
@@ -78,9 +79,6 @@ public class ProductService {
         ProductList productList = new ProductList();
         Product dataProduct = convertEntityToData(product);
         productList.setProduct(dataProduct);
-        List<ProductDescription> productDescriptionsForProduct = productDescriptionService
-                .getDataProductDescriptionsForProduct(product.getId());
-        productList.setProductDescription(productDescriptionsForProduct);
         return productList;
     }
 
@@ -157,11 +155,6 @@ public class ProductService {
         log.info("remove product: {} START", productId);
         Optional<ProductEntity> product = productRepository.findById(Long.valueOf(productId));
         if (product.isPresent()) {
-            List<ProductDescriptionEntity> productDescriptions = productDescriptionService
-                    .getEntityProductDescriptionForProduct(product.get().getId());
-            productDescriptions.forEach(productDescription -> {
-                productDescriptionService.removeProductDescription(productDescription.getId());
-            });
             productRepository.delete(product.get());
             log.info("remove product: {} END", productId);
             logService.saveToLog(product.get().getId(), ProductLogType.PRODUCT, "Product deleted");
