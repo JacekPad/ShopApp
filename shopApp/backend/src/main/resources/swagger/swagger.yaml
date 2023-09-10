@@ -219,7 +219,6 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/schemas/ErrorResponse'
-
   /products/{productId}:
     get: 
       tags:
@@ -1152,7 +1151,10 @@ components:
           format: date-time
           examples: 
             - "2022-02-02T12:00:00"
-          
+        productDescription:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDescription'
     ProductDescription:
       type: object
       properties: 
@@ -1192,10 +1194,6 @@ components:
       properties:
         Product:
           $ref: '#/components/schemas/Product'
-        ProductDescription:
-          type: array
-          items: 
-            $ref: '#/components/schemas/ProductDescription'
 
     ProductCreationResponse:
       type: object

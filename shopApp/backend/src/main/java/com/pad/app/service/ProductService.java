@@ -20,6 +20,7 @@ public class ProductService {
 
     public List<ProductList> getProducts() {
 //        TODO cache caffeine it
+//        TODO change it to just cache and search by query as a different endpoint (and this as scheduler and not endpoint)
         return manageProductService.getProducts();
     }
 

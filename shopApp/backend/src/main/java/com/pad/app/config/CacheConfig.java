@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class CacheConfig {
@@ -16,7 +15,7 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         CaffeineCache productsCache = new CaffeineCache("products",
-                Caffeine.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS).build());
+                Caffeine.newBuilder().build());
         SimpleCacheManager manager = new SimpleCacheManager();
         manager.setCaches(Collections.singletonList(productsCache));
         return manager;

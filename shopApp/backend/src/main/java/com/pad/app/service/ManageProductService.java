@@ -6,6 +6,7 @@ import com.pad.warehouse.swagger.model.ProductsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,17 @@ public class ManageProductService {
     @Value("${product.get-all.uri}")
     private String PRODUCT_URI;
 
-    @Cacheable("products")
+    @Cacheable(value = "products", key = "'product'")
     public List<ProductList> getProducts() {
+        log.info("Cache empty: fetching items");
         ProductsResponse productsResponse = webClientService.webClientGet(PRODUCT_URI, ProductsResponse.class);
         return productsResponse.getProducts();
+    }
+
+    @CachePut(value = "products", key = "'product'")
+    public List<ProductList> restoreBackupCache(List<ProductList> products) {
+        log.info("Error while fetching products, restoring backup cache");
+        return products;
     }
 
 
