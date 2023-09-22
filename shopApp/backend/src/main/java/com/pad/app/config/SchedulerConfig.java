@@ -14,7 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @AllArgsConstructor
 @Slf4j
 public class SchedulerConfig {
-
+//TODO move it to service (its more like a service than config and move service to specific product service)
     @Autowired
     private final CacheManager manager;
 

@@ -24,21 +24,25 @@ public class ManageProductService {
     @Value("${product.get-all.uri}")
     private String PRODUCT_URI;
 
-    @Cacheable(value = "products", key = "'product'")
-    public List<ProductList> getProducts() {
+    public List<ProductList> fetchProducts() {
         log.info("Cache empty: fetching items");
         ProductsResponse productsResponse = webClientService.webClientGet(PRODUCT_URI, ProductsResponse.class);
         return productsResponse.getProducts();
     }
 
-    @CachePut(value = "products", key = "'product'")
-    public List<ProductList> restoreBackupCache(List<ProductList> products) {
-        log.info("Error while fetching products, restoring backup cache");
-        return products;
+    @Cacheable(value = "products", key = "#id")
+    public ProductList getProduct(String id) {
+//        TODO some error handling for no object in cache
+        log.error("no object cached with id: {}", id);
+        return null;
     }
 
+    @CachePut(value = "products", key = "#productList.getProduct().getId()")
+    public ProductList populateCache(ProductList productList) {
+        log.info("populating cache with item: {}", productList);
+        return productList;
+    }
 
-//    @CachePut(value = "products", key = "#productId")
     public void updateProductCount(String productId, int quantityChange) {
         log.info("updating product count: {}", productId);
         ProductQuantityChangeMessageTemplate template = prepareProductTemplate(productId, quantityChange);
