@@ -19,22 +19,20 @@ public class WebClientService {
                 .uri(uri)
 //                .header()
                 .retrieve()
-//                .onStatus(HttpStatusCode::is5xxServerError, error -> Mono.error(new WebClientResponseException()));
                 .bodyToMono(clazz).block();
-        log.info("web client get response: {}", response);
+        log.debug("web client get response: {}", response);
         return response;
     }
 
     public <T, V> T webClientPost(String uri, Class<T> clazz, V body) {
-        log.info("web client post request body: {}", body);
+        log.debug("web client post request body: {}", body);
         T response = webClient.build().post()
                 .uri(uri)
 //                .header()
                 .body(Mono.just(body), body.getClass())
                 .retrieve()
-//                .onStatus()
                 .bodyToMono(clazz).block();
-        log.info("web client post response: {}", response);
+        log.debug("web client post response: {}", response);
         return response;
     }
 }

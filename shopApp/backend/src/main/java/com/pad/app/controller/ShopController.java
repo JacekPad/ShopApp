@@ -1,5 +1,6 @@
 package com.pad.app.controller;
 
+import com.pad.app.model.FilterParams;
 import com.pad.app.model.Order;
 import com.pad.app.model.enums.DeliveryMethodEnum;
 import com.pad.app.service.OrderService;
@@ -37,14 +38,14 @@ public class ShopController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductList>> getProducts() {
-// get cached products or make call to warehouse to check if ok
+    public ResponseEntity<List<ProductList>> getProducts(FilterParams params) {
+//        TODO maybe less info when only querying for products?
         log.info("getProducts - Controller - START");
-        List<ProductList> products = productService.getProducts();
+        log.error("TEMP LOG params: {}", params);
+        List<ProductList> products = productService.getProducts(params);
         log.info("getProducts - Controller - END - {}", products);
         return new ResponseEntity<>(products, null, 200);
     }
-
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductList> getDetails(@PathVariable String id) {
         log.info("get Details - Controller - START");

@@ -1,6 +1,7 @@
 package com.pad.app.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import com.pad.app.model.FilterParams;
 import com.pad.app.model.ProductOrder;
 import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductList;
@@ -13,6 +14,7 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,14 +26,15 @@ public class ProductService {
 
     @Autowired
     private final CacheManager manager;
-    public List<ProductList> getProducts() {
+
+    public List<ProductList> getProducts(FilterParams params) {
+        String name = params.getName();
         log.info("getProducts - START");
         CaffeineCacheManager caffeineCacheManager = (CaffeineCacheManager) manager;
         CaffeineCache cache = (CaffeineCache) caffeineCacheManager.getCache("products");
         Cache<Object, Object> caffeine = cache.getNativeCache();
         List<ProductList> productList = caffeine.asMap().values().stream().map(value -> (ProductList) value).toList();
-        log.info("GetProducts - END - {}", productList);
-        return productList;
+        return filterProducts(params, productList);
     }
 
     public ProductList getProductDetails(String productId) {
@@ -40,11 +43,7 @@ public class ProductService {
     }
 
     public boolean isProductAvailable(ProductOrder productOrder) {
-        Product orderProduct = productOrder.getProduct();
-        List<ProductList> products = getProducts();
-
-        Optional<ProductList> product = products.stream().filter(productList -> productList.getProduct().getId().equals(orderProduct.getId())).findFirst();
-
+        Optional<ProductList> product = Optional.ofNullable(manageProductService.getProduct(productOrder.getProduct().getId()));
         if (product.isPresent()) {
             int productQuantity = Integer.parseInt(product.get().getProduct().getQuantity());
             int quantityBought = productOrder.getQuantityBought();
@@ -57,5 +56,28 @@ public class ProductService {
 
     public void updateProductAvailability(String productId, int quantityChange) {
         manageProductService.updateProductCount(productId, quantityChange);
+    }
+
+    public void updateProductCache() {
+        try {
+            List<ProductList> products = manageProductService.fetchProducts();
+            if (products != null) {
+                Objects.requireNonNull(manager.getCache("products")).clear();
+                products.forEach(manageProductService::populateCache);
+            }
+        } catch (Exception e) {
+            log.error("Error when updating cache: {}", e.getMessage());
+        }
+    }
+
+    private List<ProductList> filterProducts(FilterParams params, List<ProductList> list) {
+        return list.stream()
+                .filter(prod -> params.getName() == null || prod.getProduct().getName().contains(params.getName()))
+                .filter(prod -> !params.isAvailable() || Integer.parseInt(prod.getProduct().getQuantity()) > 0)
+                .filter(prod -> params.getPriceAtMost() == null || Double.parseDouble(prod.getProduct().getPrice()) <= params.getPriceAtMost())
+                .filter(prod -> params.getPriceAtLeast() == null || Double.parseDouble(prod.getProduct().getPrice()) >= params.getPriceAtLeast())
+                .filter(prod -> params.getType() == null || prod.getProduct().getType().equals(params.getType()))
+                .filter(prod -> params.getSubtype() == null || prod.getProduct().getSubtype().equals(params.getSubtype()))
+                .collect(Collectors.toList());
     }
 }

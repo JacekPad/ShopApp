@@ -25,8 +25,9 @@ public class ManageProductService {
     private String PRODUCT_URI;
 
     public List<ProductList> fetchProducts() {
-        log.info("Cache empty: fetching items");
+        log.info("fetchProducts - START");
         ProductsResponse productsResponse = webClientService.webClientGet(PRODUCT_URI, ProductsResponse.class);
+        log.info("fetchProducts - END");
         return productsResponse.getProducts();
     }
 
@@ -38,8 +39,8 @@ public class ManageProductService {
     }
 
     @CachePut(value = "products", key = "#productList.getProduct().getId()")
+    @SuppressWarnings("UnusedReturnValue")
     public ProductList populateCache(ProductList productList) {
-        log.info("populating cache with item: {}", productList);
         return productList;
     }
 
