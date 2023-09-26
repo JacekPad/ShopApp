@@ -18,8 +18,6 @@ public class OrderService {
 
     private final ProductService productService;
 
-    private final WorkerService workerService;
-
     private final ManageOrderService manageOrderService;
 
     public void makeOrder(Order order) {
@@ -29,6 +27,8 @@ public class OrderService {
         if (isOrderAvailable(productOrderList)) {
             productOrderList.parallelStream().forEach(this::processProductOrder);
             processOrder(order);
+        } else {
+//            TODO some error that product are not available
         }
         log.info("makeOrder - Service - STOP");
     }
