@@ -23,18 +23,14 @@ public class OrderService {
     private final ManageOrderService manageOrderService;
 
     public void makeOrder(Order order) {
-        log.info("makeOrder START: {}", order);
+        log.info("makeOrder - Service - START: {}", order);
         List<ProductOrder> productOrderList = order.getProducts();
 
         if (isOrderAvailable(productOrderList)) {
             productOrderList.parallelStream().forEach(this::processProductOrder);
             processOrder(order);
         }
-
-        // prepare order details and send to other service
-        // descrease number of items in warehouse
-        // move user somewhere else if 200OK etc.
-        log.info("makeOrder STOP");
+        log.info("makeOrder - Service - STOP");
     }
 
     private void processOrder(Order order) {
@@ -46,10 +42,11 @@ public class OrderService {
     }
 
     private void processProductOrder(ProductOrder productOrder) {
-        int quantityBought = productOrder.getQuantityBought();
+        log.info("ProcessProductOrder - Service - Start: {}", productOrder);
+        int quantityBought = -productOrder.getQuantityBought();
         String productId = productOrder.getProduct().getId();
         productService.updateProductAvailability(productId, quantityBought);
-//        send some emails etc. (not implemented)
+        log.info("ProcessProductOrder - Service - Stop");
     }
 
     private boolean isOrderAvailable(List<ProductOrder> productOrders) {
@@ -58,12 +55,10 @@ public class OrderService {
         //  (rabbitMQ multithread check all at the same time?)
         //  is anyMatch multithreaded to send rabbitmq or needs to be used differently?
         boolean isAvailable = productOrders.parallelStream()
-                .anyMatch(productOrder -> !productService.isProductAvailable(productOrder));
+                .allMatch(productService::isProductAvailable);
         log.info("isOrderAvailable: STOP");
         log.error("is available?: {}", isAvailable);
-//        TODO check if working ok
-//        return isAvailable;
-        return true;
+        return isAvailable;
     }
 
 }

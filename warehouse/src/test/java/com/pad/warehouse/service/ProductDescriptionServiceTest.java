@@ -72,7 +72,7 @@ public class ProductDescriptionServiceTest {
         productEntity.setName("testName");
         productEntity.setProductCode("001");
         productEntity.setQuantity(10);
-        productEntity.setPrice(99);
+        productEntity.setPrice(99d);
         productEntity.setStatus(ProductStatus.AVAILABLE.getCode());
         productEntity.setType("type");
         productEntity.setSubtype("subtype");

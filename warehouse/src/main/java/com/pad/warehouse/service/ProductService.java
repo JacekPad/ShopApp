@@ -18,11 +18,9 @@ import com.pad.warehouse.exception.unprocessable.ProductMapperException;
 import com.pad.warehouse.mappers.ProductMapper;
 import com.pad.warehouse.model.entity.ProductEntity;
 import com.pad.warehouse.model.enums.ProductLogType;
-import com.pad.warehouse.model.entity.ProductDescriptionEntity;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.CreateProductRequest;
 import com.pad.warehouse.swagger.model.Product;
-import com.pad.warehouse.swagger.model.ProductDescription;
 import com.pad.warehouse.swagger.model.ProductList;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 import com.pad.warehouse.utils.DataValidators;
@@ -49,9 +47,10 @@ public class ProductService {
         List<ProductEntity> products = getProductsEntity(name, productCode, quantity, price, status, type, subtype,
                 created,
                 modified);
-        log.error("TEMP: check entity content: {}", products);
+        log.debug("check entity content: {}", products);
         if (products.isEmpty()) {
-            throw new NoObjectFound("No products with given attributes");
+//            response.addProductsItem(new ProductList());
+            throw new NoObjectFound("No products for given parameters");
         }
         for (ProductEntity product : products) {
             response.addProductsItem(prepareProductList(product));
@@ -180,15 +179,7 @@ public class ProductService {
             log.error("Validation errors for update Product {} - errors: {}", product, errors);
             throw new ValidationException(errors);
             }
-//            TODO make mapper (map struct)?
-            ProductEntity productEntityToUpdate = productEntity.get();
-            if (product.getName() != null) productEntityToUpdate.setName(product.getName());
-            if (product.getProductCode() != null) productEntityToUpdate.setProductCode(product.getProductCode());
-            if (product.getQuantity() != null) productEntityToUpdate.setQuantity(Integer.parseInt(product.getQuantity()));
-            if (product.getPrice() != null) productEntityToUpdate.setPrice(Long.parseLong(product.getPrice()));
-            if (product.getStatus() != null) productEntityToUpdate.setStatus(product.getStatus());
-            if (product.getType() != null) productEntityToUpdate.setType(product.getType());
-            if (product.getSubtype() != null) productEntityToUpdate.setSubtype(product.getSubtype());
+            ProductEntity productEntityToUpdate = updateProductFields(productEntity.get(), product);
             try {
                 productRepository.saveAndFlush(productEntityToUpdate);
             } catch (Exception e) {
@@ -206,9 +197,7 @@ public class ProductService {
     }
 
     public void changeProductQuantity(Long productId, int quantityChange) {
-//       TODO return message 200 OK, product updated?
-//        or some confirmation to the broker?
-//        and some tests
+        log.info("changeProductQuantity - Service - START: productId: {}, quantity: {}", productId, quantityChange);
         Optional<ProductEntity> product = productRepository.findById(productId);
         if (product.isPresent()) {
             ProductEntity productEntity = product.get();
@@ -219,9 +208,9 @@ public class ProductService {
                 productEntity.setQuantity(quantity);
                 productRepository.saveAndFlush(productEntity);
             } else if (quantityChange < 0) {
-//            new order, decrease product quantity
-                if (quantity - quantityChange <= 0) {
-                    quantity -= quantityChange;
+//            new order, add negative product quantity if available
+                if (quantity + quantityChange >= 0) {
+                    quantity += quantityChange;
                     productEntity.setQuantity(quantity);
                     productRepository.saveAndFlush(productEntity);
                 } else {
@@ -234,7 +223,18 @@ public class ProductService {
             log.error("Product with id {} does not exists", productId);
             throw new NoObjectFound("Product does not exists");
         }
+        log.info("changeProductQuantity - Service - STOP");
     }
 
+    private ProductEntity updateProductFields(ProductEntity productEntityToUpdate, Product product) {
+        if (product.getName() != null) productEntityToUpdate.setName(product.getName());
+        if (product.getProductCode() != null) productEntityToUpdate.setProductCode(product.getProductCode());
+        if (product.getQuantity() != null) productEntityToUpdate.setQuantity(Integer.parseInt(product.getQuantity()));
+        if (product.getPrice() != null) productEntityToUpdate.setPrice(Double.parseDouble(product.getPrice()));
+        if (product.getStatus() != null) productEntityToUpdate.setStatus(product.getStatus());
+        if (product.getType() != null) productEntityToUpdate.setType(product.getType());
+        if (product.getSubtype() != null) productEntityToUpdate.setSubtype(product.getSubtype());
+        return productEntityToUpdate;
+    }
 
 }

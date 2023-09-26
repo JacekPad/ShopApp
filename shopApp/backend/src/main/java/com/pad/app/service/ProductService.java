@@ -3,7 +3,6 @@ package com.pad.app.service;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.pad.app.model.FilterParams;
 import com.pad.app.model.ProductOrder;
-import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +27,12 @@ public class ProductService {
     private final CacheManager manager;
 
     public List<ProductList> getProducts(FilterParams params) {
-        String name = params.getName();
-        log.info("getProducts - START");
+        log.info("getProductsFiltered - Service - START: filterParams: {}", params);
         CaffeineCacheManager caffeineCacheManager = (CaffeineCacheManager) manager;
         CaffeineCache cache = (CaffeineCache) caffeineCacheManager.getCache("products");
         Cache<Object, Object> caffeine = cache.getNativeCache();
         List<ProductList> productList = caffeine.asMap().values().stream().map(value -> (ProductList) value).toList();
+        log.info("getProductsFiltered - Service - STOP");
         return filterProducts(params, productList);
     }
 
@@ -43,19 +42,27 @@ public class ProductService {
     }
 
     public boolean isProductAvailable(ProductOrder productOrder) {
-        Optional<ProductList> product = Optional.ofNullable(manageProductService.getProduct(productOrder.getProduct().getId()));
+        Optional<ProductList> product = Optional.ofNullable(getProductDetails(productOrder.getProduct().getId()));
         if (product.isPresent()) {
             int productQuantity = Integer.parseInt(product.get().getProduct().getQuantity());
             int quantityBought = productOrder.getQuantityBought();
-            return productQuantity - quantityBought >= 0;
+            log.info("TEMP: for product {} is: {}, left: {}", product.get(), productQuantity, productQuantity - quantityBought);
+            log.info("is available? product {}, {}", product.get(), productQuantity - quantityBought > 0 );
+            return productQuantity - quantityBought > 0;
         } else {
-//            some errors that product doesn't exist?
+//            TODO some errors that product doesn't exist?
             return false;
         }
     }
 
     public void updateProductAvailability(String productId, int quantityChange) {
-        manageProductService.updateProductCount(productId, quantityChange);
+        log.info("updateProductAvailability - Service - START: for product {}, quantity: {}", productId, quantityChange);
+        ProductList product = manageProductService.getProduct(productId);
+        int productQuantity = Integer.parseInt(product.getProduct().getQuantity());
+        product.getProduct().setQuantity(String.valueOf(productQuantity + quantityChange));
+        manageProductService.populateCache(product);
+        manageProductService.updateProductDatabase(productId, quantityChange);
+        log.info("updateProductAvailability - Service - STOP");
     }
 
     public void updateProductCache() {

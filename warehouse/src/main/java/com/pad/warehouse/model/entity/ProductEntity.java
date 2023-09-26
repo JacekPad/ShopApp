@@ -26,10 +26,10 @@ public class ProductEntity {
     private String productCode;
 
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "price")
-    private double price;
+    private Double price;
 
     @Column(name = "status")
     private String status;

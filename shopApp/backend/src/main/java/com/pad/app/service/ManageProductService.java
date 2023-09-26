@@ -44,10 +44,11 @@ public class ManageProductService {
         return productList;
     }
 
-    public void updateProductCount(String productId, int quantityChange) {
-        log.info("updating product count: {}", productId);
+    public void updateProductDatabase(String productId, int quantityChange) {
+        log.info("updating product database - Service - START: {}", productId);
         ProductQuantityChangeMessageTemplate template = prepareProductTemplate(productId, quantityChange);
         workerService.prepareMessage(template);
+        log.info("updating product database - Service - STOP");
     }
 
     private ProductQuantityChangeMessageTemplate prepareProductTemplate(String productId, int quantityChange) {

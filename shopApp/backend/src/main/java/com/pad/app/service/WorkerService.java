@@ -25,9 +25,8 @@ public class WorkerService {
 
     public <T> void prepareMessage(MessageTemplate messageTemplate) {
         log.info("preparing message: {} of type {}", messageTemplate, messageTemplate.getClass());
-        log.info("type: {}", messageTemplate.getMessageType());
-//        TODO instead of generics (listeners have to be not ambigous, so objects have to be unique) make abstract class and some subclasses and cast
-//        messages to subclasses when receiving / sending
+        log.debug("type: {}", messageTemplate.getMessageType());
+//        TODO instead of generics (listeners cant be ambigous, so objects have to be unique) make abstract class and some subclasses and cast
         switch (messageTemplate.getMessageType()) {
             case SEND_ORDER -> sendMessage(messageTemplate, sendOrderRoutingKey);
             case CHANGE_PRODUCT_COUNT -> sendMessage(messageTemplate, productCountChangeRoutingKey);

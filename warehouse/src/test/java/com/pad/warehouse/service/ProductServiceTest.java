@@ -89,7 +89,7 @@ public class ProductServiceTest {
         productEntity.setName("testName");
         productEntity.setProductCode("001");
         productEntity.setQuantity(10);
-        productEntity.setPrice(99);
+        productEntity.setPrice(99d);
         productEntity.setStatus("STATUS");
         productEntity.setType("TYPE");
         productEntity.setSubtype("SUBTYPE");
@@ -152,7 +152,7 @@ public class ProductServiceTest {
                     "test", "test", null, null);
             fail("exception not thrown");
         } catch (Exception e) {
-            assertEquals("No products with given attributes", e.getMessage());
+            assertEquals("No products for given parameters", e.getMessage());
         }
 
     }
