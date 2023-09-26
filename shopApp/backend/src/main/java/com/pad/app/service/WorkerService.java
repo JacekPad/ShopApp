@@ -23,7 +23,7 @@ public class WorkerService {
     @Value("${spring.rabbitmq.template.exchange}")
     private String exchangeName;
 
-    public <T> void prepareMessage(MessageTemplate messageTemplate) {
+    public void prepareMessage(MessageTemplate messageTemplate) {
         log.info("preparing message: {} of type {}", messageTemplate, messageTemplate.getClass());
         log.debug("type: {}", messageTemplate.getMessageType());
 //        TODO instead of generics (listeners cant be ambigous, so objects have to be unique) make abstract class and some subclasses and cast
@@ -33,7 +33,7 @@ public class WorkerService {
         }
     }
 
-    private <T> void sendMessage(MessageTemplate message, String routingKey) {
+    private void sendMessage(MessageTemplate message, String routingKey) {
         log.info("sending message: {}, of type: {}", message, message.getClass());
         log.info("thread: {}", Thread.currentThread().getName());
         rabbitTemplate.convertAndSend(exchangeName, routingKey, message);

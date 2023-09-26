@@ -34,11 +34,9 @@ public class OrderService {
     }
 
     private void processOrder(Order order) {
+        log.info("processOrder - Service - START: {}", order);
         manageOrderService.sendOrder(order);
-        // TODO send order to Orders app
-        OrderMessageTemplate messageTemplate = new OrderMessageTemplate();
-        messageTemplate.setOrder(order);
-        workerService.prepareMessage(messageTemplate);
+        log.info("processOrder - Service - STOP");
     }
 
     private void processProductOrder(ProductOrder productOrder) {
@@ -50,14 +48,10 @@ public class OrderService {
     }
 
     private boolean isOrderAvailable(List<ProductOrder> productOrders) {
-        log.info("isOrderAvailable: START");
-        // TODO check if items are available to buy or were bought in between making order and
-        //  (rabbitMQ multithread check all at the same time?)
-        //  is anyMatch multithreaded to send rabbitmq or needs to be used differently?
+        log.info("isOrderAvailable - Service - START: {}", productOrders);
         boolean isAvailable = productOrders.parallelStream()
                 .allMatch(productService::isProductAvailable);
-        log.info("isOrderAvailable: STOP");
-        log.error("is available?: {}", isAvailable);
+        log.info("isOrderAvailable - Service - STOP: isAvailable: {}", isAvailable);
         return isAvailable;
     }
 
