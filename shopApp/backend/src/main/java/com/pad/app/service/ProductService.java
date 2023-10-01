@@ -46,8 +46,7 @@ public class ProductService {
         if (product.isPresent()) {
             int productQuantity = Integer.parseInt(product.get().getProduct().getQuantity());
             int quantityBought = productOrder.getQuantityBought();
-            log.info("TEMP: for product {} is: {}, left: {}", product.get(), productQuantity, productQuantity - quantityBought);
-            log.info("is available? product {}, {}", product.get(), productQuantity - quantityBought > 0 );
+            log.info("is available? product {}, {}", product.get().getProduct(), productQuantity - quantityBought > 0);
             return productQuantity - quantityBought > 0;
         } else {
 //            TODO some errors that product doesn't exist?

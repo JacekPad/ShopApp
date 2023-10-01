@@ -13,15 +13,6 @@ import java.util.Collections;
 @Configuration
 public class CacheConfig {
 
-//    @Bean
-//    public CacheManager cacheManager() {
-//        CaffeineCache productsCache = new CaffeineCache("products",
-//                Caffeine.newBuilder().build());
-//        SimpleCacheManager manager = new SimpleCacheManager();
-//        manager.setCaches(Collections.singletonList(productsCache));
-//        return manager;
-//    }
-
     @Bean
     public CacheManager cacheManager() {
         CaffeineCache productsCache = new CaffeineCache("products",
