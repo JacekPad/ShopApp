@@ -2,19 +2,11 @@ package com.pad.warehouse.model.entity;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -34,10 +26,10 @@ public class ProductEntity {
     private String productCode;
 
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "price")
-    private double price;
+    private Double price;
 
     @Column(name = "status")
     private String status;
@@ -47,6 +39,9 @@ public class ProductEntity {
 
     @Column(name = "subtype")
     private String subtype;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    List<ProductDescriptionEntity> productDescription;
 
     @Column(name = "created", updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
