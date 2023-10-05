@@ -4,8 +4,6 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.pad.app.model.FilterParams;
 import com.pad.app.model.ProductOrder;
 import com.pad.warehouse.swagger.model.Product;
-import com.pad.warehouse.swagger.model.ProductList;
-import jakarta.annotation.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -56,8 +54,7 @@ class ProductServiceTest {
 //        manager.getCache("products").put("1", prepareProductList("1"));
 //    }
 
-    private ProductList prepareProductList(String id) {
-        ProductList productList = new ProductList();
+    private Product prepareProductList(String id) {
         Product product = new Product();
         product.setId(id);
         product.setName("testName");
@@ -67,14 +64,13 @@ class ProductServiceTest {
         product.setStatus("testStatus");
         product.setType("testType");
         product.setSubtype("testSubtype");
-        productList.setProduct(product);
-        return productList;
+        return product;
     }
 
     private ProductOrder prepareProductOrder(String productId, int quantity) {
         ProductOrder productOrder = new ProductOrder();
         productOrder.setQuantityBought(quantity);
-        productOrder.setProduct(prepareProductList(productId).getProduct());
+        productOrder.setProduct(prepareProductList(productId));
         return productOrder;
     }
 

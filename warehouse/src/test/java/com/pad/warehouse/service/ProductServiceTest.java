@@ -133,9 +133,9 @@ public class ProductServiceTest {
         // then
         ProductsResponse productsData = productService.getProductsData("test", "test", "test", "test", "test", "test",
                 "test", null, null);
-        assertTrue(isProductEqual(entityList.get(0), productsData.getProducts().get(0).getProduct()));
-        assertTrue(isProductEqual(entityList.get(1), productsData.getProducts().get(1).getProduct()));
-        assertTrue(isProductEqual(entityList.get(2), productsData.getProducts().get(2).getProduct()));
+        assertTrue(isProductEqual(entityList.get(0), productsData.getProducts().get(0)));
+        assertTrue(isProductEqual(entityList.get(1), productsData.getProducts().get(1)));
+        assertTrue(isProductEqual(entityList.get(2), productsData.getProducts().get(2)));
     }
 
     @Test

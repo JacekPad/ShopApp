@@ -1,7 +1,7 @@
 package com.pad.app.service;
 
 import com.pad.app.model.messageTemplates.ProductQuantityChangeMessageTemplate;
-import com.pad.warehouse.swagger.model.ProductList;
+import com.pad.warehouse.swagger.model.Product;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class ManageProductService {
     @Value("${product.get-all.uri}")
     private String PRODUCT_URI;
 
-    public List<ProductList> fetchProducts() {
+    public List<Product> fetchProducts() {
         log.info("fetchProducts - START");
         ProductsResponse productsResponse = webClientService.webClientGet(PRODUCT_URI, ProductsResponse.class);
         log.info("fetchProducts - END");
@@ -32,16 +32,16 @@ public class ManageProductService {
     }
 
     @Cacheable(value = "products", key = "#id")
-    public ProductList getProduct(String id) {
+    public Product getProduct(String id) {
 //        TODO some error handling for no object in cache
         log.error("no object cached with id: {}", id);
         return null;
     }
 
-    @CachePut(value = "products", key = "#productList.getProduct().getId()")
+    @CachePut(value = "products", key = "#product.getId()")
     @SuppressWarnings("UnusedReturnValue")
-    public ProductList populateCache(ProductList productList) {
-        return productList;
+    public Product populateCache(Product product) {
+        return product;
     }
 
     public void updateProductDatabase(String productId, int quantityChange) {

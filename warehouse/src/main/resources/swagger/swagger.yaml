@@ -1187,13 +1187,7 @@ components:
         Products:
           type: array
           items:
-            $ref: '#/components/schemas/ProductList'
-    
-    ProductList:
-      type: object
-      properties:
-        Product:
-          $ref: '#/components/schemas/Product'
+            $ref: '#/components/schemas/Product'
 
     ProductCreationResponse:
       type: object
