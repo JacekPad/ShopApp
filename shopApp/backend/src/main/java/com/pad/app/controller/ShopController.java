@@ -9,7 +9,6 @@ import com.pad.app.model.enums.PaymentMethodEnum;
 import com.pad.app.service.OrderService;
 import com.pad.app.service.ProductService;
 import com.pad.warehouse.swagger.model.Product;
-import com.pad.warehouse.swagger.model.ProductList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -40,18 +39,18 @@ public class ShopController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductList>> getProducts(FilterParams params) {
+    public ResponseEntity<List<Product>> getProducts(FilterParams params) {
 //        TODO maybe less info when only querying for products?
         log.info("getProducts - Controller - START");
         log.error("TEMP LOG params: {}", params);
-        List<ProductList> products = productService.getProducts(params);
+        List<Product> products = productService.getProducts(params);
         log.info("getProducts - Controller - END - {}", products);
         return new ResponseEntity<>(products, null, 200);
     }
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductList> getDetails(@PathVariable String id) {
+    public ResponseEntity<Product> getDetails(@PathVariable String id) {
         log.info("get Details - Controller - START");
-        ProductList productDetails = productService.getProductDetails(id);
+        Product productDetails = productService.getProductDetails(id);
         log.info("get Details - Controller - END - {}", productDetails);
         return new ResponseEntity<>(productDetails, null, 200);
 // get all product details when user clicks on product?

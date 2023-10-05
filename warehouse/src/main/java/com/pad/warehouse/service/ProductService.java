@@ -21,7 +21,6 @@ import com.pad.warehouse.model.enums.ProductLogType;
 import com.pad.warehouse.repository.ProductRepository;
 import com.pad.warehouse.swagger.model.CreateProductRequest;
 import com.pad.warehouse.swagger.model.Product;
-import com.pad.warehouse.swagger.model.ProductList;
 import com.pad.warehouse.swagger.model.ProductsResponse;
 import com.pad.warehouse.utils.DataValidators;
 
@@ -53,7 +52,7 @@ public class ProductService {
             throw new NoObjectFound("No products for given parameters");
         }
         for (ProductEntity product : products) {
-            response.addProductsItem(prepareProductList(product));
+            response.addProductsItem(convertEntityToData(product));
         }
         log.info("Get product response END");
         return response;
@@ -74,12 +73,12 @@ public class ProductService {
         }
     }
 
-    private ProductList prepareProductList(ProductEntity product) {
-        ProductList productList = new ProductList();
-        Product dataProduct = convertEntityToData(product);
-        productList.setProduct(dataProduct);
-        return productList;
-    }
+//    private ProductList prepareProductList(ProductEntity product) {
+//        ProductList productList = new ProductList();
+//        Product dataProduct = convertEntityToData(product);
+//        productList.setProduct(dataProduct);
+//        return productList;
+//    }
 
     public ProductEntity getProductEntity(Long id) {
         Optional<ProductEntity> product = productRepository.findById(id);
