@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @AllArgsConstructor
 public class ProductWorker {
-//TODO not getting response?
-// service or component?
-
     private final ProductService productService;
 
     @RabbitHandler
