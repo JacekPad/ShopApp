@@ -1,6 +1,6 @@
-package com.pad.app.model.messageTemplates;
+package com.pad.orderapp.model.DTO;
 
-import com.pad.app.model.enums.MessageType;
+import com.pad.orderapp.model.enums.MessageType;
 import com.pad.warehouse.swagger.model.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 public class OrderMessageTemplate extends MessageTemplate {
 
     private Order order;
+
     public OrderMessageTemplate() {
         super(MessageType.SEND_ORDER);
     }

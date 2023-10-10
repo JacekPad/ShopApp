@@ -1,14 +1,9 @@
 package com.pad.app.controller;
 
 import com.pad.app.model.FilterParams;
-import com.pad.app.model.Order;
-import com.pad.app.model.OrderAddress;
-import com.pad.app.model.ProductOrder;
-import com.pad.app.model.enums.DeliveryMethodEnum;
-import com.pad.app.model.enums.PaymentMethodEnum;
 import com.pad.app.service.OrderService;
 import com.pad.app.service.ProductService;
-import com.pad.warehouse.swagger.model.Product;
+import com.pad.warehouse.swagger.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -95,22 +90,22 @@ public class ShopController {
 
 
         productOrder1.setProduct(aproduct);
-        productOrder1.setQuantityBought(5);
+        productOrder1.setQuantityBought("5");
 
         ProductOrder productOrder2 = new ProductOrder();
         productOrder2.setProduct(bproduct);
-        productOrder2.setQuantityBought(11);
+        productOrder2.setQuantityBought("11");
 
         ProductOrder productOrder3 = new ProductOrder();
         productOrder3.setProduct(cproduct);
-        productOrder3.setQuantityBought(1);
+        productOrder3.setQuantityBought("1");
         List<ProductOrder> orders = new ArrayList<>();
         orders.add(productOrder1);
         orders.add(productOrder2);
         orders.add(productOrder3);
         order.setProducts(orders);
 
-        OrderAddress address = new OrderAddress();
+        Address address = new Address();
         address.setStreet("Street");
         address.setZipCode("50-000");
         address.setCity("City");
@@ -119,7 +114,7 @@ public class ShopController {
         address.setEmail("asdasdassa");
 
         order.setAddress(address);
-        order.setPayed(true);
+        order.setIsPayed(true);
         order.setDeliveryMethod(DeliveryMethodEnum.POST);
         order.setPaymentMethod(PaymentMethodEnum.CASH);
 

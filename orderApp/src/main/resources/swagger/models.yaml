@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: Order models
+  description: This is a swagger for commonly used models throughout  applications
+  contact: 
+    name: Author
+    url: http://localhost:8080/
+  version: '0.0.1'
+servers: 
+  - url: http://localhost:8080
+tags:
+  - name: Order
+    description: Order models
+
+components:
+  schemas: 
+
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+          exmaples:
+            - "street"
+        zipCode:
+          type: string
+          exmaples:
+            - "street"
+        city:
+          type: string
+          exmaples:
+            - "street"
+        country:
+          type: string
+          exmaples:
+            - "street"
+        phoneNumber:
+          type: string
+          exmaples:
+            - "street"
+        email:
+          type: string
+          exmaples:
+            - "street"
+    
+    ProductOrder:
+      type: object
+      properties:
+        quantityBought:
+          type: string
+          example:
+            - "2"
+        Product:
+          $ref: 'apiSwagger.yaml#/components/schemas/Product'
+    
+    DeliveryMethodEnum:
+      type: string
+      enum: 
+        - COURIER
+        - PERSONAL
+        - POST
+
+    PaymentMethodEnum:
+      type: string
+      enum: 
+        - CASH
+        - CREDIT_CARD
+        - BLIK
+
+    Order:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductOrder'
+        address:
+          $ref: '#/components/schemas/Address'
+        isPayed:
+          type: boolean
+        deliveryMethod:
+          $ref: '#/components/schemas/DeliveryMethodEnum'
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethodEnum'

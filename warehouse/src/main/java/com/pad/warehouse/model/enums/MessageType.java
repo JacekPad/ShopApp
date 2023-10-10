@@ -7,6 +7,5 @@ import java.io.Serializable;
 @Getter
 public enum MessageType implements Serializable {
 
-    CHANGE_PRODUCT_COUNT,
-    SEND_ORDER
+    CHANGE_PRODUCT_COUNT
 }

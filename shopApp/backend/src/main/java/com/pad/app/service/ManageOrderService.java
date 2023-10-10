@@ -1,7 +1,7 @@
 package com.pad.app.service;
 
-import com.pad.app.model.Order;
 import com.pad.app.model.messageTemplates.OrderMessageTemplate;
+import com.pad.warehouse.swagger.model.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

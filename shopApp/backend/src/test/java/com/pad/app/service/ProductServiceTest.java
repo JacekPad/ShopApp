@@ -2,8 +2,8 @@ package com.pad.app.service;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.pad.app.model.FilterParams;
-import com.pad.app.model.ProductOrder;
 import com.pad.warehouse.swagger.model.Product;
+import com.pad.warehouse.swagger.model.ProductOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -69,7 +69,7 @@ class ProductServiceTest {
 
     private ProductOrder prepareProductOrder(String productId, int quantity) {
         ProductOrder productOrder = new ProductOrder();
-        productOrder.setQuantityBought(quantity);
+        productOrder.setQuantityBought(String.valueOf(quantity));
         productOrder.setProduct(prepareProductList(productId));
         return productOrder;
     }

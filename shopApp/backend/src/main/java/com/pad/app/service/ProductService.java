@@ -2,8 +2,8 @@ package com.pad.app.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.pad.app.model.FilterParams;
-import com.pad.app.model.ProductOrder;
 import com.pad.warehouse.swagger.model.Product;
+import com.pad.warehouse.swagger.model.ProductOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class ProductService {
         Optional<Product> product = Optional.ofNullable(getProductDetails(productOrder.getProduct().getId()));
         if (product.isPresent()) {
             int productQuantity = Integer.parseInt(product.get().getQuantity());
-            int quantityBought = productOrder.getQuantityBought();
+            int quantityBought = Integer.parseInt(productOrder.getQuantityBought());
             log.info("is available? product {}, {}", product.get(), productQuantity - quantityBought > 0);
             return productQuantity - quantityBought > 0;
         } else {

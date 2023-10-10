@@ -2,12 +2,12 @@ package com.pad.app.service;
 
 import java.util.List;
 
-import com.pad.app.model.messageTemplates.OrderMessageTemplate;
+import com.pad.warehouse.swagger.model.Order;
+import com.pad.warehouse.swagger.model.ProductOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import com.pad.app.model.Order;
-import com.pad.app.model.ProductOrder;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +41,7 @@ public class OrderService {
 
     private void processProductOrder(ProductOrder productOrder) {
         log.info("ProcessProductOrder - Service - Start: {}", productOrder);
-        int quantityBought = -productOrder.getQuantityBought();
+        int quantityBought = -Integer.parseInt(productOrder.getQuantityBought());
         String productId = productOrder.getProduct().getId();
         productService.updateProductAvailability(productId, quantityBought);
         log.info("ProcessProductOrder - Service - Stop");
