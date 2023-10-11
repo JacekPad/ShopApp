@@ -70,7 +70,7 @@ class ProductServiceTest {
     private ProductOrder prepareProductOrder(String productId, int quantity) {
         ProductOrder productOrder = new ProductOrder();
         productOrder.setQuantityBought(String.valueOf(quantity));
-        productOrder.setProduct(prepareProductList(productId));
+        productOrder.setProductId(prepareProductList(productId).getId());
         return productOrder;
     }
 

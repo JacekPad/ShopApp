@@ -26,7 +26,7 @@ spring:
             queue:
                 productCountChange: productQuantityChange_queue
         host: localhost
-        port: 15672
+        port: 5672
         username: user
         password: user
 

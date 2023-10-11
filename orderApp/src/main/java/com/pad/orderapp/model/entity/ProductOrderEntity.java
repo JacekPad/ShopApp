@@ -20,14 +20,14 @@ public class ProductOrderEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", insertable = false, updatable = false)
+    @JoinColumn(name = "order_id")
     @JsonIgnore
     private OrderEntity order;
 
-    @Column(name = "order_id")
-    private Long orderId;
-
     @Column(name = "quantity_bought")
     private int quantityBought;
+
+    @Column(name = "product_id")
+    private Long productId;
 
 }

@@ -50,8 +50,10 @@ components:
           type: string
           example:
             - "2"
-        Product:
-          $ref: 'apiSwagger.yaml#/components/schemas/Product'
+        ProductId:
+          type: string
+          example:
+            - "2"
     
     DeliveryMethodEnum:
       type: string

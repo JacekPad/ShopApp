@@ -89,15 +89,15 @@ public class ShopController {
         cproduct.setSubtype("FLAT_SCREEN");
 
 
-        productOrder1.setProduct(aproduct);
+        productOrder1.setProductId(aproduct.getId());
         productOrder1.setQuantityBought("5");
 
         ProductOrder productOrder2 = new ProductOrder();
-        productOrder2.setProduct(bproduct);
+        productOrder2.setProductId(bproduct.getId());
         productOrder2.setQuantityBought("11");
 
         ProductOrder productOrder3 = new ProductOrder();
-        productOrder3.setProduct(cproduct);
+        productOrder3.setProductId(cproduct.getId());
         productOrder3.setQuantityBought("1");
         List<ProductOrder> orders = new ArrayList<>();
         orders.add(productOrder1);

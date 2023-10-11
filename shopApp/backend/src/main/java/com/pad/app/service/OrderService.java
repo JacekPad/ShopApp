@@ -42,7 +42,7 @@ public class OrderService {
     private void processProductOrder(ProductOrder productOrder) {
         log.info("ProcessProductOrder - Service - Start: {}", productOrder);
         int quantityBought = -Integer.parseInt(productOrder.getQuantityBought());
-        String productId = productOrder.getProduct().getId();
+        String productId = productOrder.getProductId();
         productService.updateProductAvailability(productId, quantityBought);
         log.info("ProcessProductOrder - Service - Stop");
     }

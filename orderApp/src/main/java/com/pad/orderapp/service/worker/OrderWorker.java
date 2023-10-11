@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-@RabbitListener(queues = "${spring.rabbitmq.template.default-receive-queue}")
+@RabbitListener(queues = "${spring.rabbitmq.template.queue.sendOrderQueue}")
 @Slf4j
 public class OrderWorker {
 

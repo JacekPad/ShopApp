@@ -42,12 +42,12 @@ public class ProductService {
     }
 
     public boolean isProductAvailable(ProductOrder productOrder) {
-        Optional<Product> product = Optional.ofNullable(getProductDetails(productOrder.getProduct().getId()));
+        Optional<Product> product = Optional.ofNullable(getProductDetails(productOrder.getProductId()));
         if (product.isPresent()) {
             int productQuantity = Integer.parseInt(product.get().getQuantity());
             int quantityBought = Integer.parseInt(productOrder.getQuantityBought());
             log.info("is available? product {}, {}", product.get(), productQuantity - quantityBought > 0);
-            return productQuantity - quantityBought > 0;
+            return productQuantity - quantityBought >= 0;
         } else {
 //            TODO some errors that product doesn't exist?
             return false;

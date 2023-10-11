@@ -18,7 +18,6 @@ public class AddressEntity {
     private Long id;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "order_id")
     private OrderEntity order;
 
