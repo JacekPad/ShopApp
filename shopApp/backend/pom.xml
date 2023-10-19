@@ -100,7 +100,7 @@
 				<version>3.0.46</version>
 				<executions>
 					<execution>
-						<id>generate-apis</id>
+						<id>main-api-swagger</id>
 						<?m2e execute onConfiguration?>
 						<goals>
 							<goal>generate</goal>
@@ -123,12 +123,12 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>generate-models</id>
+						<id>order-models-swagger</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>src/main/resources/swagger/models.yaml</inputSpec>
+							<inputSpec>src/main/resources/swagger/order-swagger.yaml</inputSpec>
 							<language>spring</language>
 							<library>spring-boot</library>
 							<output>${project.build.directory}/generated-sources</output>

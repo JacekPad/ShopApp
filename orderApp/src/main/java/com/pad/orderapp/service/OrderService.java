@@ -1,18 +1,18 @@
 package com.pad.orderapp.service;
 
-import com.pad.orderapp.model.entity.AddressEntity;
 import com.pad.orderapp.model.entity.OrderEntity;
 import com.pad.orderapp.model.enums.OrderStatus;
-import com.pad.orderapp.repository.AddressRepository;
 import com.pad.orderapp.repository.OrderRepository;
 import com.pad.orderapp.mappers.OrderMapper;
-import com.pad.orderapp.repository.ProductOrderRepository;
 import com.pad.warehouse.swagger.model.Order;
+import com.pad.warehouse.swagger.model.OrderFilterParams;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @AllArgsConstructor
@@ -32,10 +32,37 @@ public class OrderService {
         log.info("processOrder - SERVICE - END");
     }
 
-    public boolean updateOrderStatus(Long orderId, OrderStatus changeStatusTo) {
-        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow();
+    public String updateOrderStatus(OrderEntity orderEntity, OrderStatus changeStatusTo) {
+//        TODO some normal delete or whatever webclient and wait for response it deleted or some error (cannot be deleted if status changed between frontend info and request)
 //            TODO some error if not found
-        if (OrderStatus.CANCELED.equals(changeStatusTo)) {
+
+        orderEntity.setStatus(changeStatusTo.name());
+        orderRepository.saveAndFlush(orderEntity);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Status changed to: ");
+        switch (changeStatusTo) {
+            case INITIAL -> sb.append(OrderStatus.INITIAL.name());
+            case IN_PROGRESS -> sb.append(OrderStatus.IN_PROGRESS.name());
+            case READY -> sb.append(OrderStatus.READY.name());
+            case IN_DELIVERY -> sb.append(OrderStatus.IN_DELIVERY.name());
+            case DELIVERED -> sb.append(OrderStatus.DELIVERED.name());
+        }
+        return sb.toString();
+    }
+
+    public String cancelOrder(Long orderId) {
+//        TODO
+//        if order canceled before some status -> cancel order and set product quantities back
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow();
+        if (canOrderBeCanceled(orderEntity)) {
+            return updateOrderStatus(orderEntity, OrderStatus.CANCELED);
+        } else {
+//            TODO cannot be canceled throw some shit
+            return null;
+        }
+    }
+
+    private boolean canOrderBeCanceled(OrderEntity orderEntity) {
             if (OrderStatus.INITIAL.name().equals(orderEntity.getStatus()) ||
                     OrderStatus.IN_PROGRESS.name().equals(orderEntity.getStatus()) ||
                     OrderStatus.READY.name().equals(orderEntity.getStatus())) {
@@ -47,43 +74,17 @@ public class OrderService {
 //                TODO cannot be canceled anymore
                 return false;
             }
-        }
-
-        switch (changeStatusTo) {
-            case INITIAL -> {
-                log.info("send some emails etc");
-            }
-            case IN_PROGRESS -> {
-                log.info("send some emails etc");
-            }
-            case READY -> {
-                log.info("send some emails etc");
-            }
-            case IN_DELIVERY -> {
-                log.info("send some emails etc");
-            }
-            case DELIVERED -> {
-                log.info("send some emails etc");
-            }
-        }
-        orderEntity.setStatus(changeStatusTo.name());
-        orderRepository.saveAndFlush(orderEntity);
-        return true;
-
     }
 
-    public void cancelOrder(Long orderId) {
-//        TODO
-//        if order canceled before some status -> cancel order and set product quantities back
-        boolean isStatusChanged = updateOrderStatus(orderId, OrderStatus.CANCELED);
-    }
-
-    public void getOrdersByUser() {
-//        TODO get orders for user based on request
-    }
-
-    public void getOrdersByParams() {
-//        TODO get orders for admin based on params
+    public List<Order> getOrdersByParams(OrderFilterParams params) {
+        List<Order> orders = new ArrayList<>();
+//        TODO get orders for admin/user based on params
+        String someUserObject = "";
+        List<OrderEntity> orderEntity = productOrderService.getOrders(params, someUserObject);
+        orderEntity.forEach(order -> {
+            orders.add(mapper.mapToDataOrder(order));
+        });
+        return orders;
     }
 
 

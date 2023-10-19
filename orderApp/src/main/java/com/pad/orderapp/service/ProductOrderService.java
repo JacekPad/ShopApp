@@ -4,6 +4,7 @@ import com.pad.orderapp.model.entity.OrderEntity;
 import com.pad.orderapp.model.entity.ProductOrderEntity;
 import com.pad.orderapp.repository.OrderRepository;
 import com.pad.orderapp.repository.ProductOrderRepository;
+import com.pad.warehouse.swagger.model.OrderFilterParams;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,10 @@ public class ProductOrderService {
 //            TODO some error
         }
 
+    }
+
+    public List<OrderEntity> getOrders(OrderFilterParams params, String someUserObject) {
+        String user = "";
+        return orderRepository.findByQueryParams(params.getCreatedBefore(), params.getCreatedAfter(), params.getStatus(), params.isIsPayed());
     }
 }
