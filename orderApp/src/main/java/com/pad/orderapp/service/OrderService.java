@@ -46,6 +46,7 @@ public class OrderService {
             case READY -> sb.append(OrderStatus.READY.name());
             case IN_DELIVERY -> sb.append(OrderStatus.IN_DELIVERY.name());
             case DELIVERED -> sb.append(OrderStatus.DELIVERED.name());
+            case CANCELED -> sb.append(OrderStatus.CANCELED.name());
         }
         return sb.toString();
     }

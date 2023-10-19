@@ -28,7 +28,8 @@ public class OrderController {
 
     @DeleteMapping("cancel-order/{id}")
     public ResponseEntity<ProcessOrderResponse> cancelOrder(@PathVariable Long id) {
-//      TODO some response object
+//      TODO some response object (work on putting it somewhere and on response message (status? message? message and status? send back the whole order object?)
+//        TODO more logs in between
         log.info("cancelOrder - CONTROLLER - START: {}", id);
         String message = orderService.cancelOrder(id);
         ProcessOrderResponse response = new ProcessOrderResponse();
@@ -46,6 +47,7 @@ public class OrderController {
     @RequestMapping("orders")
     public ResponseEntity<List<Order>> getOrders(OrderFilterParams params) {
 //        TODO some identification?
+//        TODO make a nice swagger response object?
         log.info("getOrders - CONTROLLER - START: ");
         List<Order> orders = orderService.getOrdersByParams(params);
         log.info("getOrders - CONTROLLER - END");

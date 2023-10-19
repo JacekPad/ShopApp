@@ -72,6 +72,8 @@ components:
     Order:
       type: object
       properties:
+        id:
+          type: string
         products:
           type: array
           items:
@@ -80,6 +82,8 @@ components:
           $ref: '#/components/schemas/Address'
         isPayed:
           type: boolean
+        status:
+          type: string
         deliveryMethod:
           $ref: '#/components/schemas/DeliveryMethodEnum'
         paymentMethod:
