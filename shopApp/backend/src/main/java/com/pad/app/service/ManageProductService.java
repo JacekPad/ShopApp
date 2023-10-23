@@ -1,8 +1,8 @@
 package com.pad.app.service;
 
 import com.pad.app.model.messageTemplates.ProductQuantityChangeMessageTemplate;
-import com.pad.warehouse.swagger.model.Product;
-import com.pad.warehouse.swagger.model.ProductsResponse;
+import com.pad.app.swagger.model.Product;
+import com.pad.app.swagger.model.ProductsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
