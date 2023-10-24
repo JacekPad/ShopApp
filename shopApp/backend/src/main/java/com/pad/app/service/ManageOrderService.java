@@ -1,5 +1,6 @@
 package com.pad.app.service;
 
+import com.pad.app.exception.notFound.NoObjectFound;
 import com.pad.app.model.messageTemplates.OrderMessageTemplate;
 import com.pad.app.swagger.model.Order;
 import com.pad.app.swagger.model.OrderFilterParams;
@@ -25,6 +26,10 @@ public class ManageOrderService {
     private String ORDER_URI;
 
     public void sendOrder(Order order) {
+        if (order == null) {
+            log.error("No order to send");
+            throw new NoObjectFound("No order to send");
+        }
         OrderMessageTemplate orderMessageTemplate = prepareOrderTemplate(order);
         workerService.prepareMessage(orderMessageTemplate);
     }

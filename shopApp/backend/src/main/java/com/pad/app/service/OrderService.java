@@ -2,8 +2,11 @@ package com.pad.app.service;
 
 import java.util.List;
 
-import com.pad.warehouse.swagger.model.Order;
-import com.pad.warehouse.swagger.model.ProductOrder;
+
+import com.pad.app.exception.notFound.NoObjectFound;
+import com.pad.app.swagger.model.Order;
+import com.pad.app.swagger.model.OrderFilterParams;
+import com.pad.app.swagger.model.ProductOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +30,16 @@ public class OrderService {
         if (isOrderAvailable(productOrderList)) {
             productOrderList.parallelStream().forEach(this::processProductOrder);
             processOrder(order);
+            log.info("makeOrder - Service - STOP");
         } else {
-//            TODO some error that product are not available
+            log.error("Error making order - product is not available: {}", productOrderList);
+            throw new NoObjectFound("Product in product list unavailable");
         }
-        log.info("makeOrder - Service - STOP");
+    }
+
+    public List<Order> getOrders(OrderFilterParams params) {
+        List<Order> orders = manageOrderService.getOrders(params);
+        return orders;
     }
 
     private void processOrder(Order order) {

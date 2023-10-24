@@ -1,7 +1,7 @@
 package com.pad.app.model.messageTemplates;
 
 import com.pad.app.model.enums.MessageType;
-import com.pad.warehouse.swagger.model.Order;
+import com.pad.app.swagger.model.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
