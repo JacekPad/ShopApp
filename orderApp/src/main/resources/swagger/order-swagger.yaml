@@ -120,3 +120,13 @@ components:
           $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
         OrderFilterParams:
           $ref: '#/components/schemas/OrderFilterParams'
+
+    OrdersResponse:
+      type: object
+      properties:
+        ResponseHeader:
+          $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
+        Orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'

@@ -1,11 +1,10 @@
 package com.pad.orderapp.controller;
 
-import com.pad.orderapp.model.entity.OrderEntity;
 import com.pad.orderapp.service.OrderService;
-import com.pad.warehouse.swagger.model.Order;
-import com.pad.warehouse.swagger.model.OrderFilterParams;
-import com.pad.warehouse.swagger.model.ProcessOrderResponse;
-import com.pad.warehouse.swagger.model.ResponseHeader;
+import com.pad.orderapp.swagger.model.Order;
+import com.pad.orderapp.swagger.model.OrderFilterParams;
+import com.pad.orderapp.swagger.model.ProcessOrderResponse;
+import com.pad.orderapp.swagger.model.ResponseHeader;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

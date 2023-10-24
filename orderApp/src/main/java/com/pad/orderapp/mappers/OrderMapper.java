@@ -1,7 +1,7 @@
 package com.pad.orderapp.mappers;
 
 import com.pad.orderapp.model.entity.OrderEntity;
-import com.pad.warehouse.swagger.model.Order;
+import com.pad.orderapp.swagger.model.Order;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

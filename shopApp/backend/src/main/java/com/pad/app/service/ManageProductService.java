@@ -1,5 +1,8 @@
 package com.pad.app.service;
 
+import com.pad.app.exception.internal.FetchDataError;
+import com.pad.app.exception.internal.SaveObjectException;
+import com.pad.app.exception.notFound.NoObjectFound;
 import com.pad.app.model.messageTemplates.ProductQuantityChangeMessageTemplate;
 import com.pad.app.swagger.model.Product;
 import com.pad.app.swagger.model.ProductsResponse;
@@ -26,16 +29,20 @@ public class ManageProductService {
 
     public List<Product> fetchProducts() {
         log.info("fetchProducts - START");
-        ProductsResponse productsResponse = webClientService.webClientGet(PRODUCT_URI, ProductsResponse.class);
-        log.info("fetchProducts - END");
-        return productsResponse.getProducts();
+        try {
+            ProductsResponse productsResponse = webClientService.webClientGet(PRODUCT_URI, ProductsResponse.class);
+            log.info("fetchProducts - END");
+            return productsResponse.getProducts();
+        } catch (Exception e) {
+            log.error("Error fetching products: {}", e);
+            throw new FetchDataError("Could not fetch products: " + e.getMessage());
+        }
     }
 
     @Cacheable(value = "products", key = "#id")
     public Product getProduct(String id) {
-//        TODO some error handling for no object in cache
         log.error("no object cached with id: {}", id);
-        return null;
+        throw new NoObjectFound("No product in cache");
     }
 
     @CachePut(value = "products", key = "#product.getId()")
@@ -46,9 +53,14 @@ public class ManageProductService {
 
     public void updateProductDatabase(String productId, int quantityChange) {
         log.info("updating product database - Service - START: {}", productId);
-        ProductQuantityChangeMessageTemplate template = prepareProductTemplate(productId, quantityChange);
-        workerService.prepareMessage(template);
-        log.info("updating product database - Service - STOP");
+        try {
+            ProductQuantityChangeMessageTemplate template = prepareProductTemplate(productId, quantityChange);
+            workerService.prepareMessage(template);
+            log.info("updating product database - Service - STOP");
+        } catch (Exception e) {
+            log.error("Error updating product database: {}", e);
+            throw new SaveObjectException("Could not update product database" + e.getMessage());
+        }
     }
 
     private ProductQuantityChangeMessageTemplate prepareProductTemplate(String productId, int quantityChange) {
