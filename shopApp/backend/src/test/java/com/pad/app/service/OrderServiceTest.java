@@ -28,10 +28,13 @@ class OrderServiceTest {
 
     @Test
     void makeOrder_whenProductNotAvailable_throwException() {
-
+//TODO ....
     }
 
-
+    @Test
+    void makeOrder_shouldProcessOrder() {
+//TODO assert uses manageOrder sendorder method
+    }
 
 
 }

@@ -8,6 +8,7 @@ import com.pad.orderapp.model.entity.OrderEntity;
 import com.pad.orderapp.model.enums.OrderStatus;
 import com.pad.orderapp.repository.OrderRepository;
 import com.pad.orderapp.mappers.OrderMapper;
+import com.pad.orderapp.swagger.model.ChangeOrderStatusResponse;
 import com.pad.orderapp.swagger.model.Order;
 import com.pad.orderapp.swagger.model.OrderFilterParams;
 import jakarta.transaction.Transactional;
@@ -46,7 +47,6 @@ public class OrderService {
 
     public String updateOrderStatus(OrderEntity orderEntity, OrderStatus changeStatusTo) {
 //        TODO some normal delete or whatever webclient and wait for response it deleted or some error (cannot be deleted if status changed between frontend info and request)
-//            TODO some error if not found
         log.info("updateOrderStatus - SERVICE - START, order: {} to status: {}", orderEntity.getId(), changeStatusTo);
         orderEntity.setStatus(changeStatusTo.name());
         try {
@@ -69,21 +69,27 @@ public class OrderService {
         return sb.toString();
     }
 
-    public String cancelOrder(Long orderId) {
+    public ChangeOrderStatusResponse cancelOrder(Long orderId) {
 //       TODO if order canceled before some status -> cancel order and set product quantities back (in shop app quantity?)
         log.info("Cancel order - SERVICE - START, Order: {}", orderId);
+        ChangeOrderStatusResponse response = new ChangeOrderStatusResponse();
         Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
+        String message = "";
         if (orderEntity.isEmpty()) {
             log.error("No order found for id: {}", orderId);
             throw new NoObjectFound("No object for id: " + orderId);
         }
         if (canOrderBeCanceled(orderEntity.get())) {
             log.info("Canceling order: {}", orderEntity.get().getId());
-            return updateOrderStatus(orderEntity.get(), OrderStatus.CANCELED);
+            message = updateOrderStatus(orderEntity.get(), OrderStatus.CANCELED);
+            response.setIsChanged(true);
         } else {
-            log.error("Error canceling order: {}, status: {}", orderId, orderEntity.get().getStatus());
-            throw new CancelOrderException("Could not cancel order: " + orderId);
+            log.info("Error canceling order: {}, status: {}", orderId, orderEntity.get().getStatus());
+            message = "Could not cancel order: " + orderId + ", status: " + orderEntity.get().getStatus();
+            response.setIsChanged(false);
         }
+        response.setMessage(message);
+        return response;
     }
 
     private boolean canOrderBeCanceled(OrderEntity orderEntity) {

@@ -195,8 +195,9 @@ class OrderServiceTest {
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(orderEntity));
 
 //        then
-        String message = orderService.cancelOrder(1L);
-        assertEquals(expectedResponse, message);
+        ChangeOrderStatusResponse response = orderService.cancelOrder(1L);
+        assertEquals(expectedResponse, response.getMessage());
+        assertTrue(response.isIsChanged());
     }
 
     @Test
@@ -207,13 +208,9 @@ class OrderServiceTest {
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(orderEntity));
 
 //        then
-        try {
-            String message = orderService.cancelOrder(1L);
-            fail(message);
-        } catch (Exception e) {
-            assertInstanceOf(CancelOrderException.class, e);
-        }
-
+        ChangeOrderStatusResponse response = orderService.cancelOrder(1L);
+        assertFalse(response.isIsChanged());
+        assertEquals("Could not cancel order: 1, status: " + OrderStatus.IN_DELIVERY.name(), response.getMessage());
     }
 
     @Test
@@ -225,8 +222,8 @@ class OrderServiceTest {
 
 //        then
         try {
-            String message = orderService.cancelOrder(1L);
-            fail(message);
+            ChangeOrderStatusResponse response = orderService.cancelOrder(1L);
+            fail(response.getMessage());
         } catch (Exception e) {
             assertInstanceOf(NoObjectFound.class, e);
         }

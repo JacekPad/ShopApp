@@ -18,7 +18,7 @@ public class OrderWorker {
 
     @RabbitHandler
     public void changeProductQuantityWorker(OrderMessageTemplate messageTemplate) {
-        log.info("WORKER - received message: {}", messageTemplate);
+        log.info("Change product quantity worker - received message: {}", messageTemplate);
         orderService.processOrder(messageTemplate.getOrder());
     }
 

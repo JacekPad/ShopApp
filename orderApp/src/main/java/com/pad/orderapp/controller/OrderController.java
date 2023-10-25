@@ -1,10 +1,7 @@
 package com.pad.orderapp.controller;
 
 import com.pad.orderapp.service.OrderService;
-import com.pad.orderapp.swagger.model.Order;
-import com.pad.orderapp.swagger.model.OrderFilterParams;
-import com.pad.orderapp.swagger.model.ProcessOrderResponse;
-import com.pad.orderapp.swagger.model.ResponseHeader;
+import com.pad.orderapp.swagger.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -26,31 +23,33 @@ public class OrderController {
     private final OrderService orderService;
 
     @DeleteMapping("cancel-order/{id}")
-    public ResponseEntity<ProcessOrderResponse> cancelOrder(@PathVariable Long id) {
-//      TODO some response object (work on putting it somewhere and on response message (status? message? message and status? send back the whole order object?)
-//        TODO more logs in between
+    public ResponseEntity<ChangeOrderStatusResponse> cancelOrder(@PathVariable Long id) {
         log.info("cancelOrder - CONTROLLER - START: {}", id);
-        String message = orderService.cancelOrder(id);
-        ProcessOrderResponse response = new ProcessOrderResponse();
-        ResponseHeader header = new ResponseHeader();
-        header.setRequestId(UUID.randomUUID());
-        header.setTimestamp(OffsetDateTime.now());
-        response.setResponseHeader(header);
-        response.setCode(String.valueOf(200));
-        response.setMessage(message);
+        ChangeOrderStatusResponse response = orderService.cancelOrder(id);
+        response.setResponseHeader(generateHeaders());
         log.info("cancelOrder - CONTROLLER - END");
         return new ResponseEntity<>(response, null, 200);
     }
 
 
     @RequestMapping("orders")
-    public ResponseEntity<List<Order>> getOrders(OrderFilterParams params) {
+    public ResponseEntity<ProcessOrderResponse> getOrders(OrderFilterParams params) {
 //        TODO some identification?
-//        TODO make a nice swagger response object?
-        log.info("getOrders - CONTROLLER - START: ");
+        log.info("getOrders - CONTROLLER - START: params {}", params);
+        ProcessOrderResponse response = new ProcessOrderResponse();
         List<Order> orders = orderService.getOrdersByParams(params);
+        response.setOrders(orders);
+        response.setResponseHeader(generateHeaders());
         log.info("getOrders - CONTROLLER - END");
-        return new ResponseEntity<>(orders, null, 200);
+        return new ResponseEntity<>(response, null, 200);
+    }
+
+    private ResponseHeader generateHeaders() {
+        ResponseHeader header = new ResponseHeader();
+//        TODO put request id not random someday
+        header.setRequestId(UUID.randomUUID());
+        header.setTimestamp(OffsetDateTime.now());
+        return header;
     }
 
 }

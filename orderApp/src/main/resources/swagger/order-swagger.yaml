@@ -101,14 +101,14 @@ components:
         isPayed:
           type: boolean
 
-    ProcessOrderResponse:
+    ChangeOrderStatusResponse:
       type: object
       description: Response class for processing order
       properties:
         ResponseHeader:
           $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
-        code:
-          type: string
+        isChanged:
+          type: boolean
         message:
           type: string
 
@@ -121,7 +121,7 @@ components:
         OrderFilterParams:
           $ref: '#/components/schemas/OrderFilterParams'
 
-    OrdersResponse:
+    ProcessOrderResponse:
       type: object
       properties:
         ResponseHeader:
