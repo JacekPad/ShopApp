@@ -2,18 +2,18 @@ openapi: 3.0.0
 info:
   title: Order models
   description: This is a swagger for commonly used models throughout  applications
-  contact: 
+  contact:
     name: Author
     url: http://localhost:8080/
   version: '0.0.1'
-servers: 
+servers:
   - url: http://localhost:8080
 tags:
   - name: Order
     description: Order models
 
 components:
-  schemas: 
+  schemas:
 
     Address:
       type: object
@@ -57,14 +57,14 @@ components:
     
     DeliveryMethodEnum:
       type: string
-      enum: 
+      enum:
         - COURIER
         - PERSONAL
         - POST
 
     PaymentMethodEnum:
       type: string
-      enum: 
+      enum:
         - CASH
         - CREDIT_CARD
         - BLIK
@@ -101,14 +101,14 @@ components:
         isPayed:
           type: boolean
 
-    ProcessOrderResponse:
+    ChangeOrderStatusResponse:
       type: object
       description: Response class for processing order
       properties:
         ResponseHeader:
           $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
-        code:
-          type: string
+        isChanged:
+          type: boolean
         message:
           type: string
 
@@ -121,7 +121,7 @@ components:
         OrderFilterParams:
           $ref: '#/components/schemas/OrderFilterParams'
 
-    OrdersResponse:
+    ProcessOrderResponse:
       type: object
       properties:
         ResponseHeader:
