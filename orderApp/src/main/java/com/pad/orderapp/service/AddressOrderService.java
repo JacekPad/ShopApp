@@ -25,12 +25,13 @@ public class AddressOrderService {
     @Transactional
     public void saveAddress(AddressEntity address, Long orderId) {
         log.info("save address - SERVICE - START, order id: {}, address: {}", orderId, address);
+        Optional<AddressEntity> addressEntityCheck = addressRepository.findById(address.getId());
         Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
         if (orderEntity.isPresent()) {
             address.setOrder(orderEntity.get());
-            if (address.getId() != null) {
-                log.error("Address already exists: order id: {}, address id: {}", orderId, address.getId());
-                throw new SaveObjectException("Could not save address - address already exists");
+            if (addressEntityCheck.isEmpty()) {
+                log.error("Address was not processed properly: order id: {}, address id: {}", orderId, address.getId());
+                throw new SaveObjectException("Could not save address - Address not processed properly");
             }
             try {
                 addressRepository.saveAndFlush(address);

@@ -1,6 +1,9 @@
 package com.pad.orderapp.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.pad.orderapp.model.enums.OrderStatus;
+import com.pad.orderapp.swagger.model.DeliveryMethodEnum;
+import com.pad.orderapp.swagger.model.PaymentMethodEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,13 +29,16 @@ public class OrderEntity {
     private boolean isPayed;
 
     @Column(name = "payment_method")
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethodEnum paymentMethod;
 
     @Column(name = "delivery_method")
-    private String deliveryMethod;
+    @Enumerated(EnumType.STRING)
+    private DeliveryMethodEnum deliveryMethod;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", orphanRemoval = true)
     private List<ProductOrderEntity> productOrdered;

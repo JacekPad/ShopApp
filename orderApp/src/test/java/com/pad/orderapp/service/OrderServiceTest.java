@@ -83,16 +83,15 @@ class OrderServiceTest {
         return address;
     }
 
-    //    TODO change entity to enums to string
     private OrderEntity createOrderEntity() {
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setId(1L);
         orderEntity.setProductOrdered(createProductEntityList());
         orderEntity.setAddress(createAddressEntity());
         orderEntity.setPayed(false);
-        orderEntity.setStatus("INITIAL");
-        orderEntity.setDeliveryMethod(DeliveryMethodEnum.COURIER.toString());
-        orderEntity.setPaymentMethod(PaymentMethodEnum.CASH.toString());
+        orderEntity.setStatus(OrderStatus.INITIAL);
+        orderEntity.setDeliveryMethod(DeliveryMethodEnum.COURIER);
+        orderEntity.setPaymentMethod(PaymentMethodEnum.CASH);
         return orderEntity;
     }
 
@@ -164,7 +163,7 @@ class OrderServiceTest {
     void updateOrderStatus_shouldUpdateOrderStatus() {
         OrderEntity orderEntity = createOrderEntity();
         OrderStatus statusToChangeTo = OrderStatus.IN_DELIVERY;
-        String expectedResponse = "Status changed to: " + OrderStatus.IN_DELIVERY.name();
+        String expectedResponse = "Status changed to: " + OrderStatus.IN_DELIVERY.getName();
 //        when
 
 //        then
@@ -190,7 +189,7 @@ class OrderServiceTest {
     @Test
     void cancelOrder_shouldCancelOrder() {
         OrderEntity orderEntity = createOrderEntity();
-        String expectedResponse = "Status changed to: " + OrderStatus.CANCELED.name();
+        String expectedResponse = "Status changed to: " + OrderStatus.CANCELED.getName();
 //        when
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(orderEntity));
 
@@ -201,22 +200,22 @@ class OrderServiceTest {
     }
 
     @Test
-    void cancelOrder_shouldThrowExceptionIfCannotBeCanceled() {
+    void cancelOrder_shouldNotCancelIfCannotBeCanceled() {
         OrderEntity orderEntity = createOrderEntity();
-        orderEntity.setStatus(OrderStatus.IN_DELIVERY.name());
+        orderEntity.setStatus(OrderStatus.IN_DELIVERY);
 //        when
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(orderEntity));
 
 //        then
         ChangeOrderStatusResponse response = orderService.cancelOrder(1L);
         assertFalse(response.isIsChanged());
-        assertEquals("Could not cancel order: 1, status: " + OrderStatus.IN_DELIVERY.name(), response.getMessage());
+        assertEquals("Could not cancel order: 1, status: " + OrderStatus.IN_DELIVERY.getName(), response.getMessage());
     }
 
     @Test
     void cancelOrder_shouldThrowExceptionIfOrderNotFound() {
         OrderEntity orderEntity = createOrderEntity();
-        orderEntity.setStatus(OrderStatus.IN_DELIVERY.name());
+        orderEntity.setStatus(OrderStatus.IN_DELIVERY);
 //        when
         when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
 

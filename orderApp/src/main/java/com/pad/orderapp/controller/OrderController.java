@@ -46,7 +46,6 @@ public class OrderController {
 
     private ResponseHeader generateHeaders() {
         ResponseHeader header = new ResponseHeader();
-//        TODO put request id not random someday
         header.setRequestId(UUID.randomUUID());
         header.setTimestamp(OffsetDateTime.now());
         return header;

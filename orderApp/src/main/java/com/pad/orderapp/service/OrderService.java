@@ -1,6 +1,5 @@
 package com.pad.orderapp.service;
 
-import com.pad.orderapp.exception.badRequest.CancelOrderException;
 import com.pad.orderapp.exception.internal.FetchDataError;
 import com.pad.orderapp.exception.internal.SaveObjectException;
 import com.pad.orderapp.exception.notFound.NoObjectFound;
@@ -35,6 +34,7 @@ public class OrderService {
     public void processOrder(Order order) {
         log.info("processOrder - SERVICE - START: {}", order);
         try {
+            order.setStatus(OrderStatus.INITIAL.getCode());
             OrderEntity orderEntity = orderRepository.saveAndFlush(mapper.mapToEntityOrder(order));
             addressOrderService.saveAddress(orderEntity.getAddress(), orderEntity.getId());
             productOrderService.saveProductOrder(orderEntity.getProductOrdered(), orderEntity.getId());
@@ -48,22 +48,22 @@ public class OrderService {
     public String updateOrderStatus(OrderEntity orderEntity, OrderStatus changeStatusTo) {
 //        TODO some normal delete or whatever webclient and wait for response it deleted or some error (cannot be deleted if status changed between frontend info and request)
         log.info("updateOrderStatus - SERVICE - START, order: {} to status: {}", orderEntity.getId(), changeStatusTo);
-        orderEntity.setStatus(changeStatusTo.name());
+        orderEntity.setStatus(changeStatusTo);
         try {
             orderRepository.saveAndFlush(orderEntity);
         } catch (Exception e) {
-            log.error("Error updating order status: {}, status: {}", orderEntity.getId(), changeStatusTo.name());
+            log.error("Error updating order status: {}, status: {}", orderEntity.getId(), changeStatusTo.getName());
             throw new SaveObjectException("Could not update order status for order: " + orderEntity.getId());
         }
         StringBuilder sb = new StringBuilder();
         sb.append("Status changed to: ");
         switch (changeStatusTo) {
-            case INITIAL -> sb.append(OrderStatus.INITIAL.name());
-            case IN_PROGRESS -> sb.append(OrderStatus.IN_PROGRESS.name());
-            case READY -> sb.append(OrderStatus.READY.name());
-            case IN_DELIVERY -> sb.append(OrderStatus.IN_DELIVERY.name());
-            case DELIVERED -> sb.append(OrderStatus.DELIVERED.name());
-            case CANCELED -> sb.append(OrderStatus.CANCELED.name());
+            case INITIAL -> sb.append(OrderStatus.INITIAL.getName());
+            case IN_PROGRESS -> sb.append(OrderStatus.IN_PROGRESS.getName());
+            case READY -> sb.append(OrderStatus.READY.getName());
+            case IN_DELIVERY -> sb.append(OrderStatus.IN_DELIVERY.getName());
+            case DELIVERED -> sb.append(OrderStatus.DELIVERED.getName());
+            case CANCELED -> sb.append(OrderStatus.CANCELED.getName());
         }
         log.info("updateOrderStatus - SERVICE - END, order: {}", orderEntity.getId());
         return sb.toString();
@@ -84,8 +84,8 @@ public class OrderService {
             message = updateOrderStatus(orderEntity.get(), OrderStatus.CANCELED);
             response.setIsChanged(true);
         } else {
-            log.info("Error canceling order: {}, status: {}", orderId, orderEntity.get().getStatus());
-            message = "Could not cancel order: " + orderId + ", status: " + orderEntity.get().getStatus();
+            log.info("Error canceling order: {}, status: {}", orderId, orderEntity.get().getStatus().getName());
+            message = "Could not cancel order: " + orderId + ", status: " + orderEntity.get().getStatus().getName();
             response.setIsChanged(false);
         }
         response.setMessage(message);
@@ -93,9 +93,9 @@ public class OrderService {
     }
 
     private boolean canOrderBeCanceled(OrderEntity orderEntity) {
-        return OrderStatus.INITIAL.name().equals(orderEntity.getStatus()) ||
-                OrderStatus.IN_PROGRESS.name().equals(orderEntity.getStatus()) ||
-                OrderStatus.READY.name().equals(orderEntity.getStatus());
+        return OrderStatus.INITIAL.equals(orderEntity.getStatus()) ||
+                OrderStatus.IN_PROGRESS.equals(orderEntity.getStatus()) ||
+                OrderStatus.READY.equals(orderEntity.getStatus());
     }
 
     public List<Order> getOrdersByParams(OrderFilterParams params) {
