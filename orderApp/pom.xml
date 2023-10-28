@@ -145,8 +145,8 @@
                             <generateApiTests>false</generateApiTests>
                             <generateApis>false</generateApis>
                             <generateModelTests>false</generateModelTests>
-                            <modelPackage>com.pad.warehouse.swagger.model</modelPackage>
-                            <apiPackage>com.pad.warehouse.swagger.api</apiPackage>
+                            <modelPackage>com.pad.orderapp.swagger.model</modelPackage>
+                            <apiPackage>com.pad.orderapp.swagger.api</apiPackage>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
                                 <dateLibrary>java8</dateLibrary>
@@ -167,8 +167,8 @@
                             <generateApiTests>false</generateApiTests>
                             <generateApis>false</generateApis>
                             <generateModelTests>false</generateModelTests>
-                            <modelPackage>com.pad.warehouse.swagger.model</modelPackage>
-                            <apiPackage>com.pad.warehouse.swagger.api</apiPackage>
+                            <modelPackage>com.pad.orderapp.swagger.model</modelPackage>
+                            <apiPackage>com.pad.orderapp.swagger.api</apiPackage>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
                                 <dateLibrary>java8</dateLibrary>

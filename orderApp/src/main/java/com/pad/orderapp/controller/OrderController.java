@@ -5,10 +5,7 @@ import com.pad.orderapp.swagger.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -32,7 +29,7 @@ public class OrderController {
     }
 
 
-    @RequestMapping("orders")
+    @GetMapping("orders")
     public ResponseEntity<ProcessOrderResponse> getOrders(OrderFilterParams params) {
 //        TODO some identification?
         log.info("getOrders - CONTROLLER - START: params {}", params);
