@@ -20,9 +20,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @DeleteMapping("cancel-order/{id}")
-    public ResponseEntity<ChangeOrderStatusResponse> cancelOrder(@PathVariable Long id) {
+    public ResponseEntity<CancelOrderStatusResponse> cancelOrder(@PathVariable Long id) {
         log.info("cancelOrder - CONTROLLER - START: {}", id);
-        ChangeOrderStatusResponse response = orderService.cancelOrder(id);
+        CancelOrderStatusResponse response = orderService.cancelOrder(id);
         response.setResponseHeader(generateHeaders());
         log.info("cancelOrder - CONTROLLER - END");
         return new ResponseEntity<>(response, null, 200);

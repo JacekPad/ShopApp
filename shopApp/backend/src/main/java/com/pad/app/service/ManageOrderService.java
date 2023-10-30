@@ -1,11 +1,10 @@
 package com.pad.app.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pad.app.exception.notFound.NoObjectFound;
 import com.pad.app.model.messageTemplates.OrderMessageTemplate;
 import com.pad.app.service.webClient.WebClientMappers;
 import com.pad.app.service.webClient.WebClientService;
-import com.pad.app.swagger.model.ChangeOrderStatusResponse;
+import com.pad.app.swagger.model.CancelOrderStatusResponse;
 import com.pad.app.swagger.model.Order;
 import com.pad.app.swagger.model.OrderFilterParams;
 import com.pad.app.swagger.model.OrdersResponse;
@@ -40,13 +39,11 @@ public class ManageOrderService {
         workerService.prepareMessage(orderMessageTemplate);
     }
 
-
     private OrderMessageTemplate prepareOrderTemplate(Order order) {
         OrderMessageTemplate messageTemplate = new OrderMessageTemplate();
         messageTemplate.setOrder(order);
         return messageTemplate;
     }
-
 
     public List<Order> getOrders(OrderFilterParams params) {
         String uri = ORDER_URI + "orders";
@@ -56,10 +53,10 @@ public class ManageOrderService {
         return orders.getOrders();
     }
 
-    public ChangeOrderStatusResponse cancelOrder(String id) {
+    public CancelOrderStatusResponse cancelOrder(String id) {
         String uri = ORDER_URI + "cancel-order/" + id;
-        ChangeOrderStatusResponse changeOrderStatusResponse = webClientService.webClientDelete(uri, ChangeOrderStatusResponse.class);
-        return changeOrderStatusResponse;
+        CancelOrderStatusResponse cancelOrderResponse= webClientService.webClientDelete(uri, CancelOrderStatusResponse.class);
+        return cancelOrderResponse;
     }
 
 

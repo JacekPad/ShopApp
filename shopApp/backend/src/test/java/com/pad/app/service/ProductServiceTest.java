@@ -1,7 +1,6 @@
 package com.pad.app.service;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.pad.app.model.FilterParams;
+import com.pad.app.model.ProductFilterParams;
 import com.pad.app.swagger.model.Product;
 import com.pad.app.swagger.model.ProductOrder;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.caffeine.CaffeineCache;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
-
-import java.util.Collections;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,9 +48,9 @@ class ProductServiceTest {
         return productOrder;
     }
 
-    private FilterParams prepareFilterParams(String name, String type, String subtype, boolean available,
-                                             Double priceAtMost, Double priceAtLeast) {
-        FilterParams params = new FilterParams();
+    private ProductFilterParams prepareFilterParams(String name, String type, String subtype, boolean available,
+                                                    Double priceAtMost, Double priceAtLeast) {
+        ProductFilterParams params = new ProductFilterParams();
         params.setName(name);
         params.setType(type);
         params.setSubtype(subtype);

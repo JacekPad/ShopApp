@@ -1,6 +1,6 @@
 package com.pad.app.controller;
 
-import com.pad.app.model.FilterParams;
+import com.pad.app.model.ProductFilterParams;
 import com.pad.app.service.OrderService;
 import com.pad.app.service.ProductService;
 import com.pad.app.swagger.model.*;
@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class ShopController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(FilterParams params) {
+    public ResponseEntity<List<Product>> getProducts(ProductFilterParams params) {
         log.info("getProducts - Controller - START");
         List<Product> products = productService.getProducts(params);
         log.info("getProducts - Controller - END - {}", products);
@@ -57,11 +55,11 @@ public class ShopController {
     }
 
     @DeleteMapping("cancel-order/{id}")
-    public ResponseEntity<ChangeOrderStatusResponse> cancelOrder(@PathVariable String id) {
+    public ResponseEntity<CancelOrderStatusResponse> cancelOrder(@PathVariable String id) {
         log.info("cancel order - Controller - START - id: {}", id);
-        ChangeOrderStatusResponse changeOrderStatusResponse = orderService.cancelOrder(id);
+        CancelOrderStatusResponse cancelOrderResponse = orderService.cancelOrder(id);
         log.info("cancel order - Controller - END");
-        return new ResponseEntity<>(changeOrderStatusResponse, null, 200);
+        return new ResponseEntity<>(cancelOrderResponse, null, 200);
     }
 
 //    Tests

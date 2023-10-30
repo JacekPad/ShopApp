@@ -7,6 +7,7 @@ import com.pad.orderapp.model.entity.OrderEntity;
 import com.pad.orderapp.model.enums.OrderStatus;
 import com.pad.orderapp.repository.OrderRepository;
 import com.pad.orderapp.mappers.OrderMapper;
+import com.pad.orderapp.swagger.model.CancelOrderStatusResponse;
 import com.pad.orderapp.swagger.model.ChangeOrderStatusResponse;
 import com.pad.orderapp.swagger.model.Order;
 import com.pad.orderapp.swagger.model.OrderFilterParams;
@@ -69,10 +70,10 @@ public class OrderService {
         return sb.toString();
     }
 
-    public ChangeOrderStatusResponse cancelOrder(Long orderId) {
+    public CancelOrderStatusResponse cancelOrder(Long orderId) {
 //       TODO if order canceled before some status -> cancel order and set product quantities back (in shop app quantity?)
         log.info("Cancel order - SERVICE - START, Order: {}", orderId);
-        ChangeOrderStatusResponse response = new ChangeOrderStatusResponse();
+        CancelOrderStatusResponse response = new CancelOrderStatusResponse();
         Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
         String message = "";
         if (orderEntity.isEmpty()) {
@@ -82,11 +83,17 @@ public class OrderService {
         if (canOrderBeCanceled(orderEntity.get())) {
             log.info("Canceling order: {}", orderEntity.get().getId());
             message = updateOrderStatus(orderEntity.get(), OrderStatus.CANCELED);
-            response.setIsChanged(true);
+            response.setChanged(true);
         } else {
             log.info("Error canceling order: {}, status: {}", orderId, orderEntity.get().getStatus().getName());
             message = "Could not cancel order: " + orderId + ", status: " + orderEntity.get().getStatus().getName();
-            response.setIsChanged(false);
+            response.setChanged(false);
+        }
+        try {
+            response.setOrder(mapper.mapToDataOrder(orderEntity.get()));
+        } catch (Exception e) {
+            log.error("Error mapping order entity to data: {}", orderEntity);
+            throw new FetchDataError("Error while canceling order: " + orderId);
         }
         response.setMessage(message);
         return response;

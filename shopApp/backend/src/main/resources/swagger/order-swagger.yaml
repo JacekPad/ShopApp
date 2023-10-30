@@ -17,6 +17,7 @@ components:
 
     Address:
       type: object
+      description: Class describing customer address
       properties:
         street:
           type: string
@@ -45,6 +46,7 @@ components:
     
     ProductOrder:
       type: object
+      description: Class describing product order
       properties:
         quantityBought:
           type: string
@@ -57,6 +59,7 @@ components:
     
     DeliveryMethodEnum:
       type: string
+      description: Enum for delivery methods
       enum:
         - COURIER
         - PERSONAL
@@ -64,6 +67,7 @@ components:
 
     PaymentMethodEnum:
       type: string
+      description: Enum for payment methods
       enum:
         - CASH
         - CREDIT_CARD
@@ -71,6 +75,7 @@ components:
 
     Order:
       type: object
+      description: Object describing order
       properties:
         id:
           type: string
@@ -91,6 +96,7 @@ components:
 
     OrderFilterParams:
       type: object
+      description: Class with order filter parameters
       properties:
         createdBefore:
           type: string
@@ -103,18 +109,33 @@ components:
 
     ChangeOrderStatusResponse:
       type: object
-      description: Response class for processing order
+      description: Response class for changing order status
       properties:
         ResponseHeader:
           $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
-        isChanged:
+        Changed:
           type: boolean
-        message:
+        Message:
           type: string
+        OrderId:
+          type: string
+
+    CancelOrderStatusResponse:
+      type: object
+      description: Response class for canceling order
+      properties:
+        ResponseHeader:
+          $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
+        Changed:
+          type: boolean
+        Message:
+          type: string
+        Order:
+          $ref: '#/components/schemas/Order'
 
     ProcessOrderRequest:
       type: object
-      description: Response class for processing order
+      description: Request class for processing order
       properties:
         ResponseHeader:
           $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
@@ -123,6 +144,7 @@ components:
 
     ProcessOrderResponse:
       type: object
+      description: Response class for processing order
       properties:
         ResponseHeader:
           $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'

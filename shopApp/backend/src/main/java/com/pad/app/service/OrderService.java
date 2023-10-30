@@ -4,7 +4,7 @@ import java.util.List;
 
 
 import com.pad.app.exception.notFound.NoObjectFound;
-import com.pad.app.swagger.model.ChangeOrderStatusResponse;
+import com.pad.app.swagger.model.CancelOrderStatusResponse;
 import com.pad.app.swagger.model.Order;
 import com.pad.app.swagger.model.OrderFilterParams;
 import com.pad.app.swagger.model.ProductOrder;
@@ -67,9 +67,15 @@ public class OrderService {
         return isAvailable;
     }
 
-    public ChangeOrderStatusResponse cancelOrder(String id) {
-//        TODO response?
-        ChangeOrderStatusResponse changeOrderStatusResponse = manageOrderService.cancelOrder(id);
-        return changeOrderStatusResponse;
+    public CancelOrderStatusResponse cancelOrder(String id) {
+        CancelOrderStatusResponse cancelOrderResponse = manageOrderService.cancelOrder(id);
+        if (cancelOrderResponse.isChanged()) {
+            List<ProductOrder> products = cancelOrderResponse.getOrder().getProducts();
+            products.forEach(productOrder -> {
+                int quantityBought = Integer.parseInt(productOrder.getQuantityBought());
+                productService.updateProductAvailability(productOrder.getProductId(), quantityBought);
+            });
+        }
+        return cancelOrderResponse;
     }
 }

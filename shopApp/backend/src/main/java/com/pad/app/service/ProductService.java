@@ -3,7 +3,7 @@ package com.pad.app.service;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.pad.app.exception.internal.FetchDataError;
 import com.pad.app.exception.notFound.NoObjectFound;
-import com.pad.app.model.FilterParams;
+import com.pad.app.model.ProductFilterParams;
 
 import com.pad.app.swagger.model.Product;
 import com.pad.app.swagger.model.ProductOrder;
@@ -15,7 +15,6 @@ import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,7 @@ public class ProductService {
     @Autowired
     private final CacheManager manager;
 
-    public List<Product> getProducts(FilterParams params) {
+    public List<Product> getProducts(ProductFilterParams params) {
         log.info("getProductsFiltered - Service - START: filterParams: {}", params);
         CaffeineCacheManager caffeineCacheManager = (CaffeineCacheManager) manager;
         CaffeineCache cache = (CaffeineCache) caffeineCacheManager.getCache("products");
@@ -82,7 +81,7 @@ public class ProductService {
         }
     }
 
-    private List<Product> filterProducts(FilterParams params, List<Product> list) {
+    private List<Product> filterProducts(ProductFilterParams params, List<Product> list) {
         return list.stream()
                 .filter(prod -> params.getName() == null || prod.getName().contains(params.getName()))
                 .filter(prod -> !params.isAvailable() || Integer.parseInt(prod.getQuantity()) > 0)
