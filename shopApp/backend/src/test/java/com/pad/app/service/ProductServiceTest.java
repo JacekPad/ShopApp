@@ -2,8 +2,8 @@ package com.pad.app.service;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.pad.app.model.FilterParams;
-import com.pad.warehouse.swagger.model.Product;
-import com.pad.warehouse.swagger.model.ProductOrder;
+import com.pad.app.swagger.model.Product;
+import com.pad.app.swagger.model.ProductOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,14 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductServiceTest {
 
 
-//TODO learn how to test cache?
 
 
     @Mock
     private ManageProductService manageProductService;
-
-//    @Mock
-//    private CacheManager manager;
 
     @InjectMocks
     private ProductService service;
@@ -37,22 +33,7 @@ class ProductServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-//        this.manager = prepareCacheManager():
-//        populateManager();
     }
-
-
-//    private CacheManager prepareCacheManager() {
-//        CaffeineCache productsCache = new CaffeineCache("products",
-//                Caffeine.newBuilder().build());
-//        CaffeineCacheManager manager = new CaffeineCacheManager();
-//        manager.setCacheNames(Collections.singletonList("products"));
-//        return manager;
-//    }
-//
-//    private void populateManager() {
-//        manager.getCache("products").put("1", prepareProductList("1"));
-//    }
 
     private Product prepareProductList(String id) {
         Product product = new Product();
@@ -116,16 +97,8 @@ class ProductServiceTest {
     }
 
     @Test
-    void getProducts_whenProductsMatchParams_shouldReturnFilteredProductList() {
-//        List<ProductList> productList = service.getProducts(prepareFilterParams("name", null, null, true,
-//                null, null));
-//
-
-    }
-
-    @Test
     void getProducts_whenNoProductsMatchParams_shouldReturnEmptyList() {
-
+//        TODO ....
 
     }
 

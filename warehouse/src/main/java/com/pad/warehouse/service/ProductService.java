@@ -213,8 +213,7 @@ public class ProductService {
                     productEntity.setQuantity(quantity);
                     productRepository.saveAndFlush(productEntity);
                 } else {
-//                    TODO some error
-//                    not enough products left
+//                    TODO cancel order endpoint to cancel this order [which]?
                 }
             }
 

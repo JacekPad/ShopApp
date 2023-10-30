@@ -1,9 +1,12 @@
 package com.pad.app.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import com.pad.app.exception.internal.FetchDataError;
+import com.pad.app.exception.notFound.NoObjectFound;
 import com.pad.app.model.FilterParams;
-import com.pad.warehouse.swagger.model.Product;
-import com.pad.warehouse.swagger.model.ProductOrder;
+
+import com.pad.app.swagger.model.Product;
+import com.pad.app.swagger.model.ProductOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,8 +53,8 @@ public class ProductService {
             log.info("is available? product {}, {}", product.get(), productQuantity - quantityBought > 0);
             return productQuantity - quantityBought >= 0;
         } else {
-//            TODO some errors that product doesn't exist?
-            return false;
+            log.error("Product not found: {}", product);
+            throw new NoObjectFound("Product not found " + product);
         }
     }
 
@@ -68,11 +72,13 @@ public class ProductService {
         try {
             List<Product> products = manageProductService.fetchProducts();
             if (products != null) {
+                log.info("Updating product cache: {}", products);
                 Objects.requireNonNull(manager.getCache("products")).clear();
                 products.forEach(manageProductService::populateCache);
             }
         } catch (Exception e) {
             log.error("Error when updating cache: {}", e.getMessage());
+            throw new FetchDataError("Could not update cache");
         }
     }
 

@@ -3,7 +3,7 @@ package com.pad.app.controller;
 import com.pad.app.model.FilterParams;
 import com.pad.app.service.OrderService;
 import com.pad.app.service.ProductService;
-import com.pad.warehouse.swagger.model.*;
+import com.pad.app.swagger.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +30,20 @@ public class ShopController {
         log.info("makeOrder - Controller - START");
         orderService.makeOrder(order);
         log.info("makeOrder - Controller - END");
-// make order and descrease number of products in warehouse and send order to other service
+    }
+
+    @GetMapping("/orders")
+    private List<Order> getOrders(OrderFilterParams params) {
+        log.info("getOrders - Controller - START, params: {}", params);
+//        TODO some errors and checks for all methods below / remove temp logs
+        List<Order> orders = orderService.getOrders(params);
+        log.info("getOrders - Controller - END");
+        return orders;
     }
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getProducts(FilterParams params) {
-//        TODO maybe less info when only querying for products?
         log.info("getProducts - Controller - START");
-        log.error("TEMP LOG params: {}", params);
         List<Product> products = productService.getProducts(params);
         log.info("getProducts - Controller - END - {}", products);
         return new ResponseEntity<>(products, null, 200);
@@ -48,10 +54,17 @@ public class ShopController {
         Product productDetails = productService.getProductDetails(id);
         log.info("get Details - Controller - END - {}", productDetails);
         return new ResponseEntity<>(productDetails, null, 200);
-// get all product details when user clicks on product?
     }
 
-//    TODO keep for making tests
+    @DeleteMapping("cancel-order/{id}")
+    public ResponseEntity<ChangeOrderStatusResponse> cancelOrder(@PathVariable String id) {
+        log.info("cancel order - Controller - START - id: {}", id);
+        ChangeOrderStatusResponse changeOrderStatusResponse = orderService.cancelOrder(id);
+        log.info("cancel order - Controller - END");
+        return new ResponseEntity<>(changeOrderStatusResponse, null, 200);
+    }
+
+//    Tests
     @GetMapping("/generate")
     public Order makeOrder() {
         Order order = new Order();
