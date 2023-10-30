@@ -1,15 +1,19 @@
 package com.pad.app.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pad.app.exception.notFound.NoObjectFound;
 import com.pad.app.model.messageTemplates.OrderMessageTemplate;
+import com.pad.app.service.webClient.WebClientMappers;
+import com.pad.app.service.webClient.WebClientService;
+import com.pad.app.swagger.model.ChangeOrderStatusResponse;
 import com.pad.app.swagger.model.Order;
 import com.pad.app.swagger.model.OrderFilterParams;
 import com.pad.app.swagger.model.OrdersResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -21,6 +25,8 @@ public class ManageOrderService {
     private final WorkerService workerService;
 
     private final WebClientService webClientService;
+
+    private final WebClientMappers webClientMappers;
 
     @Value("${order.get-all.uri}")
     private String ORDER_URI;
@@ -43,10 +49,17 @@ public class ManageOrderService {
 
 
     public List<Order> getOrders(OrderFilterParams params) {
-//        TODO cachable by ID? save order not the list?
-        OrdersResponse orders = webClientService.webClientPost(ORDER_URI, OrdersResponse.class, params);
-        log.info("TEMP orders: {}", orders);
+        String uri = ORDER_URI + "orders";
+        MultiValueMap<String, String> uriParams = webClientMappers.convertToUriParams(params);
+        OrdersResponse orders = webClientService.webClientGet(uri, OrdersResponse.class, uriParams);
+        log.debug("orders: {}", orders);
         return orders.getOrders();
+    }
+
+    public ChangeOrderStatusResponse cancelOrder(String id) {
+        String uri = ORDER_URI + "cancel-order/" + id;
+        ChangeOrderStatusResponse changeOrderStatusResponse = webClientService.webClientDelete(uri, ChangeOrderStatusResponse.class);
+        return changeOrderStatusResponse;
     }
 
 
