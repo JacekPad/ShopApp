@@ -1,14 +1,15 @@
 # DESCRIPTION:
-Shop application written in java 17 with springboot 3.1.1. 
-Communication among services possible via message-broker (rabbitMQ) and/or HTTP requests (WebClient).
+Aapplication written in java 17 with springboot 3.1.1. 
+The Service includes three applications, allowing users to manage products in the database, place orders based on available products, and process created orders. 
+Communication among services is done via a message-broker (rabbitMQ) and/or HTTP requests (WebClient).
 
 # Services:
  ### warehouse 
- Backend application providing CRUD operations on products for other services.
+ A backend application that provides CRUD operations on products for other services.
  ### shopApp
- Backend application used for creating orders and sending all necessary information to other services.
+ A backend application used to create orders and send all necessary information to other services.
  ### orderApp
- Backend application managing orders and providing CRUD operations on orders for other services.
+ A backend application that manages orders and provides CRUD operations on orders for other services.
 
 # TECHNOLOGIES:
 - Java 17
