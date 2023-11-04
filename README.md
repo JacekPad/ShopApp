@@ -1,5 +1,6 @@
 # DESCRIPTION:
 Shop application written in java 17 with springboot 3.1.1. 
+Communication among services possible via message-broker (rabbitMQ) and/or HTTP requests (WebClient).
 
 # Services:
  ### warehouse 
