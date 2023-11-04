@@ -3,7 +3,7 @@ package com.pad.app.model;
 import lombok.Data;
 
 @Data
-public class FilterParams {
+public class ProductFilterParams {
 
     private String name;
     private boolean isAvailable;

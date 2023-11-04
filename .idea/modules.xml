@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/orderApp/orderApp.iml" filepath="$PROJECT_DIR$/orderApp/orderApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/private.iml" filepath="$PROJECT_DIR$/.idea/private.iml" />
+      <module fileurl="file://$PROJECT_DIR$/warehouse/warehouse.iml" filepath="$PROJECT_DIR$/warehouse/warehouse.iml" />
     </modules>
   </component>
 </project>

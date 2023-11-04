@@ -213,8 +213,8 @@ public class ProductService {
                     productEntity.setQuantity(quantity);
                     productRepository.saveAndFlush(productEntity);
                 } else {
-//                    TODO some error
-//                    not enough products left
+                    log.error("Not enough product for product id: {}", productId);
+                    throw new SaveObjectException("Not enough product");
                 }
             }
 

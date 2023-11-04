@@ -54,8 +54,6 @@ public class RabbitmqConfig {
 //        mapper if consumer object have different package paths
         DefaultJackson2JavaTypeMapper mapper = new DefaultJackson2JavaTypeMapper();
         mapper.setIdClassMapping(Map.of("productQuantity", ProductQuantityChangeMessageTemplate.class, "makeOrder", OrderMessageTemplate.class));
-//        set trusted packages for consumer without custom classMappings
-//        mapper.setTrustedPackages("*");
         jackson2JsonMessageConverter.setClassMapper(mapper);
 
         return jackson2JsonMessageConverter;

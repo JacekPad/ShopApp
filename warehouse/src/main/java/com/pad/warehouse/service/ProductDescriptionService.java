@@ -64,7 +64,6 @@ public class ProductDescriptionService {
             return productDescriptionRepository.getByProductId(productId);
         } catch (Exception e) {
             log.error("Error while fetching product descriptions for product ID: {} - {}", productId, e.getMessage());
-            // TODO save errors to DB and fetch error id and put it in exception message
             throw new FetchDataError("Error while fetching product descriptions for product ID: " + productId);
         }
     }

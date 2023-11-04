@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @ControllerAdvice
 @RequiredArgsConstructor
-public class RESTExceptionHanlder {
+public class RESTExceptionHandler {
 
     private final LogService logService;
     
@@ -23,7 +23,7 @@ public class RESTExceptionHanlder {
     public ResponseEntity<ErrorResponse> exceptionResponse(AbstractException exception) {
         logService.saveToErrorLog(exception);
         ErrorResponse response = createErrorResponse(exception.getCode(), exception.getMessage());
-        return new ResponseEntity<ErrorResponse>(response, null, exception.getCode());
+        return new ResponseEntity<>(response, null, exception.getCode());
     }
 
     private ErrorResponse createErrorResponse (int code, String message) {

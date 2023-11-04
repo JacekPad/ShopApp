@@ -1,21 +1,14 @@
 package com.pad.app.controller;
 
-import com.pad.app.model.FilterParams;
-import com.pad.app.model.Order;
-import com.pad.app.model.OrderAddress;
-import com.pad.app.model.ProductOrder;
-import com.pad.app.model.enums.DeliveryMethodEnum;
-import com.pad.app.model.enums.PaymentMethodEnum;
+import com.pad.app.model.ProductFilterParams;
 import com.pad.app.service.OrderService;
 import com.pad.app.service.ProductService;
-import com.pad.warehouse.swagger.model.Product;
+import com.pad.app.swagger.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,14 +28,19 @@ public class ShopController {
         log.info("makeOrder - Controller - START");
         orderService.makeOrder(order);
         log.info("makeOrder - Controller - END");
-// make order and descrease number of products in warehouse and send order to other service
+    }
+
+    @GetMapping("/orders")
+    private List<Order> getOrders(OrderFilterParams params) {
+        log.info("getOrders - Controller - START, params: {}", params);
+        List<Order> orders = orderService.getOrders(params);
+        log.info("getOrders - Controller - END");
+        return orders;
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(FilterParams params) {
-//        TODO maybe less info when only querying for products?
+    public ResponseEntity<List<Product>> getProducts(ProductFilterParams params) {
         log.info("getProducts - Controller - START");
-        log.error("TEMP LOG params: {}", params);
         List<Product> products = productService.getProducts(params);
         log.info("getProducts - Controller - END - {}", products);
         return new ResponseEntity<>(products, null, 200);
@@ -53,10 +51,17 @@ public class ShopController {
         Product productDetails = productService.getProductDetails(id);
         log.info("get Details - Controller - END - {}", productDetails);
         return new ResponseEntity<>(productDetails, null, 200);
-// get all product details when user clicks on product?
     }
 
-//    TODO keep for making tests
+    @DeleteMapping("cancel-order/{id}")
+    public ResponseEntity<CancelOrderStatusResponse> cancelOrder(@PathVariable String id) {
+        log.info("cancel order - Controller - START - id: {}", id);
+        CancelOrderStatusResponse cancelOrderResponse = orderService.cancelOrder(id);
+        log.info("cancel order - Controller - END");
+        return new ResponseEntity<>(cancelOrderResponse, null, 200);
+    }
+
+//    Tests
     @GetMapping("/generate")
     public Order makeOrder() {
         Order order = new Order();
@@ -94,23 +99,23 @@ public class ShopController {
         cproduct.setSubtype("FLAT_SCREEN");
 
 
-        productOrder1.setProduct(aproduct);
-        productOrder1.setQuantityBought(5);
+        productOrder1.setProductId(aproduct.getId());
+        productOrder1.setQuantityBought("5");
 
         ProductOrder productOrder2 = new ProductOrder();
-        productOrder2.setProduct(bproduct);
-        productOrder2.setQuantityBought(11);
+        productOrder2.setProductId(bproduct.getId());
+        productOrder2.setQuantityBought("11");
 
         ProductOrder productOrder3 = new ProductOrder();
-        productOrder3.setProduct(cproduct);
-        productOrder3.setQuantityBought(1);
+        productOrder3.setProductId(cproduct.getId());
+        productOrder3.setQuantityBought("1");
         List<ProductOrder> orders = new ArrayList<>();
         orders.add(productOrder1);
         orders.add(productOrder2);
         orders.add(productOrder3);
         order.setProducts(orders);
 
-        OrderAddress address = new OrderAddress();
+        Address address = new Address();
         address.setStreet("Street");
         address.setZipCode("50-000");
         address.setCity("City");
@@ -119,7 +124,7 @@ public class ShopController {
         address.setEmail("asdasdassa");
 
         order.setAddress(address);
-        order.setPayed(true);
+        order.setIsPayed(true);
         order.setDeliveryMethod(DeliveryMethodEnum.POST);
         order.setPaymentMethod(PaymentMethodEnum.CASH);
 

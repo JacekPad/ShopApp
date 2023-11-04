@@ -1,0 +1,154 @@
+openapi: 3.0.0
+info:
+  title: Order models
+  description: This is a swagger for commonly used models throughout  applications
+  contact:
+    name: Author
+    url: http://localhost:8080/
+  version: '0.0.1'
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Order
+    description: Order models
+
+components:
+  schemas:
+
+    Address:
+      type: object
+      description: Class describing customer address
+      properties:
+        street:
+          type: string
+          exmaples:
+            - "street"
+        zipCode:
+          type: string
+          exmaples:
+            - "street"
+        city:
+          type: string
+          exmaples:
+            - "street"
+        country:
+          type: string
+          exmaples:
+            - "street"
+        phoneNumber:
+          type: string
+          exmaples:
+            - "street"
+        email:
+          type: string
+          exmaples:
+            - "street"
+    
+    ProductOrder:
+      type: object
+      description: Class describing product order
+      properties:
+        quantityBought:
+          type: string
+          example:
+            - "2"
+        ProductId:
+          type: string
+          example:
+            - "2"
+    
+    DeliveryMethodEnum:
+      type: string
+      description: Enum for delivery methods
+      enum:
+        - COURIER
+        - PERSONAL
+        - POST
+
+    PaymentMethodEnum:
+      type: string
+      description: Enum for payment methods
+      enum:
+        - CASH
+        - CREDIT_CARD
+        - BLIK
+
+    Order:
+      type: object
+      description: Object describing order
+      properties:
+        id:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductOrder'
+        address:
+          $ref: '#/components/schemas/Address'
+        isPayed:
+          type: boolean
+        status:
+          type: string
+        deliveryMethod:
+          $ref: '#/components/schemas/DeliveryMethodEnum'
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethodEnum'
+
+    OrderFilterParams:
+      type: object
+      description: Class with order filter parameters
+      properties:
+        createdBefore:
+          type: string
+        createdAfter:
+          type: string
+        status:
+          type: string
+        isPayed:
+          type: boolean
+
+    ChangeOrderStatusResponse:
+      type: object
+      description: Response class for changing order status
+      properties:
+        ResponseHeader:
+          $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
+        Changed:
+          type: boolean
+        Message:
+          type: string
+        OrderId:
+          type: string
+
+    CancelOrderStatusResponse:
+      type: object
+      description: Response class for canceling order
+      properties:
+        ResponseHeader:
+          $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
+        Changed:
+          type: boolean
+        Message:
+          type: string
+        Order:
+          $ref: '#/components/schemas/Order'
+
+    ProcessOrderRequest:
+      type: object
+      description: Request class for processing order
+      properties:
+        ResponseHeader:
+          $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
+        OrderFilterParams:
+          $ref: '#/components/schemas/OrderFilterParams'
+
+    ProcessOrderResponse:
+      type: object
+      description: Response class for processing order
+      properties:
+        ResponseHeader:
+          $ref: 'apiSwagger.yaml#/components/schemas/ResponseHeader'
+        Orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'

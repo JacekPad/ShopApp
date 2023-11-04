@@ -9,7 +9,6 @@ public class ResponseHeaderMapper {
     
 
     public static ResponseHeader createResponseHeader(UUID requestId) {
-        // TODO TEMP
         ResponseHeader header = new ResponseHeader();
         header.setRequestId(requestId);
         header.setTimestamp(OffsetDateTime.now());

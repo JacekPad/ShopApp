@@ -1,9 +1,12 @@
 package com.pad.app.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.pad.app.model.FilterParams;
-import com.pad.app.model.ProductOrder;
-import com.pad.warehouse.swagger.model.Product;
+import com.pad.app.exception.internal.FetchDataError;
+import com.pad.app.exception.notFound.NoObjectFound;
+import com.pad.app.model.ProductFilterParams;
+
+import com.pad.app.swagger.model.Product;
+import com.pad.app.swagger.model.ProductOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ public class ProductService {
     @Autowired
     private final CacheManager manager;
 
-    public List<Product> getProducts(FilterParams params) {
+    public List<Product> getProducts(ProductFilterParams params) {
         log.info("getProductsFiltered - Service - START: filterParams: {}", params);
         CaffeineCacheManager caffeineCacheManager = (CaffeineCacheManager) manager;
         CaffeineCache cache = (CaffeineCache) caffeineCacheManager.getCache("products");
@@ -42,15 +45,15 @@ public class ProductService {
     }
 
     public boolean isProductAvailable(ProductOrder productOrder) {
-        Optional<Product> product = Optional.ofNullable(getProductDetails(productOrder.getProduct().getId()));
+        Optional<Product> product = Optional.ofNullable(getProductDetails(productOrder.getProductId()));
         if (product.isPresent()) {
             int productQuantity = Integer.parseInt(product.get().getQuantity());
-            int quantityBought = productOrder.getQuantityBought();
+            int quantityBought = Integer.parseInt(productOrder.getQuantityBought());
             log.info("is available? product {}, {}", product.get(), productQuantity - quantityBought > 0);
-            return productQuantity - quantityBought > 0;
+            return productQuantity - quantityBought >= 0;
         } else {
-//            TODO some errors that product doesn't exist?
-            return false;
+            log.error("Product not found: {}", product);
+            throw new NoObjectFound("Product not found " + product);
         }
     }
 
@@ -68,15 +71,17 @@ public class ProductService {
         try {
             List<Product> products = manageProductService.fetchProducts();
             if (products != null) {
+                log.info("Updating product cache: {}", products);
                 Objects.requireNonNull(manager.getCache("products")).clear();
                 products.forEach(manageProductService::populateCache);
             }
         } catch (Exception e) {
             log.error("Error when updating cache: {}", e.getMessage());
+            throw new FetchDataError("Could not update cache");
         }
     }
 
-    private List<Product> filterProducts(FilterParams params, List<Product> list) {
+    private List<Product> filterProducts(ProductFilterParams params, List<Product> list) {
         return list.stream()
                 .filter(prod -> params.getName() == null || prod.getName().contains(params.getName()))
                 .filter(prod -> !params.isAvailable() || Integer.parseInt(prod.getQuantity()) > 0)
