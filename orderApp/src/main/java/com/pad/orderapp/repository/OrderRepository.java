@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
-//TODO make search for user
 
     @Query("SELECT o FROM OrderEntity o WHERE (:createdBefore is null OR o.created <= :createdBefore) AND (:createdAfter is null OR o.created >= :createdAfter) AND (:status is null OR o.status = :status) AND (:isPayed is null OR o.isPayed = :isPayed)")
     List<OrderEntity> findByQueryParams(@Param("createdBefore") String createdBefore, @Param("createdAfter") String createdAfter, @Param("status") String status, @Param("isPayed") boolean isPayed);

@@ -33,7 +33,6 @@ public class ShopController {
     @GetMapping("/orders")
     private List<Order> getOrders(OrderFilterParams params) {
         log.info("getOrders - Controller - START, params: {}", params);
-//        TODO some errors and checks for all methods below / remove temp logs
         List<Order> orders = orderService.getOrders(params);
         log.info("getOrders - Controller - END");
         return orders;

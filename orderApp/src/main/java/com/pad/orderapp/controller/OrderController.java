@@ -31,7 +31,6 @@ public class OrderController {
 
     @GetMapping("orders")
     public ResponseEntity<ProcessOrderResponse> getOrders(OrderFilterParams params) {
-//        TODO some identification?
         log.info("getOrders - CONTROLLER - START: params {}", params);
         ProcessOrderResponse response = new ProcessOrderResponse();
         List<Order> orders = orderService.getOrdersByParams(params);

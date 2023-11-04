@@ -47,7 +47,6 @@ public class OrderService {
     }
 
     public String updateOrderStatus(OrderEntity orderEntity, OrderStatus changeStatusTo) {
-//        TODO some normal delete or whatever webclient and wait for response it deleted or some error (cannot be deleted if status changed between frontend info and request)
         log.info("updateOrderStatus - SERVICE - START, order: {} to status: {}", orderEntity.getId(), changeStatusTo);
         orderEntity.setStatus(changeStatusTo);
         try {
@@ -71,7 +70,6 @@ public class OrderService {
     }
 
     public CancelOrderStatusResponse cancelOrder(Long orderId) {
-//       TODO if order canceled before some status -> cancel order and set product quantities back (in shop app quantity?)
         log.info("Cancel order - SERVICE - START, Order: {}", orderId);
         CancelOrderStatusResponse response = new CancelOrderStatusResponse();
         Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
@@ -108,7 +106,6 @@ public class OrderService {
     public List<Order> getOrdersByParams(OrderFilterParams params) {
         log.info("getOrderByParams - SERVICE - START: {}", params);
         List<Order> orders = new ArrayList<>();
-//        TODO get orders for admin/user based on params
         String someUserObject = "";
         List<OrderEntity> orderEntity = getOrders(params, someUserObject);
         orderEntity.forEach(order -> {

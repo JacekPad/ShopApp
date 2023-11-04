@@ -89,11 +89,5 @@ class ProductServiceTest {
         assertFalse(productAvailable);
     }
 
-    @Test
-    void getProducts_whenNoProductsMatchParams_shouldReturnEmptyList() {
-//        TODO ....
-
-    }
-
 
 }
