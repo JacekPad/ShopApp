@@ -1,7 +1,9 @@
 package com.pad.warehouse.controller;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
+@Slf4j
 public class EnumsController {
 
     private final ProductCacheService cacheService;
@@ -43,6 +46,22 @@ public class EnumsController {
         manager.getCacheNames().stream().forEach(name -> manager.getCache(name).clear());
     }
 
-
+    @GetMapping("/test")
+    public void testAuth(HttpServletRequest request) {
+        log.info("START");
+        log.info("header");
+        Iterator<String> iterator = request.getHeaderNames().asIterator();
+        log.info("headers?: {}", iterator.hasNext());
+        iterator.forEachRemaining(x -> {
+            log.info(x);
+            log.info(request.getHeader(x));
+            log.info("================");
+        });
+        log.info("authType");
+        log.info(request.getAuthType());
+        log.info("content type");
+        log.info(request.getContentType());
+        log.info("testing request: {}", request);
+    }
 }
 

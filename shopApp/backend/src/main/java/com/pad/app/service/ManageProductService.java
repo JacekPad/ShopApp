@@ -28,6 +28,7 @@ public class ManageProductService {
     @Value("${product.get-all.uri}")
     private String PRODUCT_URI;
 
+//    private String PRODUCT_URI = "http://localhost:8080/products/test";
     public List<Product> fetchProducts() {
         log.info("fetchProducts - START");
         try {

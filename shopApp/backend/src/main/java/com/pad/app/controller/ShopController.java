@@ -1,12 +1,16 @@
 package com.pad.app.controller;
 
 import com.pad.app.model.ProductFilterParams;
+import com.pad.app.service.AuthService;
 import com.pad.app.service.OrderService;
 import com.pad.app.service.ProductService;
 import com.pad.app.swagger.model.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +26,8 @@ public class ShopController {
     private final OrderService orderService;
 
     private final ProductService productService;
+
+    private final AuthService authService;
 
     @PostMapping("/order")
     public void makeOrder(@RequestBody Order order) {
@@ -39,8 +45,9 @@ public class ShopController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(ProductFilterParams params) {
+    public ResponseEntity<List<Product>> getProducts(ProductFilterParams params, HttpServletRequest request, HttpServletResponse response) {
         log.info("getProducts - Controller - START");
+        authService.securityTest(request, response);
         List<Product> products = productService.getProducts(params);
         log.info("getProducts - Controller - END - {}", products);
         return new ResponseEntity<>(products, null, 200);
