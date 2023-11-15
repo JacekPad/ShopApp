@@ -1,7 +1,7 @@
 # DESCRIPTION:
 Aapplication written in java 17 with springboot 3.1.1. 
 The Service includes three applications, allowing users to manage products in the database, place orders based on available products, and process created orders. 
-Communication among services is done via a message-broker (rabbitMQ) and/or HTTP requests (WebClient).
+Communication among services is done via a message-broker (rabbitMQ) and/or HTTP requests (WebClient). Services are secured by keycoak (client credentials among services and authorization code for users)
 
 # Services:
  ### warehouse 
@@ -26,3 +26,4 @@ Communication among services is done via a message-broker (rabbitMQ) and/or HTTP
 - DockerCompose
 - RabbitMQ
 - Swagger
+- Keycloak
