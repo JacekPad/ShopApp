@@ -1,6 +1,5 @@
 package com.pad.orderapp.service;
 
-import com.pad.orderapp.exception.badRequest.CancelOrderException;
 import com.pad.orderapp.exception.internal.FetchDataError;
 import com.pad.orderapp.exception.internal.SaveObjectException;
 import com.pad.orderapp.exception.notFound.NoObjectFound;
@@ -233,7 +232,7 @@ class OrderServiceTest {
         OrderFilterParams params = createOrderFilterParams();
 
 //        when
-        when(orderRepository.findByQueryParams(any(), any(), any(), anyBoolean()))
+        when(orderRepository.findByQueryParams(any(), any(), any(), anyBoolean(), any()))
                 .thenThrow(new FetchDataError(""));
 
 //        then

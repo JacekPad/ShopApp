@@ -1,12 +1,19 @@
 package com.pad.app.service;
 
 import com.pad.app.exception.notFound.NoObjectFound;
+import com.pad.app.exception.unauthorized.AuthorizationException;
 import com.pad.app.swagger.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ContextConfiguration
 class OrderServiceTest {
 
     @Mock
@@ -24,6 +32,7 @@ class OrderServiceTest {
 
     @InjectMocks
     OrderService orderService;
+
 
     @BeforeEach
     void setUp() {
@@ -67,12 +76,20 @@ class OrderServiceTest {
         return address;
     }
 
+    private Authentication mockUserAuthorization() {
+        User userDetails = new User("user","user", List.of());
+        return new UsernamePasswordAuthenticationToken(userDetails, null);
+    }
+
 
     @Test
     void makeOrder_whenProductNotAvailable_throwException() {
 //        when
         Order order = createOrder();
         when(productService.isProductAvailable(any())).thenReturn(false);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(mockUserAuthorization());
+        SecurityContextHolder.setContext(securityContext);
 //        then
         try {
             orderService.makeOrder(order);
@@ -84,10 +101,30 @@ class OrderServiceTest {
     }
 
     @Test
+    void makeOrder_whenNotAuthorized_throwException() {
+//        when
+        Order order = createOrder();
+        when(productService.isProductAvailable(any())).thenReturn(false);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(null);
+        SecurityContextHolder.setContext(securityContext);
+//        then
+        try {
+            orderService.makeOrder(order);
+            fail();
+        } catch (Exception e) {
+            assertInstanceOf(AuthorizationException.class, e);
+            assertEquals("User could not be authorized", e.getMessage());
+        }
+    }
+    @Test
     void makeOrder_shouldProcessOrder() {
 //        when
         Order order = createOrder();
         when(productService.isProductAvailable(any())).thenReturn(true);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(mockUserAuthorization());
+        SecurityContextHolder.setContext(securityContext);
 //        then
         try {
             orderService.makeOrder(order);

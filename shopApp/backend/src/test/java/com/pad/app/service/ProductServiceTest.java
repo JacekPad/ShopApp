@@ -1,5 +1,6 @@
 package com.pad.app.service;
 
+import com.pad.app.exception.notFound.NoObjectFound;
 import com.pad.app.model.ProductFilterParams;
 import com.pad.app.swagger.model.Product;
 import com.pad.app.swagger.model.ProductOrder;
@@ -13,8 +14,6 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductServiceTest {
-
-
 
 
     @Mock
@@ -66,9 +65,13 @@ class ProductServiceTest {
         String productId = "1";
         ProductOrder testProductOrder = prepareProductOrder(productId, 2);
         when(manageProductService.getProduct(anyString())).thenReturn(null);
-        boolean productAvailable = service.isProductAvailable(testProductOrder);
-
-        assertFalse(productAvailable);
+        try {
+            boolean productAvailable = service.isProductAvailable(testProductOrder);
+            fail();
+        } catch (Exception e) {
+            assertInstanceOf(NoObjectFound.class, e);
+            assertEquals("Product not found", e.getMessage());
+        }
     }
 
     @Test

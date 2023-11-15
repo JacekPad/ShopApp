@@ -4,9 +4,14 @@ import com.pad.app.model.ProductFilterParams;
 import com.pad.app.service.OrderService;
 import com.pad.app.service.ProductService;
 import com.pad.app.swagger.model.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +27,7 @@ public class ShopController {
     private final OrderService orderService;
 
     private final ProductService productService;
+
 
     @PostMapping("/order")
     public void makeOrder(@RequestBody Order order) {
@@ -39,7 +45,7 @@ public class ShopController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(ProductFilterParams params) {
+    public ResponseEntity<List<Product>> getProducts(ProductFilterParams params, HttpServletRequest request, HttpServletResponse response) {
         log.info("getProducts - Controller - START");
         List<Product> products = productService.getProducts(params);
         log.info("getProducts - Controller - END - {}", products);
@@ -129,6 +135,19 @@ public class ShopController {
         order.setPaymentMethod(PaymentMethodEnum.CASH);
 
         return order;
+    }
+
+    @GetMapping("/test")
+    public void tests() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info(authentication.getName());
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        log.info(jwt.getSubject());
+        log.info(jwt.getTokenValue());
+        log.info(jwt.getClaims().toString());
+        log.info((String) jwt.getClaims().get("preferred_username"));
+        log.info(authentication.getDetails().toString());
+        log.info(authentication.getAuthorities().toString());
     }
 
 }

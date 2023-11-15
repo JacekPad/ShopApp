@@ -1,4 +1,5 @@
 spring:
+
 #    database configs
     jpa:
         hibernate:
@@ -12,6 +13,7 @@ spring:
         url: jdbc:mysql://127.0.0.1:3333/warehouse
         username: root
         password: admin
+
 #    db migration configs
     flyway:
         url: jdbc:mysql://127.0.0.1:3333
@@ -20,6 +22,7 @@ spring:
         schemas: warehouse
         create-schemas: true
         baseline-on-migrate: true
+
 #        rabbitmq configs
     rabbitmq:
         template:
@@ -30,6 +33,12 @@ spring:
         username: user
         password: user
 
+#Security Keycloak
+    security:
+      oauth2:
+        resource-server:
+          jwt:
+              issuer-uri: http://localhost:9090/realms/ProjectRealm
 #custom configs
 app-config:
     cache:

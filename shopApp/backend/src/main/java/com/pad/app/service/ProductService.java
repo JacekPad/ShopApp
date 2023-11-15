@@ -52,8 +52,8 @@ public class ProductService {
             log.info("is available? product {}, {}", product.get(), productQuantity - quantityBought > 0);
             return productQuantity - quantityBought >= 0;
         } else {
-            log.error("Product not found: {}", product);
-            throw new NoObjectFound("Product not found " + product);
+            log.error("Product not found: {}", productOrder.getProductId());
+            throw new NoObjectFound("Product not found");
         }
     }
 

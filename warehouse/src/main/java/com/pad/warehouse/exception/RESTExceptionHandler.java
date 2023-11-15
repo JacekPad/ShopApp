@@ -12,6 +12,7 @@ import com.pad.warehouse.swagger.model.ErrorResponse;
 import com.pad.warehouse.swagger.model.ResponseHeader;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.client.HttpClientErrorException;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -25,6 +26,12 @@ public class RESTExceptionHandler {
         ErrorResponse response = createErrorResponse(exception.getCode(), exception.getMessage());
         return new ResponseEntity<>(response, null, exception.getCode());
     }
+//TODO not working
+//    @ExceptionHandler(HttpClientErrorException.class)
+//    public ResponseEntity<ErrorResponse> unauthorizedException(HttpClientErrorException.Unauthorized exception) {
+//        ErrorResponse response = createErrorResponse(exception.getStatusCode().value(), exception.getMessage());
+//        return new ResponseEntity<>(response, null, exception.getStatusCode().value());
+//    }
 
     private ErrorResponse createErrorResponse (int code, String message) {
         ResponseHeader header = new ResponseHeader();

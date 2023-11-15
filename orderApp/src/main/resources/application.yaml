@@ -34,3 +34,10 @@ spring:
     schemas: orders
     create-schemas: true
     baseline-on-migrate: true
+
+#Security Keycloak
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/ProjectRealm

@@ -1,13 +1,11 @@
 package com.pad.orderapp.service;
 
-import com.pad.orderapp.exception.internal.FetchDataError;
 import com.pad.orderapp.exception.internal.SaveObjectException;
 import com.pad.orderapp.exception.notFound.NoObjectFound;
 import com.pad.orderapp.model.entity.OrderEntity;
 import com.pad.orderapp.model.entity.ProductOrderEntity;
 import com.pad.orderapp.repository.OrderRepository;
 import com.pad.orderapp.repository.ProductOrderRepository;
-import com.pad.orderapp.swagger.model.OrderFilterParams;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

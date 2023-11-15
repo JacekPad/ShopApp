@@ -93,6 +93,8 @@ components:
           $ref: '#/components/schemas/DeliveryMethodEnum'
         paymentMethod:
           $ref: '#/components/schemas/PaymentMethodEnum'
+        user:
+          type: string
 
     OrderFilterParams:
       type: object
@@ -106,6 +108,8 @@ components:
           type: string
         isPayed:
           type: boolean
+        user:
+          type: string
 
     ChangeOrderStatusResponse:
       type: object

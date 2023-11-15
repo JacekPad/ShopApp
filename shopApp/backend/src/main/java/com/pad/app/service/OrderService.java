@@ -4,11 +4,14 @@ import java.util.List;
 
 
 import com.pad.app.exception.notFound.NoObjectFound;
+import com.pad.app.exception.unauthorized.AuthorizationException;
 import com.pad.app.swagger.model.CancelOrderStatusResponse;
 import com.pad.app.swagger.model.Order;
 import com.pad.app.swagger.model.OrderFilterParams;
 import com.pad.app.swagger.model.ProductOrder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -26,9 +29,11 @@ public class OrderService {
 
     public void makeOrder(Order order) {
         log.info("makeOrder - Service - START: {}", order);
+        String username = getUsername();
         List<ProductOrder> productOrderList = order.getProducts();
 
         if (isOrderAvailable(productOrderList)) {
+            order.setUser(username);
             productOrderList.parallelStream().forEach(this::processProductOrder);
             processOrder(order);
             log.info("makeOrder - Service - STOP");
@@ -40,6 +45,7 @@ public class OrderService {
 
     public List<Order> getOrders(OrderFilterParams params) {
         log.info("get orders - service - START - params: {}", params);
+        params.setUser(getUsername());
         List<Order> orders = manageOrderService.getOrders(params);
         log.info("get orders - service - END");
         return orders;
@@ -77,5 +83,14 @@ public class OrderService {
             });
         }
         return cancelOrderResponse;
+    }
+
+    private String getUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null || authentication.getName().isBlank()) {
+            log.error("User authorization failed for authentication: {}", authentication);
+            throw new AuthorizationException("User could not be authorized");
+        }
+        return authentication.getName();
     }
 }

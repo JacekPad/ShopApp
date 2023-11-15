@@ -1,0 +1,57 @@
+server:
+  port: 8081
+spring:
+  rabbitmq:
+    host: localhost
+    port: 15672
+    username: user
+    password: user
+    template:
+      exchange: exchange
+      queue:
+        productCountChange: productQuantityChange_queue
+        sendOrder: sendOrder_queue
+      routing-key:
+        productCountChange: productQuantityChange_routingKey
+        sendOrder: sendOrder_routingKey
+
+    #Security Keycloak
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/ProjectRealm
+      client:
+          registration:
+            keycloak:
+                client-id: ShopApp
+                client-secret: Nx5JtotivrZxxoXH3DgwYWEbEf8VWSs4
+                authorization-grant-type: client_credentials
+#                authorization-grant-type: authorization_code
+                redirect-uri: http://localhost:8081/products
+                scope:
+                  - openid
+          provider:
+            keycloak:
+                authorization-uri: http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/auth
+                token-uri: http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/token
+                user-info-uri: http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/userinfo
+                issuer-uri: http://localhost:9090/realms/ProjectRealm
+                user-name-attribute: preferred_username
+                jwk-set-uri: http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/certs
+
+#REST URIs
+product:
+  get-all:
+    uri: http://localhost:8080/products
+order:
+  get-all:
+    uri: http://localhost:8082/
+#Cache settings
+app-config:
+  cache:
+    clear-cache:
+      #fixed-timer: 0 0 0/24 * * *
+
+      #for testing
+      fixed-timer: 0 0 0/1 * * *
