@@ -8,7 +8,6 @@ import com.pad.orderapp.model.enums.OrderStatus;
 import com.pad.orderapp.repository.OrderRepository;
 import com.pad.orderapp.mappers.OrderMapper;
 import com.pad.orderapp.swagger.model.CancelOrderStatusResponse;
-import com.pad.orderapp.swagger.model.ChangeOrderStatusResponse;
 import com.pad.orderapp.swagger.model.Order;
 import com.pad.orderapp.swagger.model.OrderFilterParams;
 import jakarta.transaction.Transactional;

@@ -1,7 +1,5 @@
 package com.pad.app.service;
 
-import com.pad.app.exception.badRequest.MessageTemplateException;
-import com.pad.app.model.enums.MessageType;
 import com.pad.app.model.messageTemplates.MessageTemplate;
 import com.pad.app.model.messageTemplates.OrderMessageTemplate;
 import com.pad.app.swagger.model.DeliveryMethodEnum;
@@ -15,10 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-//@SpringBootTest(properties = { "spring.rabbitmq.template.exchange=exchangeName"})
 class WorkerServiceTest {
 
 

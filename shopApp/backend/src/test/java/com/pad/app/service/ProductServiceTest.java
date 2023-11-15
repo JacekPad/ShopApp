@@ -1,7 +1,6 @@
 package com.pad.app.service;
 
 import com.pad.app.exception.notFound.NoObjectFound;
-import com.pad.app.exception.unauthorized.AuthorizationException;
 import com.pad.app.model.ProductFilterParams;
 import com.pad.app.swagger.model.Product;
 import com.pad.app.swagger.model.ProductOrder;
