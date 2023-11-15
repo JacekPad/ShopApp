@@ -31,7 +31,6 @@ public class SecurityConfig {
                     requestManager.requestMatchers("*/**").hasAnyRole("USER", "ADMIN")
                             .anyRequest().authenticated();
                 })
-//                .oauth2ResourceServer(oatuh -> oatuh.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
                 .oauth2ResourceServer(oatuh -> oatuh.jwt(jwt -> {
                     jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
                 }));
