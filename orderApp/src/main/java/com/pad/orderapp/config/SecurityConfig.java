@@ -16,14 +16,11 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityChain(HttpSecurity http) throws Exception{
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-//        TODO add roles and role checks
-//        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new );
         http
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requestManager -> {
                     requestManager.requestMatchers("/**").authenticated();
-//                            .anyRequest().hasAnyRole();
 //                    for testing
 //                    requestManager.requestMatchers("/**").permitAll();
                 })
