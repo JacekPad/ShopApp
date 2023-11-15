@@ -22,16 +22,19 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityChain(HttpSecurity http) throws Exception{
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-//        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new RoleConverter);
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new RoleConverter());
         http
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requestManager -> {
 //                    requestManager.requestMatchers("/*").permitAll();
-                    requestManager.requestMatchers("*/**").authenticated();
-//                            .anyRequest().hasAnyRole();
+                    requestManager.requestMatchers("*/**").hasAnyRole("USER", "ADMIN")
+                            .anyRequest().authenticated();
                 })
-                .oauth2ResourceServer(oatuh -> oatuh.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+//                .oauth2ResourceServer(oatuh -> oatuh.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+                .oauth2ResourceServer(oatuh -> oatuh.jwt(jwt -> {
+                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+                }));
         return http.build();
     }
 //    ADD BEARER TO THE WEBCLIENT.BUILDER AUTOMATICALLY
