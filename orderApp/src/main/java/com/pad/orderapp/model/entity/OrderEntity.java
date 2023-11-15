@@ -57,6 +57,9 @@ public class OrderEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime modified;
 
+    @Column(name = "user_id")
+    private String user;
+
     @PrePersist
     private void setCreatedDate() {
         created = OffsetDateTime.parse(OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));

@@ -233,7 +233,7 @@ class OrderServiceTest {
         OrderFilterParams params = createOrderFilterParams();
 
 //        when
-        when(orderRepository.findByQueryParams(any(), any(), any(), anyBoolean()))
+        when(orderRepository.findByQueryParams(any(), any(), any(), anyBoolean(), any()))
                 .thenThrow(new FetchDataError(""));
 
 //        then

@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS b_orders
     payment_method varchar(50),
     delivery_method varchar(50),
     status varchar(50),
+    user_id varchar(50),
     created timestamp not null,
     modified timestamp
 );

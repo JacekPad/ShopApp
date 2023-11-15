@@ -35,32 +35,13 @@ public class SecurityConfig {
         return http.build();
     }
 //    ADD BEARER TO THE WEBCLIENT.BUILDER AUTOMATICALLY
-//    @Bean
-//    OAuth2AuthorizedClientManager authorizedClientManager (ClientRegistrationRepository clientRegistrationRepository) {
-//        OAuth2AuthorizedClientService service = new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
-//        AuthorizedClientServiceOAuth2AuthorizedClientManager manager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, service);
-//        OAuth2AuthorizedClientProvider auth2AuthorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder().clientCredentials().build();
-//        manager.setAuthorizedClientProvider(auth2AuthorizedClientProvider);
-//        return manager;
-//    }
-
     @Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
-            ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientRepository authorizedClientRepository) {
-
-        OAuth2AuthorizedClientProvider authorizedClientProvider =
-                OAuth2AuthorizedClientProviderBuilder.builder()
-                        .authorizationCode()
-                        .refreshToken()
-                        .build();
-
-        DefaultOAuth2AuthorizedClientManager authorizedClientManager =
-                new DefaultOAuth2AuthorizedClientManager(
-                        clientRegistrationRepository, authorizedClientRepository);
-        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
-
-        return authorizedClientManager;
+    OAuth2AuthorizedClientManager authorizedClientManager (ClientRegistrationRepository clientRegistrationRepository) {
+        OAuth2AuthorizedClientService service = new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
+        AuthorizedClientServiceOAuth2AuthorizedClientManager manager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(clientRegistrationRepository, service);
+        OAuth2AuthorizedClientProvider auth2AuthorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder().clientCredentials().build();
+        manager.setAuthorizedClientProvider(auth2AuthorizedClientProvider);
+        return manager;
     }
     @Bean
     WebClient.Builder webClient(OAuth2AuthorizedClientManager manager) {

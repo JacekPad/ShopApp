@@ -106,8 +106,7 @@ public class OrderService {
     public List<Order> getOrdersByParams(OrderFilterParams params) {
         log.info("getOrderByParams - SERVICE - START: {}", params);
         List<Order> orders = new ArrayList<>();
-        String someUserObject = "";
-        List<OrderEntity> orderEntity = getOrders(params, someUserObject);
+        List<OrderEntity> orderEntity = getOrders(params);
         orderEntity.forEach(order -> {
             try {
                 orders.add(mapper.mapToDataOrder(order));
@@ -121,10 +120,9 @@ public class OrderService {
 
     }
 
-    public List<OrderEntity> getOrders(OrderFilterParams params, String someUserObject) {
-        String user = "";
+    public List<OrderEntity> getOrders(OrderFilterParams params) {
         try {
-            return orderRepository.findByQueryParams(params.getCreatedBefore(), params.getCreatedAfter(), params.getStatus(), params.isIsPayed());
+            return orderRepository.findByQueryParams(params.getCreatedBefore(), params.getCreatedAfter(), params.getStatus(), params.isIsPayed(), params.getUser());
         } catch (Exception e) {
             log.error("Error fetching orders from database: filter params: {}", params);
             throw new FetchDataError("Could not fetch order");
