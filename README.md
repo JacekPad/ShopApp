@@ -14,8 +14,8 @@ Communication among services is done via a message-broker (rabbitMQ) and HTTP re
 # INITIALIZATION:
   1. cd into main folder and <br>
   <code>docker compose up</code>
-  2. login to keycloak admin console with admin / admin, switch to ProjectRealm and create a user and give it a 'USER' realm role.
-  3. Use postman collection with authorization type OAuth 2.0 to login to keycloak as the created user or use postman auth/GET token code and POST token endpoints and then post aquired code in the Authorization type Bearer Token.
+  2. login to keycloak admin console with <code>admin / admin</code>, switch to ProjectRealm and create a user and give it a <code>USER</code> realm role.
+  3. Use postman collection with <code>authorization type OAuth 2.0</code> to login to keycloak as the created user or use postman AUTH/<code>GET token code</code> and AUTH/<code>POST token</code> endpoints and then post aquired code in the <code>Authorization type Bearer Token</code>.
 
 # TECHNOLOGIES:
 - Java 17
