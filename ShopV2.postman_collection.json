@@ -1,0 +1,914 @@
+{
+	"info": {
+		"_postman_id": "a225c691-48c7-4b73-9a73-74e16ef4390d",
+		"name": "ShopV2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28244422"
+	},
+	"item": [
+		{
+			"name": "warehouse",
+			"item": [
+				{
+					"name": "Endpoints",
+					"item": [
+						{
+							"name": "Products",
+							"item": [
+								{
+									"name": "Get products by query",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJSV3UwRzFpZklSRHl0WDl3NzNUcGxISE14ZENPQ0Qxc09kMDdlQW9uaDhJIn0.eyJleHAiOjE2OTk5NTI4ODcsImlhdCI6MTY5OTkxNjg4NywianRpIjoiMzUxZjkxNmYtNTFhZS00Mjc3LWEwYzgtZDQ3MzgyZWY4MzBjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDkwL3JlYWxtcy9Qcm9qZWN0UmVhbG0iLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZTE0YzcwMzUtMzZkNC00MDc3LWFlZWMtNWNhYWFiNzFiNGViIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiU2hvcEFwcCIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiKiJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1wcm9qZWN0cmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiU2hvcEFwcCI6eyJyb2xlcyI6WyJ1bWFfcHJvdGVjdGlvbiJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsImNsaWVudEhvc3QiOiIxOTIuMTY4LjMyLjEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6InNlcnZpY2UtYWNjb3VudC1zaG9wYXBwIiwiY2xpZW50QWRkcmVzcyI6IjE5Mi4xNjguMzIuMSIsImNsaWVudF9pZCI6IlNob3BBcHAifQ.GHfAjzQ2Cr5NAkf45VWG363xZDLqXbWOMfurGFR-5_QedE0IuIZeXBfbtJNgc-yje63yuYJ1I2Hh9RdQ2PYg0xryGCmclesNyrTf_cJLEA1wS5wz2P1l5rckgPeK8tUyCl6l718ho6IXAmWK_hiqllILCnZIgYhIhgOctwrHVLFGo4gzkxJDH96p0MNMQ950aeqp3BbglxlxQvzCUZi6AYYQH1WCCTqH_Wiz5skgtehFzhfwnS4E9u0NXAMm9LnB-Sium28HORFaUN0YixYXumPXSZa3x094cJm-lG7v5G-noDpXAB0iCWVLQctg92HYhUpAegm2IaCFRYnCDKzrHQ",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products"
+											],
+											"query": [
+												{
+													"key": "grant_type",
+													"value": "client_credentials",
+													"disabled": true
+												},
+												{
+													"key": "client_id",
+													"value": "ShopApp",
+													"disabled": true
+												},
+												{
+													"key": "client_secret",
+													"value": "Nx5JtotivrZxxoXH3DgwYWEbEf8VWSs4",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Product by Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add product",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"RequestHeader\": {\r\n        \"requestId\": \"abcd\",\r\n        \"timestamp\": \"2022-02-02T00:00:00+01:00\"\r\n    }, \"Product\": {\r\n            \"name\": \"newSDwaggerest\",\r\n            \"productCode\": \"CODE1\",\r\n            \"quantity\": \"33\",\r\n            \"price\": \"11.0\",\r\n            \"status\": \"OK\",\r\n            \"type\": \"TV\",\r\n            \"subtype\": \"FLAT_SCREEN\"\r\n    }, \"ProductDescription\": [\r\n        {\r\n            \"productDescription\": \"nmewTest\"\r\n        } \r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/products",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove product by id",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products/5",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"5"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "AddProductDescription",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"ProductDescription\": {\r\n        \"productDescription\": \"addManually\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/products/4/descriptions",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"4",
+												"descriptions"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get ProductDescriptions by ProductId",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products/4/descriptions",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"4",
+												"descriptions"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove product description by id",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products/descriptions/3",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"descriptions",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update product",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n \"Product\": {\r\n            \"name\": \"updaeteTest222\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/products/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update product description",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n \"ProductDescription\": {\r\n            \"productDescription\": \"updatedProdcutDescirpiton\",\r\n            \"productId\": \"5\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/products/descriptions/5",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"descriptions",
+												"5"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Enums",
+							"item": [
+								{
+									"name": "statusMap",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products/status",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"status"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Subtype Map",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products/subtype",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"subtype"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "typeMap",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/products/type",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"products",
+												"type"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "shopApp",
+			"item": [
+				{
+					"name": "endpoints",
+					"item": [
+						{
+							"name": "Make order",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "clientSecret",
+											"value": "TQWa4FhPsVZNS1bdWBbjvBj5hSSJPg33",
+											"type": "string"
+										},
+										{
+											"key": "authRequestParams",
+											"value": [],
+											"type": "any"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/token",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/auth",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "ShopApp",
+											"type": "string"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://localhost:8081/products",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": false,
+											"type": "boolean"
+										},
+										{
+											"key": "tokenName",
+											"value": "UserToken",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"products\": [\r\n        {\r\n            \"ProductId\": \"1\",\r\n            \"quantityBought\": 1\r\n        },\r\n        {\r\n            \"ProductId\": \"2\",\r\n            \"quantityBought\": 1\r\n        },\r\n        {\r\n            \"ProductId\": \"3\",\r\n            \"quantityBought\": 1\r\n        }\r\n    ],\r\n    \"address\": {\r\n        \"street\": \"Street\",\r\n        \"zipCode\": \"50-000\",\r\n        \"city\": \"City\",\r\n        \"country\": \"Country\",\r\n        \"phoneNumber\": \"55555555555\",\r\n        \"email\": \"asdasdassa\"\r\n    },\r\n    \"deliveryMethod\": \"POST\",\r\n    \"paymentMethod\": \"CASH\",\r\n    \"isPayed\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/order",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Products",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/products",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"products"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "TV",
+											"disabled": true
+										},
+										{
+											"key": "subtype",
+											"value": "FLAT_SCREEN",
+											"disabled": true
+										},
+										{
+											"key": "priceAtMost",
+											"value": "100",
+											"disabled": true
+										},
+										{
+											"key": "priceAtLeast",
+											"value": "50",
+											"disabled": true
+										},
+										{
+											"key": "isAvailable",
+											"value": "false",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "produc",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Orders By Params",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "clientSecret",
+											"value": "TQWa4FhPsVZNS1bdWBbjvBj5hSSJPg33",
+											"type": "string"
+										},
+										{
+											"key": "authRequestParams",
+											"value": [],
+											"type": "any"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/token",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/auth",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "ShopApp",
+											"type": "string"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://localhost:8081/products",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": false,
+											"type": "boolean"
+										},
+										{
+											"key": "tokenName",
+											"value": "UserToken",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/orders?isPayed=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "isPayed",
+											"value": "0"
+										},
+										{
+											"key": "createdBefore",
+											"value": "2023-10-31T01:30",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "INITIAL",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Order {id}",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "clientSecret",
+											"value": "TQWa4FhPsVZNS1bdWBbjvBj5hSSJPg33",
+											"type": "string"
+										},
+										{
+											"key": "authRequestParams",
+											"value": [],
+											"type": "any"
+										},
+										{
+											"key": "accessTokenUrl",
+											"value": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/token",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/auth",
+											"type": "string"
+										},
+										{
+											"key": "clientId",
+											"value": "ShopApp",
+											"type": "string"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://localhost:8081/products",
+											"type": "string"
+										},
+										{
+											"key": "useBrowser",
+											"value": false,
+											"type": "boolean"
+										},
+										{
+											"key": "tokenName",
+											"value": "UserToken",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "string"
+										},
+										{
+											"key": "client_authentication",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/cancel-order/622",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"cancel-order",
+										"622"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "orderApp",
+			"item": [
+				{
+					"name": "Endpoints",
+					"item": [
+						{
+							"name": "Get Orders By Params",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/orders?isPayed=0",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"orders"
+									],
+									"query": [
+										{
+											"key": "isPayed",
+											"value": "0"
+										},
+										{
+											"key": "createdBefore",
+											"value": "2023-10-31T01:30",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "INITIAL",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Order {id}",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8082/cancel-order/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8082",
+									"path": [
+										"cancel-order",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Client credentials",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "ShopApp",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "Nx5JtotivrZxxoXH3DgwYWEbEf8VWSs4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"realms",
+								"ProjectRealm",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET token code",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "response_type",
+									"value": "code",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "ShopApp",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/auth?response_type=code&username=user&password=user&client_id=ShopApp&scope=openid&state=abcd&redirect_uri=http://localhost:8080",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"realms",
+								"ProjectRealm",
+								"protocol",
+								"openid-connect",
+								"auth"
+							],
+							"query": [
+								{
+									"key": "response_type",
+									"value": "code"
+								},
+								{
+									"key": "username",
+									"value": "user"
+								},
+								{
+									"key": "password",
+									"value": "user"
+								},
+								{
+									"key": "client_id",
+									"value": "ShopApp"
+								},
+								{
+									"key": "scope",
+									"value": "openid"
+								},
+								{
+									"key": "state",
+									"value": "abcd"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8080"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "390b830d-df14-4d24-8adf-32a3ee933066.b49bab8d-af8d-4cfa-9e27-9d34f4c82cdf.bf877b40-07d2-4d46-b8f5-965d12b214d1",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "ShopApp",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "TQWa4FhPsVZNS1bdWBbjvBj5hSSJPg33",
+									"type": "text"
+								},
+								{
+									"key": "session_state",
+									"value": "3fe6e1dc-604d-4720-974c-6b65bcc950d2",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8080",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:9090/realms/ProjectRealm/protocol/openid-connect/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"realms",
+								"ProjectRealm",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
