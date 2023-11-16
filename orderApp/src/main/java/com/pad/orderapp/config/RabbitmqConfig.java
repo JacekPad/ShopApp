@@ -1,6 +1,7 @@
 package com.pad.orderapp.config;
 
 import com.pad.orderapp.model.DTO.OrderMessageTemplate;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 @Configuration
+@Slf4j
 public class RabbitmqConfig {
 
 
@@ -27,9 +29,12 @@ public class RabbitmqConfig {
     @Value("${spring.rabbitmq.template.queue.sendOrderQueue}")
     private String sendOrderQueue;
 
+    @Value("${spring.rabbitmq.host}")
+    private String hostname;
     @Bean
     CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname);
+        log.debug(cachingConnectionFactory.getHost());
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;

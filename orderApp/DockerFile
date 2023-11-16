@@ -1,0 +1,11 @@
+FROM maven:3.6.3-openjdk-17 AS build
+COPY src /home/orderapp/src
+#looking for swagger yaml in root folder
+COPY src/main/resources/swagger /src/main/resources/swagger
+COPY pom.xml /home/orderapp
+RUN mvn -f /home/orderapp/pom.xml clean package
+
+FROM openjdk:17-jdk-alpine
+ARG JAR_FILE
+COPY --from=build /home/orderapp/target/*.jar orderapp.jar
+ENTRYPOINT ["java","-jar","/orderapp.jar"]

@@ -25,9 +25,10 @@ public class SecurityConfig {
                 .sessionManagement(sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requestManager -> {
-//                    requestManager.requestMatchers("/*").permitAll();
-                    requestManager.requestMatchers("*/**").hasAnyRole("USER", "ADMIN")
-                            .anyRequest().authenticated();
+                    //TODO - keycloak does not allow external URL as issuer when comparing it with internal url
+                    requestManager.requestMatchers("/*").permitAll();
+//                    requestManager.requestMatchers("*/**").hasAnyRole("USER", "ADMIN")
+//                            .anyRequest().authenticated();
                 })
                 .oauth2ResourceServer(oatuh -> oatuh.jwt(jwt -> {
                     jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
