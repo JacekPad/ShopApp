@@ -28,12 +28,18 @@ spring:
         template:
             queue:
                 productCountChange: productQuantityChange_queue
+                sendOrder: sendOrder_queue
+            exchange: exchange
+            routing-key:
+                productCountChange: productQuantityChange_routingKey
+                sendOrder: sendOrder_routingKey
+#LOCAL SETTING
         host: localhost
         port: 5672
         username: user
         password: user
 
-#Security Keycloak
+    #Security Keycloak
     security:
       oauth2:
         resource-server:

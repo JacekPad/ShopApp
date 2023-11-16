@@ -1,7 +1,8 @@
 package com.pad.warehouse.config;
 
 import com.pad.warehouse.model.DTOs.ProductQuantityChangeMessageTemplate;
-import org.springframework.amqp.core.Queue;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 @Configuration
+@Slf4j
 public class RabbitmqConfig {
 
     @Value("${spring.rabbitmq.username}")
@@ -21,12 +23,28 @@ public class RabbitmqConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
+    @Value("${spring.rabbitmq.template.exchange}")
+    private String exchangeName;
+
+    @Value("${spring.rabbitmq.template.queue.sendOrder}")
+    private String sendOrderQueue;
+
+    @Value("${spring.rabbitmq.template.routing-key.sendOrder}")
+    private String sendOrderRoutingKey;
+
     @Value("${spring.rabbitmq.template.queue.productCountChange}")
     private String productCountChangeQueue;
 
+    @Value("${spring.rabbitmq.template.routing-key.productCountChange}")
+    private String productCountChangeRoutingKey;
+
+    @Value("${spring.rabbitmq.host}")
+    private String hostname;
+
     @Bean
     CachingConnectionFactory connectionFactory() {
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostname);
+        log.debug(cachingConnectionFactory.getHost());
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;
@@ -51,9 +69,31 @@ public class RabbitmqConfig {
         return rabbitTemplate;
     }
 
+
     @Bean
     public Queue productQuantityChangeQueue() {
         return new Queue(productCountChangeQueue);
     }
 
+    @Bean
+    public Queue sendOrderQueue() {
+        return new Queue(sendOrderQueue);
+    }
+
+    @Bean
+    DirectExchange exchange() {
+        return ExchangeBuilder.directExchange(exchangeName).durable(true).build();
+    }
+
+    @Bean
+    Binding productCountChangeBinding() {
+        return BindingBuilder.bind(productQuantityChangeQueue())
+                .to(exchange()).with(productCountChangeRoutingKey);
+    }
+
+    @Bean
+    Binding sendOrderBinding() {
+        return BindingBuilder.bind(sendOrderQueue())
+                .to(exchange()).with(sendOrderRoutingKey);
+    }
 }

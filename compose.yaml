@@ -1,0 +1,145 @@
+ version: '3.5'
+ name: app-cluster
+ services:
+   mysqldb:
+     container_name: app-mysql-db
+     image: 'mysql:8'
+     environment:
+       - 'MYSQL_ROOT_PASSWORD=admin'
+     networks:
+       - appnet
+     ports:
+       - '3333:3306'
+     volumes:
+      - ./sql/init:/docker-entrypoint-initdb.d
+      - ./sql/data/compose/volumes:/var/lib/mysql
+
+   rabbit-mq:
+     container_name: rabbit-mq
+     image: rabbitmq:3.12-management
+     hostname: rabbit-mq
+     environment:
+       - RABBITMQ_DEFAULT_USER=user
+       - RABBITMQ_DEFAULT_PASS=user
+     ports:
+       - "5672:5672"
+       - "15672:15672"
+     networks:
+       - appnet
+
+   keycloak:
+     container_name: app-keycloak
+     image: quay.io/keycloak/keycloak:22.0.5
+#     hostname: keycloak
+     environment:
+       - KEYCLOAK_ADMIN=admin
+       - KEYCLOAK_ADMIN_PASSWORD=admin
+       - KC_DB=mysql
+       - KC_DB_URL=jdbc:mysql://mysqldb/keycloak
+       - KC_DB_USERNAME=root
+       - KC_DB_PASSWORD=admin
+     depends_on:
+       mysqldb:
+         condition: service_completed_successfully
+     networks:
+       - appnet
+     ports:
+       - "9090:8080"
+     volumes:
+       - ./keycloak-import:/opt/keycloak/data/import
+     command:
+       - start-dev --import-realm
+
+   WarehouseApp:
+     container_name: warehouse-app
+     hostname: warehouse-app
+     build:
+       context: warehouse
+       dockerfile: ./Dockerfile
+     image: mushiatsui/warehouse-app
+     environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb/warehouse
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_FLYWAY_URL=jdbc:mysql://mysqldb
+      - SPRING_FLYWAY_USERNAME=root
+      - SPRING_FLYWAY_PASSWORD=admin
+      - SPRING_RABBITMQ_HOST=rabbit-mq
+      - SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/ProjectRealm
+     depends_on:
+       mysqldb:
+         condition: service_completed_successfully
+       rabbit-mq:
+         condition: service_completed_successfully
+       keycloak:
+         condition: service_completed_successfully
+     networks:
+       - appnet
+     ports:
+       - "8080:8080"
+
+   ShopApp:
+     container_name: shop-app
+     hostname: shop-app
+     build:
+       context: shopApp
+       dockerfile: ./DockerFile
+     image: mushiatsui/shop-app
+     environment:
+       - SPRING_RABBITMQ_HOST=rabbit-mq
+       - SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/ProjectRealm
+       - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT-URI=http://shop-app:8081/products
+       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION-URI=http://keycloak:8080/realms/ProjectRealm/protocol/openid-connect/auth
+       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN-URI=http://keycloak:8080/realms/ProjectRealm/protocol/openid-connect/token
+       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER-INFO-URI=http://keycloak:8080/realms/ProjectRealm/protocol/openid-connect/userinfo
+       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER-URI=http://keycloak:8080/realms/ProjectRealm
+       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWK-SET-URI=http://keycloak:8080/realms/ProjectRealm/protocol/openid-connect/certs
+       - PRODUCT_GET-ALL_URI=http://warehouse-app:8080/products
+       - ORDER_GET-ALL_URI=http://order-app:8082/
+     depends_on:
+       rabbit-mq:
+         condition: service_completed_successfully
+       keycloak:
+         condition: service_completed_successfully
+     networks:
+       - appnet
+     ports:
+       - "8081:8081"
+
+   OrderApp:
+     container_name: order-app
+     hostname: order-app
+     build:
+       context: orderApp
+       dockerfile: ./Dockerfile
+     image: mushiatsui/order-app
+     environment:
+       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb/orders
+       - SPRING_DATASOURCE_USERNAME=root
+       - SPRING_DATASOURCE_PASSWORD=admin
+       - SPRING_FLYWAY_URL=jdbc:mysql://mysqldb
+       - SPRING_FLYWAY_USERNAME=root
+       - SPRING_FLYWAY_PASSWORD=admin
+       - SPRING_RABBITMQ_HOST=rabbit-mq
+       - SPRING_SECURITY_OAUTH2_RESOURCE-SERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/ProjectRealm
+     depends_on:
+       WarehouseApp:
+         condition: service_completed_successfully
+       ShopApp:
+         condition: service_completed_successfully
+       mysqldb:
+         condition: service_completed_successfully
+       rabbit-mq:
+         condition: service_completed_successfully
+       keycloak:
+         condition: service_completed_successfully
+     networks:
+       - appnet
+     ports:
+       - "8082:8082"
+ networks:
+    appnet:
+     driver: bridge
+ volumes:
+  mysqldb:
+    driver: local

@@ -7,7 +7,7 @@ import com.pad.app.service.webClient.WebClientService;
 import com.pad.app.swagger.model.CancelOrderStatusResponse;
 import com.pad.app.swagger.model.Order;
 import com.pad.app.swagger.model.OrderFilterParams;
-import com.pad.app.swagger.model.OrdersResponse;
+import com.pad.app.swagger.model.ProcessOrderResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +48,7 @@ public class ManageOrderService {
     public List<Order> getOrders(OrderFilterParams params) {
         String uri = ORDER_URI + "orders";
         MultiValueMap<String, String> uriParams = webClientMappers.convertToUriParams(params);
-        OrdersResponse orders = webClientService.webClientGet(uri, OrdersResponse.class, uriParams);
+        ProcessOrderResponse orders = webClientService.webClientGet(uri, ProcessOrderResponse.class, uriParams);
         log.debug("orders: {}", orders);
         return orders.getOrders();
     }

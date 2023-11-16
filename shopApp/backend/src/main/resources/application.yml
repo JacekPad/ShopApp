@@ -7,14 +7,13 @@ spring:
     username: user
     password: user
     template:
-      exchange: exchange
       queue:
         productCountChange: productQuantityChange_queue
         sendOrder: sendOrder_queue
+      exchange: exchange
       routing-key:
-        productCountChange: productQuantityChange_routingKey
-        sendOrder: sendOrder_routingKey
-
+          productCountChange: productQuantityChange_routingKey
+          sendOrder: sendOrder_routingKey
     #Security Keycloak
   security:
     oauth2:
@@ -25,9 +24,8 @@ spring:
           registration:
             keycloak:
                 client-id: ShopApp
-                client-secret: Nx5JtotivrZxxoXH3DgwYWEbEf8VWSs4
+                client-secret: TQWa4FhPsVZNS1bdWBbjvBj5hSSJPg33
                 authorization-grant-type: client_credentials
-#                authorization-grant-type: authorization_code
                 redirect-uri: http://localhost:8081/products
                 scope:
                   - openid
