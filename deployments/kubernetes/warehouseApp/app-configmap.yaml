@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: myapp-configmap
-  namespace: warehouse-app
-data:
-  DB_URL: jdbc:mysql://mysqldb-service.database/warehouse
-  DB_USERNAME: root
-  FLYWAY_DB_URL: jdbc:mysql://mysqldb-service.database
