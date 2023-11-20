@@ -1,7 +1,7 @@
 # DESCRIPTION:
 Applications written in java 17 with springboot 3.1.1. 
 Microservices based application, allowing users to manage products in the database, place orders based on available products, and process created orders. <br> 
-Communication among services is done via a message-broker (rabbitMQ) and HTTP requests (WebClient). Services are secured by keycoak (client credentials among services and authorization code for users).
+Communication among services is done via a message-broker (rabbitMQ) and HTTP requests (WebClient). Services are secured by keycloak (client credentials among services and authorization code for users).
 
 # Services:
  ### warehouse 
