@@ -1,5 +1,6 @@
 package com.pad.warehouse.model.entity;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ProductEntity {
     private Integer quantity;
 
     @Column(name = "price")
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "status")
     private String status;
