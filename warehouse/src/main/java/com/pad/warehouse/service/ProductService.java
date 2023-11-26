@@ -1,5 +1,6 @@
 package com.pad.warehouse.service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,7 +230,7 @@ public class ProductService {
         if (product.getName() != null) productEntityToUpdate.setName(product.getName());
         if (product.getProductCode() != null) productEntityToUpdate.setProductCode(product.getProductCode());
         if (product.getQuantity() != null) productEntityToUpdate.setQuantity(Integer.parseInt(product.getQuantity()));
-        if (product.getPrice() != null) productEntityToUpdate.setPrice(Double.parseDouble(product.getPrice()));
+        if (product.getPrice() != null) productEntityToUpdate.setPrice(BigDecimal.valueOf(Double.parseDouble(product.getPrice())));
         if (product.getStatus() != null) productEntityToUpdate.setStatus(product.getStatus());
         if (product.getType() != null) productEntityToUpdate.setType(product.getType());
         if (product.getSubtype() != null) productEntityToUpdate.setSubtype(product.getSubtype());
