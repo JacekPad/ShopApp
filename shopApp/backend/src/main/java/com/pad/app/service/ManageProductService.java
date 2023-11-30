@@ -3,7 +3,7 @@ package com.pad.app.service;
 import com.pad.app.exception.internal.FetchDataError;
 import com.pad.app.exception.internal.SaveObjectException;
 import com.pad.app.exception.notFound.NoObjectFound;
-import com.pad.app.factories.messagetemplate.ProductQuantityFactoryAbstract;
+import com.pad.app.factories.messagetemplate.ProductQuantityFactory;
 import com.pad.app.factories.messagetemplate.TemplateFactory;
 import com.pad.app.model.messageTemplates.MessageTemplate;
 import com.pad.app.service.webClient.WebClientService;
@@ -68,7 +68,7 @@ public class ManageProductService {
     }
 
     private MessageTemplate prepareProductTemplate(String productId, int quantityChange) {
-        return TemplateFactory.createTemplate(new ProductQuantityFactoryAbstract(quantityChange, Long.parseLong(productId)));
+        return TemplateFactory.createTemplate(new ProductQuantityFactory(quantityChange, Long.parseLong(productId)));
     }
 
 

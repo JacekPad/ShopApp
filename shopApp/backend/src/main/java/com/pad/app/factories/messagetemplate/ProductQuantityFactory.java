@@ -5,7 +5,7 @@ import com.pad.app.model.messageTemplates.ProductQuantityChangeMessageTemplate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ProductQuantityFactoryAbstract implements AbstractTemplateFactory {
+public class ProductQuantityFactory implements AbstractTemplateFactory {
 
     private final int quantity;
     private final long productId;

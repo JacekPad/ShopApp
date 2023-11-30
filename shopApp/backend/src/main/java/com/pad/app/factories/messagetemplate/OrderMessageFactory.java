@@ -6,7 +6,7 @@ import com.pad.app.swagger.model.Order;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OrderMessageFactoryAbstract implements AbstractTemplateFactory {
+public class OrderMessageFactory implements AbstractTemplateFactory {
 
     private final Order order;
 
