@@ -58,7 +58,7 @@ public class ManageProductService {
     public void updateProductDatabase(String productId, int quantityChange) {
         log.info("updating product database - Service - START: {}", productId);
         try {
-            MessageTemplate template = prepareProductTemplate(productId, quantityChange);
+            MessageTemplate template = TemplateFactory.createTemplate(new ProductQuantityFactory(quantityChange, Long.parseLong(productId)));
             workerService.prepareMessage(template);
             log.info("updating product database - Service - STOP");
         } catch (Exception e) {
@@ -66,10 +66,5 @@ public class ManageProductService {
             throw new SaveObjectException("Could not update product database" + e.getMessage());
         }
     }
-
-    private MessageTemplate prepareProductTemplate(String productId, int quantityChange) {
-        return TemplateFactory.createTemplate(new ProductQuantityFactory(quantityChange, Long.parseLong(productId)));
-    }
-
 
 }

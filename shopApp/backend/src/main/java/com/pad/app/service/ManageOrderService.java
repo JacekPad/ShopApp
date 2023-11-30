@@ -37,12 +37,8 @@ public class ManageOrderService {
             log.error("No order to send");
             throw new NoObjectFound("No order to send");
         }
-        MessageTemplate orderMessageTemplate = prepareOrderTemplate(order);
+        MessageTemplate orderMessageTemplate = TemplateFactory.createTemplate(new OrderMessageFactory(order));
         workerService.prepareMessage(orderMessageTemplate);
-    }
-
-    private MessageTemplate prepareOrderTemplate(Order order) {
-        return TemplateFactory.createTemplate(new OrderMessageFactory(order));
     }
 
     public List<Order> getOrders(OrderFilterParams params) {
