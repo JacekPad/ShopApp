@@ -3,7 +3,9 @@ package com.pad.app.service;
 import com.pad.app.exception.internal.FetchDataError;
 import com.pad.app.exception.internal.SaveObjectException;
 import com.pad.app.exception.notFound.NoObjectFound;
-import com.pad.app.model.messageTemplates.ProductQuantityChangeMessageTemplate;
+import com.pad.app.factories.messagetemplate.ProductQuantityFactory;
+import com.pad.app.factories.messagetemplate.TemplateFactory;
+import com.pad.app.model.messageTemplates.MessageTemplate;
 import com.pad.app.service.webClient.WebClientService;
 import com.pad.app.swagger.model.Product;
 import com.pad.app.swagger.model.ProductsResponse;
@@ -56,7 +58,7 @@ public class ManageProductService {
     public void updateProductDatabase(String productId, int quantityChange) {
         log.info("updating product database - Service - START: {}", productId);
         try {
-            ProductQuantityChangeMessageTemplate template = prepareProductTemplate(productId, quantityChange);
+            MessageTemplate template = TemplateFactory.createTemplate(new ProductQuantityFactory(quantityChange, Long.parseLong(productId)));
             workerService.prepareMessage(template);
             log.info("updating product database - Service - STOP");
         } catch (Exception e) {
@@ -64,13 +66,5 @@ public class ManageProductService {
             throw new SaveObjectException("Could not update product database" + e.getMessage());
         }
     }
-
-    private ProductQuantityChangeMessageTemplate prepareProductTemplate(String productId, int quantityChange) {
-        ProductQuantityChangeMessageTemplate template = new ProductQuantityChangeMessageTemplate();
-        template.setProductId(Long.valueOf(productId));
-        template.setQuantity(quantityChange);
-        return template;
-    }
-
 
 }

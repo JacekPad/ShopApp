@@ -1,7 +1,9 @@
 package com.pad.app.service;
 
 import com.pad.app.exception.notFound.NoObjectFound;
-import com.pad.app.model.messageTemplates.OrderMessageTemplate;
+import com.pad.app.factories.messagetemplate.OrderMessageFactory;
+import com.pad.app.factories.messagetemplate.TemplateFactory;
+import com.pad.app.model.messageTemplates.MessageTemplate;
 import com.pad.app.service.webClient.WebClientMappers;
 import com.pad.app.service.webClient.WebClientService;
 import com.pad.app.swagger.model.CancelOrderStatusResponse;
@@ -35,14 +37,8 @@ public class ManageOrderService {
             log.error("No order to send");
             throw new NoObjectFound("No order to send");
         }
-        OrderMessageTemplate orderMessageTemplate = prepareOrderTemplate(order);
+        MessageTemplate orderMessageTemplate = TemplateFactory.createTemplate(new OrderMessageFactory(order));
         workerService.prepareMessage(orderMessageTemplate);
-    }
-
-    private OrderMessageTemplate prepareOrderTemplate(Order order) {
-        OrderMessageTemplate messageTemplate = new OrderMessageTemplate();
-        messageTemplate.setOrder(order);
-        return messageTemplate;
     }
 
     public List<Order> getOrders(OrderFilterParams params) {

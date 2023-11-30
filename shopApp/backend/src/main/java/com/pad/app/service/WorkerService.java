@@ -25,7 +25,7 @@ public class WorkerService {
     private String exchangeName;
 
     public void prepareMessage(MessageTemplate messageTemplate) {
-        log.info("preparing message: {} of type {}", messageTemplate, messageTemplate.getClass());
+        log.info("preparing message: {} of type {}", messageTemplate, messageTemplate.getMessageType());
         log.debug("thread: {}", Thread.currentThread().getName());
         switch (messageTemplate.getMessageType()) {
             case SEND_ORDER -> sendMessage(messageTemplate, sendOrderRoutingKey);
