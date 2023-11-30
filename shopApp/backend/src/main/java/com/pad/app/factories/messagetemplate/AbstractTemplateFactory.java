@@ -4,5 +4,5 @@ import com.pad.app.model.messageTemplates.MessageTemplate;
 
 public interface AbstractTemplateFactory {
 
-    public MessageTemplate createTemplate();
+    MessageTemplate createTemplate();
 }
